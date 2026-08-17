@@ -1,0 +1,269 @@
+/* GSeven Matrimony Account Sidebar */
+
+.account-sidebar {
+  width: 250px;
+  min-width: 250px;
+  height: calc(100vh - 24px);
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #700019 0%, #560014 100%);
+  color: #fff;
+  box-shadow: 0 12px 35px rgba(86, 0, 20, 0.16);
+  z-index: 100;
+}
+
+.account-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-sidebar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.account-sidebar-brand-mark {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(217, 179, 106, 0.65);
+  border-radius: 10px;
+  color: #d9b36a;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.account-sidebar-brand strong {
+  display: block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.account-sidebar-brand small {
+  display: block;
+  margin-top: 4px;
+  color: #e6c98f;
+  font-size: 8px;
+  letter-spacing: 2.1px;
+  font-weight: 600;
+}
+
+.account-sidebar-close {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.account-sidebar-nav {
+  flex: 1;
+  overflow: visible;
+  padding: 14px 11px;
+}
+
+.account-sidebar-link {
+  position: relative;
+  width: 100%;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 4px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.84);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.account-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+}
+
+.account-sidebar-link.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  box-shadow: inset 3px 0 0 #d9b36a;
+}
+
+.account-sidebar-link.active svg {
+  color: #e2bd72;
+}
+
+.account-sidebar-logout {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 10px 10px;
+}
+
+.account-sidebar-membership {
+  margin: 10px 12px 13px;
+  padding: 15px 14px;
+  border: 1px solid rgba(217, 179, 106, 0.3);
+  border-radius: 14px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.11),
+    rgba(255, 255, 255, 0.05)
+  );
+}
+
+.account-sidebar-membership-icon {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  border-radius: 50%;
+  background: rgba(217, 179, 106, 0.16);
+  color: #e2bd72;
+}
+
+.account-sidebar-membership h4 {
+  margin: 0 0 6px;
+  color: #fff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.account-sidebar-membership p {
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.account-sidebar-plan {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 8px 0 11px;
+}
+
+.account-sidebar-plan strong {
+  color: #f1d08b;
+  font-size: 16px;
+}
+
+.account-sidebar-plan span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+}
+
+.account-sidebar-membership-btn {
+  width: 100%;
+  min-height: 34px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #d9a94f, #c78d2f);
+  color: #4d1700;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.account-sidebar-progress {
+  height: 5px;
+  margin: 9px 0 7px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.account-sidebar-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #d9b36a;
+}
+
+.account-sidebar-membership small {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+}
+
+.account-sidebar-backdrop {
+  display: none;
+}
+
+/* Use this wrapper around sidebar + page content:
+   .account-layout {
+     display: flex;
+     gap: 20px;
+     align-items: flex-start;
+   }
+*/
+
+@media (max-width: 900px) {
+  .account-sidebar {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    bottom: 12px;
+    height: auto;
+    transform: translateX(calc(-100% - 20px));
+    transition: transform 0.25s ease;
+  }
+
+  .account-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .account-sidebar-close {
+    display: grid;
+    place-items: center;
+  }
+
+  .account-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(35, 8, 15, 0.42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 99;
+  }
+
+  .account-sidebar-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 901px) {
+  .account-sidebar-backdrop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .account-sidebar {
+    width: min(280px, calc(100vw - 24px));
+    min-width: 0;
+  }
+}

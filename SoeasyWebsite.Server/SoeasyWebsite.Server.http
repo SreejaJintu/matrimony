@@ -1,0 +1,6 @@
+@SoeasyWebsite.Server_HostAddress = http://localhost:5038
+
+GET {{SoeasyWebsite.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

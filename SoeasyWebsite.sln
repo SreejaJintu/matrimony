@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "soeasywebsite.client", "soeasywebsite.client\soeasywebsite.client.esproj", "{DB52B410-D291-4DAD-0170-5209358CEEB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoeasyWebsite.Server", "SoeasyWebsite.Server\SoeasyWebsite.Server.csproj", "{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB52B410-D291-4DAD-0170-5209358CEEB1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3985E1D-E25E-430D-8E33-9D15071506AB}
+	EndGlobalSection
+EndGlobal

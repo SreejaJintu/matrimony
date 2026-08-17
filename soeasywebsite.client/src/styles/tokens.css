@@ -1,0 +1,66 @@
+/* Design token mappings for utility-like classnames used in components */
+
+/* Core colors (from DESIGN.md) */
+:root{
+  --maroon-1:#700019;
+  --burgundy-1:#85002A;
+  --gold-1:#C89A45;
+  --gold-2:#D9B36A;
+  --cream-1:#FBF7F0;
+  --cream-2:#F8F2EA;
+  --dark-text:#292222;
+  --muted-text:#746B67;
+
+  --color-surface:var(--cream-2);
+  --color-on-surface:var(--dark-text);
+  --color-on-surface-variant:var(--muted-text);
+  --color-primary:var(--maroon-1);
+  --color-primary-container:var(--burgundy-1);
+  --color-secondary:var(--gold-1);
+  --color-secondary-container:rgba(217, 179, 106, 0.22);
+  --color-outline-variant:rgba(116, 107, 103, 0.22);
+  --color-surface-container-highest:#f1e7da;
+  --color-surface-container-low:#f6efe5;
+  --color-error:#ba1a1a;
+  --color-error-container:#ffdad6;
+}
+
+/* Background tokens */
+.bg-surface{background-color:var(--color-surface) !important}
+.bg-white{background-color:#ffffff !important}
+.bg-white\/90{background-color:rgba(255,255,255,0.9) !important}
+.bg-surface-container-highest{background-color:var(--color-surface-container-highest) !important}
+.bg-surface-container-low{background-color:var(--color-surface-container-low) !important}
+.bg-primary{background-color:var(--color-primary) !important}
+.bg-secondary{background-color:var(--color-secondary) !important}
+.bg-secondary-container\/20{background-color:rgba(205,225,254,0.2) !important}
+.bg-error-container\/20{background-color:rgba(255,218,214,0.2) !important}
+
+/* Text tokens */
+.text-on-surface{color:var(--color-on-surface) !important}
+.text-on-surface-variant{color:var(--color-on-surface-variant) !important}
+.text-primary{color:var(--color-primary) !important}
+.text-secondary{color:var(--color-secondary) !important}
+.text-error{color:var(--color-error) !important}
+.text-white{color:#ffffff !important}
+
+/* Border tokens */
+.border-outline-variant{border-color:var(--color-outline-variant) !important}
+.border-outline-variant\/30{border-color:rgba(224,191,191,0.3) !important}
+.border-primary{border-color:var(--color-primary) !important}
+.border-secondary-container\/30{border-color:rgba(205,225,254,0.3) !important}
+
+/* Hover helpers (escaped colons) */
+.hover\:bg-surface-container-low:hover{background-color:var(--color-surface-container-low) !important}
+.hover\:text-primary:hover{color:var(--color-primary) !important}
+
+/* Simple utilities referenced by components */
+.opacity-80{opacity:.8}
+.rounded-full{border-radius:999px}
+.rounded-lg{border-radius:8px}
+.rounded-xl{border-radius:12px}
+.shadow-sm{box-shadow:0 1px 2px rgba(0,0,0,0.05)}
+.backdrop-blur-md{backdrop-filter:blur(12px)}
+
+/* Allow escaped slash classes used earlier */
+.border-outline-variant\/30{border-color:rgba(224,191,191,0.3) !important}
