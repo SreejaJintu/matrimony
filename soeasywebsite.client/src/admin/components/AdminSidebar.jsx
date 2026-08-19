@@ -28,7 +28,7 @@ const AdminSidebar = () => {
           Profiles
         </NavLink>
 
-        <NavLink to="/admin/memberships">
+        <NavLink to="/admin/subscriptions">
           <span>◆</span>
           Memberships
         </NavLink>

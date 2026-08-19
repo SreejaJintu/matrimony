@@ -8,4 +8,14 @@ public interface IAdminProfileRepository
         string? search,
         byte? genderId,
         byte? profileStatusId);
+
+    Task<AdminProfileDetailResult?> GetById(int userId);
+
+    Task<AdminProfileStatusUpdateResult?> UpdateStatus(
+    int userId,
+    byte profileStatusId);
+
+    Task<AdminMarkMarriedResult?> MarkAsMarried(
+    int userId,
+    int adminUserId);
 }

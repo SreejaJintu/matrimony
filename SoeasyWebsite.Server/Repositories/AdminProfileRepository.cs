@@ -38,4 +38,56 @@ public class AdminProfileRepository : IAdminProfileRepository
 
         return result;
     }
+   public async Task<AdminProfileDetailResult?> GetById(int userId)
+{
+    using var connection =
+        _connectionFactory.CreateConnection();
+
+    var result =
+        await connection.QueryFirstOrDefaultAsync<AdminProfileDetailResult>(
+            "usp_Admin_Profile_GetById",
+            new
+            {
+                UserId = userId
+            },
+            commandType: CommandType.StoredProcedure
+        );
+
+    return result;
+}
+
+public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(
+    int userId,
+    byte profileStatusId)
+{
+    using var connection =
+        _connectionFactory.CreateConnection();
+
+    return await connection.QueryFirstOrDefaultAsync<AdminProfileStatusUpdateResult>(
+        "usp_Admin_Profile_UpdateStatus",
+        new
+        {
+            UserId = userId,
+            ProfileStatusId = profileStatusId
+        },
+        commandType: CommandType.StoredProcedure
+    );
+}
+public async Task<AdminMarkMarriedResult?> MarkAsMarried(
+    int userId,
+    int adminUserId)
+{
+    using var connection =
+        _connectionFactory.CreateConnection();
+
+    return await connection.QueryFirstOrDefaultAsync<AdminMarkMarriedResult>(
+        "usp_Admin_MarkProfileAsMarried",
+        new
+        {
+            MarriedUserId = userId,
+            AdminUserId = adminUserId
+        },
+        commandType: CommandType.StoredProcedure
+    );
+}
 }

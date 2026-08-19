@@ -81,4 +81,3 @@ D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Debug\net8.0\SoeasyWebsite.Server.p
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Debug\net8.0\SoeasyWebsite.Server.genruntimeconfig.cache
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Debug\net8.0\ref\SoeasyWebsite.Server.dll
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Debug\net8.0\SoeasyWebsite.Server.sourcelink.json
-D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -2,18 +2,9 @@ using SoeasyWebsite.Server.DTOs.Profile;
 
 namespace SoeasyWebsite.Server.DTOs.Admin;
 
-public class AdminProfileDetailResult
+public class AdminProfileDetailResult : UserProfileDto
 {
-    public UserProfileDto? Profile { get; set; }
-
-    public AdminProfileAccountInfo? Account { get; set; }
-}
-
-public class AdminProfileAccountInfo
-{
-    public int UserId { get; set; }
-
-    public string ProfileCode { get; set; } = string.Empty;
+    public string? GenderName { get; set; }
 
     public byte ProfileStatusId { get; set; }
 

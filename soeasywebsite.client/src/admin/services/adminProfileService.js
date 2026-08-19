@@ -16,6 +16,33 @@ const adminProfileService = {
 
     return response.data;
   },
+
+  getProfileById: async (userId) => {
+    const response = await axios.get(
+      `/api/admin/profiles/${userId}`
+    );
+
+    return response.data;
+  },
+
+  updateProfileStatus: async (userId, profileStatusId) => {
+    const response = await axios.put(
+      `/api/admin/profiles/${userId}/status`,
+      { profileStatusId }
+    );
+
+    return response.data;
+  },
+
+
+  markAsMarried: async (userId) => {
+  const response = await axios.put(
+    `/api/admin/profiles/${userId}/married`
+  );
+
+  return response.data;
+},
 };
+
 
 export default adminProfileService;

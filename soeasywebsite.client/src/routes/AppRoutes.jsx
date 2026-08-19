@@ -22,6 +22,8 @@ import AdminLogin from '../admin/pages/AdminLogin'
 import AdminLayout from '../admin/components/AdminLayout'
 import AdminDashboard from '../admin/pages/AdminDashboard'
 import AdminProfiles from "../admin/pages/AdminProfiles";
+import AdminProfileDetail from "../admin/pages/AdminProfileDetail";
+import AdminSubscriptionPage from '../admin/pages/AdminSubscriptionPage'
 export function AppRoutes() {
   const navigate = useNavigate()
 
@@ -184,6 +186,16 @@ export function AppRoutes() {
     path="profiles"
     element={<AdminProfiles />}
   />
+
+  <Route
+    path="profiles/:userId"
+    element={<AdminProfileDetail />}
+  />
+
+  <Route
+  path="subscriptions"
+  element={<AdminSubscriptionPage />}
+/>
 </Route>
 
 

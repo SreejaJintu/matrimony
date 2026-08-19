@@ -50,7 +50,13 @@ builder.Services.AddScoped<IAdminProfileService, AdminProfileService>();
 builder.Services.AddScoped<IAdminAuthRepository, AdminAuthRepository>();
 
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
+builder.Services.AddScoped<
+    IAdminSubscriptionRepository,
+    AdminSubscriptionRepository>();
 
+builder.Services.AddScoped<
+    IAdminSubscriptionService,
+    AdminSubscriptionService>();
 //---------------------------------------------------------
 // CORS
 //---------------------------------------------------------

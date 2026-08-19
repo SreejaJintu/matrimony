@@ -13,7 +13,10 @@ public class AdminProfileService : IAdminProfileService
     {
         _repository = repository;
     }
-
+public async Task<AdminProfileDetailResult?> GetById(int userId)
+{
+    return await _repository.GetById(userId);
+}
     public async Task<IEnumerable<AdminProfileDto>> GetAll(
         string? search,
         byte? genderId,
@@ -24,4 +27,22 @@ public class AdminProfileService : IAdminProfileService
             genderId,
             profileStatusId);
     }
+
+    public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(
+    int userId,
+    byte profileStatusId)
+{
+    return await _repository.UpdateStatus(
+        userId,
+        profileStatusId);
+}
+
+public async Task<AdminMarkMarriedResult?> MarkAsMarried(
+    int userId,
+    int adminUserId)
+{
+    return await _repository.MarkAsMarried(
+        userId,
+        adminUserId);
+}
 }
