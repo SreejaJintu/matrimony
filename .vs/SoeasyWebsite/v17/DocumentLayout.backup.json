@@ -38,19 +38,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Document",
@@ -60,7 +52,7 @@
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
               "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
-              "ViewState": "AgIAAFEBAAAAAAAAAAAAAFEBAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAADYBAAAAAAAAAAAAAFEBAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2026-08-16T07:20:45.659Z",
               "EditorCaption": ""
@@ -73,10 +65,9 @@
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAAwAAAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAAwAAAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2026-08-16T06:49:32.47Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-16T06:49:32.47Z"
             },
             {
               "$type": "Document",
@@ -88,8 +79,7 @@
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
               "ViewState": "AgIAABkAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2026-08-16T06:49:06.161Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-16T06:49:06.161Z"
             },
             {
               "$type": "Document",
@@ -101,8 +91,7 @@
               "RelativeToolTip": "soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
               "ViewState": "AgIAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2026-08-16T06:48:37.628Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-16T06:48:37.628Z"
             },
             {
               "$type": "Document",
@@ -114,8 +103,7 @@
               "RelativeToolTip": "SoeasyWebsite.Server\\appsettings.json",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-07T09:56:56.681Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-07T09:56:56.681Z"
             },
             {
               "$type": "Document",
@@ -140,6 +128,14 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-07-29T11:15:57.011Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             }
           ]
         }

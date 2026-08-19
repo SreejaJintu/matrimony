@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SoeasyWebsite.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b3aa24d945e47c3f71208c604d6e9bc2c213f12")]
 [assembly: System.Reflection.AssemblyProductAttribute("SoeasyWebsite.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SoeasyWebsite.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

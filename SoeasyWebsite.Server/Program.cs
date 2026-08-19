@@ -1,9 +1,10 @@
 using SoeasyWebsite.Server.Data;
 using SoeasyWebsite.Server.Models;
 using SoeasyWebsite.Server.RepositoryInterfaces;
+using SoeasyWebsite.Server.Interfaces;
 using SoeasyWebsite.Server.Repositories;
 using SoeasyWebsite.Server.Services;
-
+using SoeasyWebsite.Server.Helpers;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -41,6 +42,14 @@ builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.IMatchService, MatchS
 
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.ISubscriptionService, SubscriptionService>();
+
+builder.Services.AddScoped<IAdminProfileRepository, AdminProfileRepository>();
+
+builder.Services.AddScoped<IAdminProfileService, AdminProfileService>();
+
+builder.Services.AddScoped<IAdminAuthRepository, AdminAuthRepository>();
+
+builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 
 //---------------------------------------------------------
 // CORS
@@ -91,5 +100,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+
+#if DEBUG
+Console.WriteLine("ADMIN HASH:");
+Console.WriteLine(PasswordHelper.Hash("Admin@123"));
+#endif
 
 app.Run();
