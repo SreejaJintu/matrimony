@@ -333,6 +333,24 @@
   }
 }
 
+.admin-action-success {
+  margin-bottom: 15px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #e7f7ed;
+  color: #19713a;
+  font-size: 13px;
+}
+
+.admin-action-error {
+  margin-bottom: 15px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #ffe8e8;
+  color: #b32626;
+  font-size: 13px;
+}
+
 @media (max-width: 650px) {
   .admin-detail-heading {
     align-items: flex-start;
@@ -352,22 +370,4 @@
   .admin-detail-grid {
     grid-template-columns: 1fr;
   }
-
-  .admin-action-success {
-  margin-bottom: 15px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: #e7f7ed;
-  color: #19713a;
-  font-size: 13px;
-}
-
-.admin-action-error {
-  margin-bottom: 15px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: #ffe8e8;
-  color: #b32626;
-  font-size: 13px;
-}
 }

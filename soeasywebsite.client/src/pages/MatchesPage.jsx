@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState, useCallback } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import {
   Heart,
@@ -50,15 +50,19 @@ export function MatchesPage() {
   const [lockedProfile, setLockedProfile] = useState(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  /*
-   * IMPORTANT:
-   * Connect this to the existing membership API/AuthContext field in your project.
-   * Do not use this frontend flag as the backend authorization mechanism.
-   */
-  const isPaidMember = user?.isPremium === true
+  // ── Live subscription status ───────────────────────────────
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+  const [unlockingUserId, setUnlockingUserId] = useState(null) // per-card loading
 
-  const profilesUsed = Number(user?.profilesUsed ?? user?.profileAccessUsed ?? 0)
-  const profileLimit = 20
+  // Derived from real API data (not a stale session flag)
+  const isPaidMember = Boolean(
+    subscriptionStatus?.isApproved &&
+    (subscriptionStatus?.hasFullAccess || subscriptionStatus?.remainingCredits > 0)
+  )
+  const remainingCredits = subscriptionStatus?.remainingCredits ?? 0
+  const profileLimit = subscriptionStatus?.profileViewLimit ?? 20
+  const profilesUsed = subscriptionStatus?.profileViewsUsed ?? 0
+
 
   useEffect(() => {
     const queryLookingFor = searchParams.get('lookingFor')
@@ -117,6 +121,23 @@ export function MatchesPage() {
 
     loadMatches()
   }, [user?.userId, user?.genderId, lookingFor])
+
+  // ── Fetch live subscription status ─────────────────────────
+  useEffect(() => {
+    if (!user?.userId) return
+
+    api.getSubscriptionStatus(user.userId)
+      .then((response) => {
+        if (response?.success && response?.data) {
+          setSubscriptionStatus(response.data)
+        } else {
+          setSubscriptionStatus(null)
+        }
+      })
+      .catch(() => {
+        setSubscriptionStatus(null)
+      })
+  }, [user?.userId])
 
   const profiles = useMemo(
     () =>
@@ -209,17 +230,58 @@ export function MatchesPage() {
     navigate('/matches')
   }
 
-  const handleViewProfile = (profile) => {
+  const handleViewProfile = useCallback(async (profile) => {
     setInterestStatus('')
 
-    if (isPaidMember) {
-      setSelectedProfile(profile)
-      setDrawerOpen(true)
+    const targetUserId = profile.raw?.userId
+    const viewerUserId = user?.userId
+
+    // No subscription at all → show locked modal
+    if (!subscriptionStatus?.isApproved) {
+      setLockedProfile(profile)
       return
     }
 
-    setLockedProfile(profile)
-  }
+    // Has full access (e.g. female free plan) OR has remaining credits
+    if (!subscriptionStatus.hasFullAccess && remainingCredits <= 0) {
+      setLockedProfile(profile)
+      return
+    }
+
+    if (!targetUserId || !viewerUserId) {
+      setLockedProfile(profile)
+      return
+    }
+
+    // Call the unlock API
+    setUnlockingUserId(targetUserId)
+    try {
+      const response = await api.unlockProfile(viewerUserId, targetUserId)
+
+      if (response?.success && response?.data) {
+        const unlockData = response.data
+
+        // Decrement credit count in local state only for a NEW unlock
+        if (unlockData.creditDeducted) {
+          setSubscriptionStatus((prev) =>
+            prev
+              ? { ...prev, remainingCredits: Math.max(0, (prev.remainingCredits ?? 0) - 1) }
+              : prev
+          )
+        }
+
+        // Navigate to the full profile detail page
+        navigate(`/profile-detail/${targetUserId}`)
+      } else {
+        // Unlock returned false (e.g. no credits left, not approved)
+        setLockedProfile(profile)
+      }
+    } catch {
+      setLockedProfile(profile)
+    } finally {
+      setUnlockingUserId(null)
+    }
+  }, [user?.userId, subscriptionStatus, remainingCredits, navigate])
 
   return (
     <div className="account-page-shell">
@@ -246,7 +308,6 @@ export function MatchesPage() {
 
           <section className="matches-page-heading">
             <div>
-              <span className="matches-eyebrow">GSEVEN MATRIMONY</span>
               <h1>Discover Matches</h1>
               <p>Find meaningful connections based on your preferences.</p>
             </div>
@@ -469,8 +530,11 @@ export function MatchesPage() {
                         type="button"
                         className="view-profile-button"
                         onClick={() => handleViewProfile(profile)}
+                        disabled={unlockingUserId === profile.raw?.userId}
                       >
-                        View Profile
+                        {unlockingUserId === profile.raw?.userId
+                          ? 'Opening…'
+                          : 'View Profile'}
                       </button>
 
                       <button type="button" className="shortlist-button">

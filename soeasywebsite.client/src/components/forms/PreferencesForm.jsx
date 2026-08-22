@@ -7,6 +7,23 @@ export const PreferencesForm = ({
 }) => {
   const [formData, setFormData] = useState(initialData);
 
+  const handleAgeChange = (field, value) => {
+    const nextValue = value === '' ? '' : Number(value);
+
+    setFormData((prev) => {
+      const currentMin = Number(prev.ageRangeMin || 20);
+      const currentMax = Number(prev.ageRangeMax || 60);
+
+      if (field === 'ageRangeMin') {
+        const minValue = Number.isNaN(nextValue) ? '' : Math.max(20, Math.min(nextValue, (currentMax || 60) - 1));
+        return { ...prev, ageRangeMin: minValue };
+      }
+
+      const maxValue = Number.isNaN(nextValue) ? '' : Math.min(60, Math.max(nextValue, (currentMin || 20) + 1));
+      return { ...prev, ageRangeMax: maxValue };
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
@@ -55,35 +72,33 @@ export const PreferencesForm = ({
                 Preferred Age Range
               </label>
               <span className="registration-range">
-                {formData.ageRangeMin} - {formData.ageRangeMax} years
+                {formData.ageRangeMin || 20} - {formData.ageRangeMax || 60} years
               </span>
             </div>
-            <div className="registration-range-row">
+            <div className="registration-range-row registration-age-fields">
               <input
-                type="range"
-                min="21"
+                type="number"
+                min="20"
                 max="60"
-                value={formData.ageRangeMin}
+                step="1"
+                value={formData.ageRangeMin ?? ''}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    ageRangeMin: Math.min(Number(e.target.value), formData.ageRangeMax - 1),
-                  })
+                  handleAgeChange('ageRangeMin', e.target.value)
                 }
-                className="registration-range-input"
+                className="registration-input"
+                placeholder="Min age"
               />
               <input
-                type="range"
-                min="22"
-                max="65"
-                value={formData.ageRangeMax}
+                type="number"
+                min="20"
+                max="60"
+                step="1"
+                value={formData.ageRangeMax ?? ''}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    ageRangeMax: Math.max(Number(e.target.value), formData.ageRangeMin + 1),
-                  })
+                  handleAgeChange('ageRangeMax', e.target.value)
                 }
-                className="registration-range-input"
+                className="registration-input"
+                placeholder="Max age"
               />
             </div>
           </div>

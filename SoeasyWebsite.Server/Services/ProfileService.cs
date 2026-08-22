@@ -8,10 +8,12 @@ namespace SoeasyWebsite.Server.Services;
 public class ProfileService : IProfileService
 {
     private readonly IProfileRepository _profileRepository;
+    private readonly ILogger<ProfileService> _logger;
 
-    public ProfileService(IProfileRepository profileRepository)
+    public ProfileService(IProfileRepository profileRepository, ILogger<ProfileService> logger)
     {
         _profileRepository = profileRepository;
+        _logger = logger;
     }
 
     public async Task<ApiResponse<UserProfileDto>> GetByUserId(int userId, int? viewerUserId = null)
@@ -37,7 +39,12 @@ public class ProfileService : IProfileService
 
     public async Task<ApiResponse<bool>> UpsertProfile(UpsertProfileRequestDto dto)
     {
+        _logger.LogInformation("ProfileService.UpsertProfile started for UserId={UserId}", dto.UserId);
+
         var success = await _profileRepository.UpsertProfile(dto);
+
+        _logger.LogInformation("ProfileService.UpsertProfile completed for UserId={UserId} with Success={Success}", dto.UserId, success);
+
         return new ApiResponse<bool>
         {
             Success = success,

@@ -119,6 +119,7 @@ export function RegistrationAboutPage() {
       }
 
       const payload = buildProfilePayload(merged, userId)
+      console.log('[RegistrationAboutPage] saveProfile payload:', payload)
       await api.saveProfile(payload)
 
       const next = getNextRegistrationStep('about')

@@ -12,7 +12,6 @@ const initialForm = {
   profileFor: 'Myself',
   fullName: '',
   gender: '',
-  dob: '',
   countryCode: '+91',
   mobileNumber: '',
   email: '',
@@ -55,7 +54,6 @@ export function AccountCompletionPage() {
           ...getRegistrationDraft(),
           fullName: account?.fullName || profile?.fullName || '',
           gender: account?.genderId === 2 ? 'Female' : account?.genderId === 3 ? 'Other' : account?.genderId === 1 ? 'Male' : profile?.genderId === 2 ? 'Female' : profile?.genderId === 3 ? 'Other' : profile?.genderId === 1 ? 'Male' : '',
-          dob: profile?.dateOfBirth ? String(profile.dateOfBirth).slice(0, 10) : '',
           mobileNumber: pickFirstValue(account, ['mobileNumber', 'mobileNo', 'phoneNumber', 'phone', 'contactNumber', 'mobile']) || '',
           email: pickFirstValue(account, ['email', 'emailId', 'emailAddress', 'mail', 'userEmail']) || '',
         }

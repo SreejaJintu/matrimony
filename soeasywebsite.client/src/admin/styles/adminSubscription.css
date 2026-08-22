@@ -1,0 +1,310 @@
+/* ============================================================
+   Admin Subscription Page
+   ============================================================ */
+
+.admin-subscription-page {
+  max-width: 680px;
+}
+
+.admin-page-header {
+  margin-bottom: 28px;
+}
+
+.admin-page-header h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.admin-page-header p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* ── Card ── */
+
+.sub-form-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 28px 30px;
+}
+
+.sub-form-title {
+  margin: 0 0 26px;
+  font-size: 18px;
+  color: #111;
+}
+
+/* ── Form structure ── */
+
+.sub-form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.sub-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 7px;
+}
+
+.sub-required {
+  color: #d63939;
+}
+
+.sub-hint {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ── Inputs / select ── */
+
+.sub-input,
+.sub-select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.sub-input:focus,
+.sub-select:focus {
+  border-color: #888;
+}
+
+.sub-input-readonly {
+  background: #f7f7f7;
+  color: #666;
+  cursor: default;
+}
+
+/* ── User search wrapper ── */
+
+.sub-search-wrapper {
+  position: relative;
+}
+
+.sub-search-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #999;
+}
+
+.sub-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  z-index: 200;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.sub-search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.1s;
+}
+
+.sub-search-item:hover {
+  background: #f5f5f5;
+}
+
+.sub-search-name {
+  flex: 1;
+  color: #222;
+  font-weight: 500;
+}
+
+.sub-search-empty {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #999;
+}
+
+/* ── Profile code + user id chips ── */
+
+.sub-profile-code {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7137a8;
+  background: #f1e7ff;
+  padding: 3px 7px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.sub-user-id {
+  font-size: 11px;
+  color: #999;
+  white-space: nowrap;
+}
+
+/* ── Selected user card ── */
+
+.sub-selected-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.sub-selected-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sub-selected-name {
+  font-size: 14px;
+  color: #222;
+}
+
+.sub-clear-user {
+  border: none;
+  background: #eee;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #555;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-clear-user:hover {
+  background: #e0e0e0;
+}
+
+/* ── Plan details grid ── */
+
+.sub-plan-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.sub-plan-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-right: 1px solid #eee;
+  background: #fafafa;
+}
+
+.sub-plan-detail-item:last-child {
+  border-right: none;
+}
+
+.sub-plan-detail-item span {
+  font-size: 11px;
+  color: #999;
+}
+
+.sub-plan-detail-item strong {
+  font-size: 13px;
+  color: #333;
+}
+
+/* ── Feedback ── */
+
+.sub-error {
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #ffe8e8;
+  color: #b32626;
+  font-size: 13px;
+}
+
+.sub-success {
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #e7f7ed;
+  color: #19713a;
+  font-size: 13px;
+}
+
+/* ── Submit button ── */
+
+.sub-submit-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sub-submit-btn:hover:not(:disabled) {
+  background: #000;
+}
+
+.sub-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  .sub-form-card {
+    padding: 20px 16px;
+  }
+
+  .sub-plan-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sub-plan-detail-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .sub-plan-detail-item:nth-child(3) {
+    border-right: 1px solid #eee;
+    border-top: 1px solid #eee;
+  }
+
+  .sub-plan-detail-item:nth-child(4) {
+    border-top: 1px solid #eee;
+  }
+}

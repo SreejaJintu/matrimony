@@ -1,4 +1,5 @@
 using Dapper;
+using Microsoft.Data.SqlClient;
 using SoeasyWebsite.Server.Data;
 using SoeasyWebsite.Server.DTOs.Subscription;
 using SoeasyWebsite.Server.RepositoryInterfaces;
@@ -111,5 +112,44 @@ public class SubscriptionRepository : ISubscriptionRepository
             ProfilesRefunded = 0,
             Message = "Failed to mark profile as married."
         };
+    }
+
+    public async Task<ProfileViewCheckResultDto> CheckAndDeductProfileView(
+        int viewerUserId,
+        int targetUserId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        // sp_CheckAndDeductProfileView uses OUTPUT parameters, not a SELECT result set.
+        // Dapper DynamicParameters with ParameterDirection.Output is required.
+        var parameters = new DynamicParameters();
+        parameters.Add("@ViewerUserId", viewerUserId, DbType.Int32);
+        parameters.Add("@TargetUserId", targetUserId, DbType.Int32);
+        parameters.Add("@CanView",  dbType: DbType.Boolean, direction: ParameterDirection.Output);
+        parameters.Add("@Message",  dbType: DbType.String,  size: 255, direction: ParameterDirection.Output);
+
+        try
+        {
+            await connection.ExecuteAsync(
+                "sp_CheckAndDeductProfileView",
+                parameters,
+                commandType: CommandType.StoredProcedure);
+
+            return new ProfileViewCheckResultDto
+            {
+                CanView  = parameters.Get<bool>("@CanView"),
+                Message  = parameters.Get<string>("@Message") ?? string.Empty
+            };
+        }
+        catch (SqlException ex)
+        {
+            // Treat any SQL error as access denied — never let a DB failure
+            // accidentally grant access to a locked profile.
+            return new ProfileViewCheckResultDto
+            {
+                CanView  = false,
+                Message  = ex.Message
+            };
+        }
     }
 }

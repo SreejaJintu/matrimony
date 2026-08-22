@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User, Calendar, Phone, Mail, Lock, ShieldCheck } from 'lucide-react';
+import { User, Phone, Mail, Lock, ShieldCheck } from 'lucide-react';
 
 const COUNTRY_CODES = [
   { code: '+91', country: 'IN' },
@@ -77,13 +77,6 @@ export const BasicDetailsStep = ({ initialData, onSubmit, onSaveLater, showPassw
               <option value="Other">Other</option>
             </select>
           </div>, errors.gender)}
-
-        {field('Date of Birth', false,
-          iconInput(<Calendar size={18} className="reg-input-icon" />,
-            <input id="input-dob" type="date" value={formData.dob}
-              onChange={(e) => handleChange('dob', e.target.value)}
-              className="reg-input" />
-          ))}
       </div>
 
       {field('Mobile Number', true,

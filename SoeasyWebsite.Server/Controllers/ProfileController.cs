@@ -1,9 +1,11 @@
 using FluentFTP;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SoeasyWebsite.Server.Common;
 using SoeasyWebsite.Server.DTOs.Profile;
 using SoeasyWebsite.Server.Interfaces;
+using SoeasyWebsite.Server.RepositoryInterfaces;
 
 namespace SoeasyWebsite.Server.Controllers;
 
@@ -13,19 +15,43 @@ public class ProfileController : ControllerBase
 {
     private const string AssetsBaseUrl = "https://assetsmatrimony.kaliweb.in/uploads";
     private readonly IProfileService _profileService;
+    private readonly ISubscriptionRepository _subscriptionRepository;
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _env;
+    private readonly ILogger<ProfileController> _logger;
 
-    public ProfileController(IProfileService profileService, IConfiguration configuration, IWebHostEnvironment env)
+    public ProfileController(
+        IProfileService profileService,
+        ISubscriptionRepository subscriptionRepository,
+        IConfiguration configuration,
+        IWebHostEnvironment env,
+        ILogger<ProfileController> logger)
     {
         _profileService = profileService;
+        _subscriptionRepository = subscriptionRepository;
         _configuration = configuration;
         _env = env;
+        _logger = logger;
     }
 
     [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetByUserId(int userId, [FromQuery] int? viewerUserId = null)
     {
+        // Enforce credit check & subscription authorization if viewerUserId is provided
+        if (viewerUserId.HasValue)
+        {
+            var checkResult = await _subscriptionRepository.CheckAndDeductProfileView(viewerUserId.Value, userId);
+
+            if (!checkResult.CanView)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = checkResult.Message
+                });
+            }
+        }
+
         var response = await _profileService.GetByUserId(userId, viewerUserId);
         return Ok(response);
     }
@@ -33,6 +59,31 @@ public class ProfileController : ControllerBase
     [HttpPut("profile")]
     public async Task<IActionResult> UpsertProfile([FromBody] UpsertProfileRequestDto dto)
     {
+        if (dto.UserId <= 0)
+        {
+            return BadRequest(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "UserId is required."
+            });
+        }
+
+        _logger.LogInformation(
+            "Profile upsert received for UserId={UserId}, HeightId={HeightId}, Weight={Weight}, MaritalStatusId={MaritalStatusId}, MotherTongueId={MotherTongueId}, ReligionId={ReligionId}, CommunityId={CommunityId}, EducationId={EducationId}, OccupationId={OccupationId}, IncomeId={IncomeId}, CountryId={CountryId}, StateId={StateId}, DistrictId={DistrictId}",
+            dto.UserId,
+            dto.HeightId,
+            dto.Weight,
+            dto.MaritalStatusId,
+            dto.MotherTongueId,
+            dto.ReligionId,
+            dto.CommunityId,
+            dto.EducationId,
+            dto.OccupationId,
+            dto.IncomeId,
+            dto.CountryId,
+            dto.StateId,
+            dto.DistrictId);
+
         var response = await _profileService.UpsertProfile(dto);
         return Ok(response);
     }

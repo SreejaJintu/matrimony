@@ -277,6 +277,12 @@
 }
 
 .match-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "image"
+    "body"
+    "actions";
   min-width: 0;
   overflow: hidden;
   border: 1px solid #eadfd5;
@@ -292,8 +298,10 @@
 }
 
 .match-card-image {
+  grid-area: image;
   position: relative;
-  height: 205px;
+  width: 100%;
+  height: 238px;
   overflow: hidden;
   background: #eee5dc;
 }
@@ -303,6 +311,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: center 18%;
 }
 
 .match-card-badges {
@@ -339,7 +348,12 @@
 }
 
 .match-card-body {
-  padding: 12px 13px 9px;
+  grid-area: body;
+  padding: 14px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
 }
 
 .match-name-row {
@@ -351,7 +365,7 @@
 .match-name-row h3 {
   margin: 0;
   color: #292222;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -366,7 +380,8 @@
 .match-basic-line {
   margin: 5px 0;
   color: #5f5752;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .match-detail {
@@ -375,7 +390,7 @@
   gap: 5px;
   margin: 5px 0;
   color: #69615c;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.35;
 }
 
@@ -423,13 +438,13 @@
 
 .profile-lock-message strong {
   color: #433b37;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .profile-lock-message span {
   margin-top: 2px;
   color: #84776f;
-  font-size: 8.5px;
+  font-size: 10px;
   line-height: 1.3;
 }
 
@@ -437,22 +452,23 @@
   color: #257443;
   background: #f3f8f1;
   border: 1px solid #dcebd8;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .match-card-actions {
+  grid-area: actions;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 7px;
-  padding: 0 13px 13px;
+  padding: 0 16px 14px;
 }
 
 .view-profile-button,
 .shortlist-button {
   min-height: 35px;
   border-radius: 6px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -477,17 +493,25 @@
 
 .match-card-skeleton {
   min-height: 340px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "image"
+    "content"
+    "actions";
 }
 
 .skeleton-image {
-  height: 205px;
+  grid-area: image;
+  height: 238px;
   background: linear-gradient(90deg, #eee8e1 25%, #f8f4ef 37%, #eee8e1 63%);
   background-size: 400% 100%;
   animation: shimmer 1.3s infinite;
 }
 
 .skeleton-content {
-  padding: 13px;
+  grid-area: content;
+  padding: 14px 16px 10px;
 }
 
 .skeleton-line {
@@ -501,10 +525,12 @@
 .skeleton-line.medium { width: 65%; }
 
 .skeleton-actions {
+  grid-area: actions;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 7px;
-  margin-top: 20px;
+  margin-top: 0;
+  padding: 0 16px 14px;
 }
 
 .skeleton-actions div {
@@ -763,6 +789,14 @@
   }
 
   .match-card-image {
+    height: 240px;
+  }
+
+  .match-card-image img {
+    object-position: center 15%;
+  }
+
+  .skeleton-image {
     height: 250px;
   }
 

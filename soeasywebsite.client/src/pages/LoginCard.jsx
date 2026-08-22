@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Shield, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
+import { useAdminAuth } from '../admin/context/AdminAuthContext';
 
 export function LoginCard() {
   const [activeTab, setActiveTab] = useState('member'); // 'member' or 'admin'
@@ -14,7 +15,8 @@ export function LoginCard() {
   const [loginError, setLoginError] = useState('');
 
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Assuming AuthContext provides a login function
+  const { login: loginMember } = useContext(AuthContext);
+  const { login: loginAdmin } = useAdminAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -37,8 +39,15 @@ export function LoginCard() {
 
     setLoading(true);
     try {
-      await login(emailOrMobile, password);
-      navigate('/matches', { replace: true });
+      const userName = emailOrMobile.trim();
+
+      if (activeTab === 'admin') {
+        await loginAdmin(userName, password);
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        await loginMember(userName, password);
+        navigate('/matches', { replace: true });
+      }
     } catch (err) {
       // Handle login errors from the AuthContext/API
       setLoginError(err.message || 'Invalid mobile number/email or password.');

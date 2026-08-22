@@ -1,6 +1,21 @@
 import { useState, useEffect } from 'react';
 import { GraduationCap, MapPin, Heart } from 'lucide-react';
 
+const resolveOptionLabel = (item) =>
+  item?.name ??
+  item?.Name ??
+  item?.title ??
+  item?.Title ??
+  item?.text ??
+  item?.Text ??
+  item?.label ??
+  item?.Label ??
+  item?.religionName ??
+  item?.ReligionName ??
+  item?.value ??
+  item?.Value ??
+  '';
+
 export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, mode = 'create' }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -15,6 +30,30 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAgeChange = (field, value) => {
+    const nextValue = value === '' ? '' : Number(value);
+
+    setFormData((prev) => {
+      const currentMin = Number(prev.ageRangeMin || 20);
+      const currentMax = Number(prev.ageRangeMax || 60);
+
+      if (field === 'ageRangeMin') {
+        const minValue = Number.isNaN(nextValue) ? '' : Math.max(20, Math.min(nextValue, (currentMax || 60) - 1));
+        return { ...prev, ageRangeMin: minValue };
+      }
+
+      const maxValue = Number.isNaN(nextValue) ? '' : Math.min(60, Math.max(nextValue, (currentMin || 20) + 1));
+      return { ...prev, ageRangeMax: maxValue };
+    });
+  };
+
+  const handleReligionSelect = (value) => {
+    const religionId = value === '' ? '' : Number(value);
+    handleChange('preferredReligionId', religionId);
+    handleChange('preferredCommunityId', '');
+    onReligionChange?.(religionId);
   };
 
   const handleSubmit = (e) => {
@@ -45,15 +84,33 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
       {field('Preferred Age Range',
         <div className="reg-range-block">
           <div className="reg-range-values">
-            <span>{formData.ageRangeMin} - {formData.ageRangeMax} years</span>
+            <span>{formData.ageRangeMin || 20} - {formData.ageRangeMax || 60} years</span>
           </div>
-          <div className="reg-range-row">
-            <input type="range" min="21" max="60" value={formData.ageRangeMin}
-              onChange={(e) => handleChange('ageRangeMin', Math.min(Number(e.target.value), formData.ageRangeMax - 1))}
-              className="reg-range-input" />
-            <input type="range" min="22" max="65" value={formData.ageRangeMax}
-              onChange={(e) => handleChange('ageRangeMax', Math.max(Number(e.target.value), formData.ageRangeMin + 1))}
-              className="reg-range-input" />
+          <div className="reg-range-row reg-age-fields">
+            <div className="reg-input-wrap">
+              <input
+                type="number"
+                min="20"
+                max="60"
+                step="1"
+                value={formData.ageRangeMin ?? ''}
+                onChange={(e) => handleAgeChange('ageRangeMin', e.target.value)}
+                className="reg-input"
+                placeholder="Min age"
+              />
+            </div>
+            <div className="reg-input-wrap">
+              <input
+                type="number"
+                min="20"
+                max="60"
+                step="1"
+                value={formData.ageRangeMax ?? ''}
+                onChange={(e) => handleAgeChange('ageRangeMax', e.target.value)}
+                className="reg-input"
+                placeholder="Max age"
+              />
+            </div>
           </div>
         </div>)}
 
@@ -62,15 +119,16 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
           <div className="reg-input-wrap">
             <select
               value={formData.preferredReligionId || ''}
-              onChange={(e) => {
-                const val = Number(e.target.value) || ''
-                onReligionChange?.(val)
-              }}
+              onChange={(e) => handleReligionSelect(e.target.value)}
               className="reg-input reg-select"
               disabled={!isLoaded}
             >
               <option value="">Select religion</option>
-              {masterData.religions?.map((r, i) => <option key={`religion-${r.id}-${i}`} value={r.id}>{r.name}</option>)}
+              {masterData.religions?.map((r, i) => (
+                <option key={`religion-${r.id ?? i}-${i}`} value={r.id ?? r.Id ?? ''}>
+                  {resolveOptionLabel(r)}
+                </option>
+              ))}
             </select>
           </div>)}
 
@@ -87,7 +145,11 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
                   ? masterData.communities?.length ? 'Select community' : 'Loading...'
                   : 'Select religion first'}
               </option>
-              {masterData.communities?.map((c, i) => <option key={`community-${c.id}-${i}`} value={c.id}>{c.name}</option>)}
+              {masterData.communities?.map((c, i) => (
+                <option key={`community-${c.id ?? i}-${i}`} value={c.id ?? c.Id ?? ''}>
+                  {resolveOptionLabel(c)}
+                </option>
+              ))}
             </select>
           </div>)}
       </div>
@@ -97,7 +159,11 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
           <GraduationCap size={18} className="reg-input-icon" />
           <select value={formData.educationPreferenceId || ''} onChange={(e) => handleChange('educationPreferenceId', Number(e.target.value) || '')} className="reg-input reg-select" disabled={!isLoaded}>
             <option value="">Select education level</option>
-            {masterData.educations?.map((ed, i) => <option key={`pref-education-${ed.id}-${i}`} value={ed.id}>{ed.name}</option>)}
+            {masterData.educations?.map((ed, i) => (
+              <option key={`pref-education-${ed.id ?? i}-${i}`} value={ed.id ?? ed.Id ?? ''}>
+                {resolveOptionLabel(ed)}
+              </option>
+            ))}
           </select>
         </div>)}
 
@@ -112,7 +178,11 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
           <div className="reg-input-wrap">
             <select value={formData.preferredMaritalStatusId || ''} onChange={(e) => handleChange('preferredMaritalStatusId', Number(e.target.value) || '')} className="reg-input reg-select" disabled={!isLoaded}>
               <option value="">Select marital status</option>
-              {masterData.maritalStatuses?.map((m, i) => <option key={`pref-marital-${m.id}-${i}`} value={m.id}>{m.name}</option>)}
+              {masterData.maritalStatuses?.map((m, i) => (
+                <option key={`pref-marital-${m.id ?? i}-${i}`} value={m.id ?? m.Id ?? ''}>
+                  {resolveOptionLabel(m)}
+                </option>
+              ))}
             </select>
           </div>)}
       </div>
@@ -127,7 +197,11 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
             disabled={!isLoaded}
           >
             <option value="">Select preferred location</option>
-            {masterData.countries?.map((c, i) => <option key={`loc-country-${c.id}-${i}`} value={c.name}>{c.name}</option>)}
+            {masterData.countries?.map((c, i) => (
+              <option key={`loc-country-${c.id ?? i}-${i}`} value={resolveOptionLabel(c)}>
+                {resolveOptionLabel(c)}
+              </option>
+            ))}
           </select>
         </div>)}
 

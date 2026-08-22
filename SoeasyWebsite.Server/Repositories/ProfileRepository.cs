@@ -9,10 +9,12 @@ namespace SoeasyWebsite.Server.Repositories;
 public class ProfileRepository : IProfileRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;
+    private readonly ILogger<ProfileRepository> _logger;
 
-    public ProfileRepository(IDbConnectionFactory connectionFactory)
+    public ProfileRepository(IDbConnectionFactory connectionFactory, ILogger<ProfileRepository> logger)
     {
         _connectionFactory = connectionFactory;
+        _logger = logger;
     }
 
     public async Task<UserProfileDto?> GetByUserId(int userId, int? viewerUserId = null)
@@ -157,12 +159,42 @@ public class ProfileRepository : IProfileRepository
     {
         using var connection = _connectionFactory.CreateConnection();
 
-        await connection.QueryFirstOrDefaultAsync(
-            "usp_Profile_Upsert",
-            dto,
-            commandType: CommandType.StoredProcedure);
+        _logger.LogInformation(
+            "ProfileRepository.UpsertProfile running in Database={Database} for UserId={UserId}",
+            connection.Database,
+            dto.UserId);
 
-        return true;
+        try
+        {
+            var parameters = new DynamicParameters(dto);
+            parameters.Add(
+                "DateOfBirth",
+                dto.DateOfBirth.HasValue ? dto.DateOfBirth.Value : DBNull.Value,
+                DbType.DateTime);
+
+            using var grid = await connection.QueryMultipleAsync(
+                "usp_Profile_Upsert",
+                parameters,
+                commandType: CommandType.StoredProcedure);
+
+            var debugInfo = await grid.ReadFirstOrDefaultAsync<ProfileUpsertDebugRow>();
+            var resultInfo = await grid.ReadFirstOrDefaultAsync<ProfileUpsertResultRow>();
+
+            _logger.LogInformation(
+                "usp_Profile_Upsert debug Database={Database}, UserId={DebugUserId}, Success={Success}, Message={Message}, RowsUpdated={RowsUpdated}",
+                debugInfo?.CurrentDatabase,
+                debugInfo?.DebugUserId,
+                resultInfo?.Success,
+                resultInfo?.Message,
+                resultInfo?.RowsUpdated);
+
+            return resultInfo?.Success ?? true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ProfileRepository.UpsertProfile failed for UserId={UserId}", dto.UserId);
+            throw;
+        }
     }
 
     public async Task<bool> UpsertFamily(UpsertFamilyRequestDto dto)
@@ -288,5 +320,18 @@ public class ProfileRepository : IProfileRepository
             """;
 
         return await connection.ExecuteAsync(sql, dto) > 0;
+    }
+
+    private sealed class ProfileUpsertDebugRow
+    {
+        public string? CurrentDatabase { get; set; }
+        public int DebugUserId { get; set; }
+    }
+
+    private sealed class ProfileUpsertResultRow
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public int RowsUpdated { get; set; }
     }
 }

@@ -28,7 +28,7 @@ public class AdminAuthService : IAdminAuthService
         AdminLoginRequestDto dto)
     {
         // Get admin from database
-        var admin = await _adminAuthRepository.Login(dto.UserName);
+        var admin = await _adminAuthRepository.Login(dto.UserName.Trim());
 
         if (admin is null)
         {

@@ -72,7 +72,6 @@ D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\staticwebassets.buil
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\staticwebassets.build.json.cache
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\staticwebassets.development.json
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\staticwebassets.build.endpoints.json
-D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\staticwebassets.upToDateCheck.txt
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\SoeasyWe.528109F6.Up2Date
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\SoeasyWebsite.Server.dll
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\refint\SoeasyWebsite.Server.dll
@@ -81,3 +80,4 @@ D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\SoeasyWebsite.Server
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\ref\SoeasyWebsite.Server.dll
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\bin\Release\net8.0\SoeasyWebsite.Server.staticwebassets.runtime.json
 D:\g7\SoeasyWebsite\SoeasyWebsite.Server\bin\Release\net8.0\FluentFTP.dll
+D:\g7\SoeasyWebsite\SoeasyWebsite.Server\obj\Release\net8.0\SoeasyWebsite.Server.sourcelink.json

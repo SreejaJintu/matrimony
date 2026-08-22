@@ -27,7 +27,6 @@ const initialForm = {
   profileFor: 'Myself',
   fullName: '',
   gender: '',
-  dob: '',
   religion: '',
   motherTongue: '',
   community: '',
@@ -78,6 +77,25 @@ const pickFirstValue = (source, keys) => {
     }
   }
   return ''
+}
+
+const resolveMasterLabel = (list, value) => {
+  if (!list || value === undefined || value === null || value === '') return ''
+
+  const match = list.find((item) => {
+    const keys = Object.keys(item || {})
+    const idKey = keys.find((k) => k.toLowerCase().endsWith('id') || k.toLowerCase() === 'value') || 'id'
+    return String(item?.[idKey]) === String(value)
+  })
+
+  if (!match) return value
+
+  const keys = Object.keys(match)
+  const labelKey =
+    keys.find((k) => k.toLowerCase().endsWith('name') && !k.toLowerCase().endsWith('username')) ||
+    keys.find((k) => ['text', 'label', 'title', 'name'].includes(k.toLowerCase()))
+
+  return labelKey ? match[labelKey] : value
 }
 
 export function ProfileEditPage() {
@@ -161,11 +179,18 @@ export function ProfileEditPage() {
         const response = await api.getProfile(userId);
         const profile = response?.data ?? response?.Data ?? response;
         if (profile) {
+          const profileImageUrl =
+            profile.imageUrl ||
+            profile.image ||
+            profile.profilePhotoUrl ||
+            profile.photos?.find((photo) => photo?.isProfilePhoto || photo?.isPrimary || photo?.isProfile)?.url ||
+            profile.photos?.[0]?.url ||
+            ''
+
           const hydratedDraft = {
             ...initialForm,
             fullName: profile.fullName || '',
             gender: profile.genderId === 2 ? 'Female' : profile.genderId === 3 ? 'Other' : profile.genderId === 1 ? 'Male' : '',
-            dob: profile.dateOfBirth ? String(profile.dateOfBirth).slice(0, 10) : '',
             mobileNumber: pickFirstValue(profile, ['mobileNumber', 'mobileNo', 'phoneNumber', 'phone', 'contactNumber', 'mobile']) || '',
             email: pickFirstValue(profile, ['email', 'emailId', 'emailAddress', 'mail', 'userEmail']) || '',
             heightId: profile.heightId || '',
@@ -192,6 +217,7 @@ export function ProfileEditPage() {
             sisters: profile.sisters ?? 0,
             aboutFamily: profile.familyAbout || '',
             aboutMe: profile.aboutMe || '',
+            profileImageUrl,
             lookingForGender: profile.lookingForGender || 'Female',
             ageRangeMin: profile.ageFrom || 26,
             ageRangeMax: profile.ageTo || 32,
@@ -268,7 +294,6 @@ export function ProfileEditPage() {
             userId,
             fullName: mergedData.fullName, // Basic details are part of profile
             genderId: mergedData.gender === 'Female' ? 2 : mergedData.gender === 'Other' ? 3 : 1,
-            dateOfBirth: mergedData.dob,
             heightId: mergedData.heightId,
             weight: Number(mergedData.weight),
             maritalStatusId: mergedData.maritalStatusId,
@@ -340,10 +365,25 @@ export function ProfileEditPage() {
   }
 
   const profileId = `GS${String(userId).padStart(6, '0')}`;
-  const birthDate = formData.dob ? new Date(formData.dob) : null;
-  const age = birthDate ? new Date().getFullYear() - birthDate.getFullYear() : null;
   const location = formData.city || 'Not provided';
   const { percentage: completionPercentage } = calculateProfileCompletion(formData);
+  const profileImageSrc =
+    formData.profileImageUrl ||
+    formData.photos?.find((photo) => photo?.isProfilePhoto || photo?.isPrimary || photo?.isProfile)?.url ||
+    formData.photos?.[0]?.url ||
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80'
+  const heightLabel = resolveMasterLabel(masterData.heights, formData.heightId)
+  const maritalStatusLabel = resolveMasterLabel(masterData.maritalStatuses, formData.maritalStatusId)
+  const occupationLabel = resolveMasterLabel(masterData.occupations, formData.occupationId)
+  const educationLabel = resolveMasterLabel(masterData.educations, formData.educationId)
+  const incomeLabel = resolveMasterLabel(masterData.incomes, formData.annualIncomeId)
+  const familyTypeLabel = resolveMasterLabel(masterData.familyTypes, formData.familyTypeId)
+  const familyStatusLabel = resolveMasterLabel(masterData.familyStatuses, formData.familyStatusId)
+  const familyValueLabel = resolveMasterLabel(masterData.familyValues, formData.familyValueId)
+  const religionLabel = resolveMasterLabel(masterData.religions, formData.religionId)
+  const motherTongueLabel = resolveMasterLabel(masterData.motherTongues, formData.motherTongueId)
+  const communityLabel = resolveMasterLabel(masterData.communities, formData.communityId)
+  const countryLabel = resolveMasterLabel(masterData.countries, formData.countryId)
   
   const renderSection = (id, title, icon, content, formComponent) => (
     <article className="profile-edit-card">
@@ -400,7 +440,7 @@ export function ProfileEditPage() {
               <article className="profile-edit-summary-card">
                 <div className="profile-photo-shell">
                   <div className="owner-profile-photo-wrap">
-                    <img src={formData.photos?.[formData.profilePhotoIndex]?.url || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80'} alt={`${formData.fullName} portrait`} />
+                    <img src={profileImageSrc} alt={`${formData.fullName} portrait`} />
                   </div>
                 </div>
                 <div className="profile-summary-body">
@@ -408,8 +448,7 @@ export function ProfileEditPage() {
                     <h2>{formData.fullName}</h2>
                     <BadgeCheck size={19} className="profile-verified-icon" />
                   </div>
-                  <div className="profile-meta-row">
-                    {age && <span>{age} Years</span>}
+                <div className="profile-meta-row">
                     <span><MapPin size={13} /> {location}</span>
                   </div>
                   <div className="profile-meta-row compact">
@@ -432,7 +471,6 @@ export function ProfileEditPage() {
                 <div className="pd-grid-2col">
                   <InfoRow label="Full Name" value={formData.fullName} />
                   <InfoRow label="Gender" value={formData.gender} />
-                  <InfoRow label="Date of Birth" value={formData.dob} />
                   <InfoRow label="Mobile Number" value={formData.mobileNumber} />
                   <InfoRow label="Email" value={formData.email} />
                 </div>,
@@ -449,17 +487,17 @@ export function ProfileEditPage() {
                 'About You',
                 <Heart size={18} />,
                 <>
-                  <p className="profile-about-copy">{formData.aboutMe || 'Not provided.'}</p>
-                  <div className="pd-grid-2col">
-                    <InfoRow label="Height" value={formData.heightId} />
+                <p className="profile-about-copy">{formData.aboutMe || 'Not provided.'}</p>
+                <div className="pd-grid-2col">
+                    <InfoRow label="Height" value={heightLabel} />
                     <InfoRow label="Weight" value={formData.weight ? `${formData.weight} kg` : ''} />
-                    <InfoRow label="Marital Status" value={formData.maritalStatusId} />
-                    <InfoRow label="Occupation" value={formData.occupation} />
-                    <InfoRow label="Highest Qualification" value={formData.educationId} />
-                    <InfoRow label="Annual Income" value={formData.annualIncomeId} />
+                    <InfoRow label="Marital Status" value={maritalStatusLabel} />
+                    <InfoRow label="Occupation" value={occupationLabel || formData.occupation} />
+                    <InfoRow label="Highest Qualification" value={educationLabel} />
+                    <InfoRow label="Annual Income" value={incomeLabel} />
                     <InfoRow label="Current City" value={formData.city} />
-                  </div>
-                </>,
+                </div>
+              </>,
                 <AboutYouStep
                   {...commonFormProps}
                   onBack={() => setEditingSection(null)}
@@ -473,17 +511,17 @@ export function ProfileEditPage() {
                 'Family Details',
                 <Users size={18} />,
                 <>
-                  <p className="profile-about-copy">{formData.aboutFamily || 'Not provided.'}</p>
-                  <div className="pd-grid-2col">
+                <p className="profile-about-copy">{formData.aboutFamily || 'Not provided.'}</p>
+                <div className="pd-grid-2col">
                     <InfoRow label="Father's Name" value={formData.fatherName} />
-                    <InfoRow label="Father's Occupation" value={formData.fatherOccupationId} />
+                    <InfoRow label="Father's Occupation" value={formData.fatherOccupation || ''} />
                     <InfoRow label="Mother's Name" value={formData.motherName} />
-                    <InfoRow label="Mother's Occupation" value={formData.motherOccupationId} />
-                    <InfoRow label="Family Type" value={formData.familyTypeId} />
+                    <InfoRow label="Mother's Occupation" value={formData.motherOccupation || ''} />
+                    <InfoRow label="Family Type" value={familyTypeLabel} />
                     <InfoRow label="No. of Brothers" value={formData.brothers} />
                     <InfoRow label="No. of Sisters" value={formData.sisters} />
-                  </div>
-                </>,
+                </div>
+              </>,
                 <FamilyDetailsStep
                   {...commonFormProps}
                   onBack={() => setEditingSection(null)}
@@ -496,11 +534,11 @@ export function ProfileEditPage() {
                 'Partner Preferences',
                 <Target size={18} />,
                 <div className="pd-grid-2col">
-                  <InfoRow label="Seeking" value={formData.lookingForGender} />
-                  <InfoRow label="Age Range" value={`${formData.ageRangeMin} - ${formData.ageRangeMax} yrs`} />
-                  <InfoRow label="Preferred Religion" value={formData.preferredReligionId} />
-                  <InfoRow label="Preferred Education" value={formData.educationPreferenceId} />
-                  <InfoRow label="Preferred Location" value={formData.locationPreference} />
+                    <InfoRow label="Seeking" value={formData.lookingForGender} />
+                    <InfoRow label="Age Range" value={`${formData.ageRangeMin} - ${formData.ageRangeMax} yrs`} />
+                    <InfoRow label="Preferred Religion" value={resolveMasterLabel(masterData.religions, formData.preferredReligionId)} />
+                    <InfoRow label="Preferred Education" value={resolveMasterLabel(masterData.educations, formData.educationPreferenceId)} />
+                    <InfoRow label="Preferred Location" value={formData.locationPreference} />
                 </div>,
                 <PartnerPreferencesStep
                   {...commonFormProps}

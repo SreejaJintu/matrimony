@@ -20,7 +20,7 @@ public class AuthRepository : IAuthRepository
         using var connection = _connectionFactory.CreateConnection();
         var user = await connection.QueryFirstOrDefaultAsync<dynamic>(
             "usp_User_Login",
-            new { UserName = dto.UserName },
+            new { UserName = dto.UserName.Trim() },
             commandType: System.Data.CommandType.StoredProcedure);
 
         if (user is null)
@@ -57,11 +57,13 @@ public class AuthRepository : IAuthRepository
             },
             commandType: System.Data.CommandType.StoredProcedure);
 
-        if (result is null || result.Success == null || !result.Success)
+        bool? success = (bool?)result?.Success;
+        if (success is not true)
         {
             return 0;
         }
 
-        return result.UserId ?? 0;
+        int? userId = (int?)result?.UserId;
+        return userId ?? 0;
     }
 }

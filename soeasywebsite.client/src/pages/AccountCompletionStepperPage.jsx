@@ -99,19 +99,33 @@ export function AccountCompletionStepperPage() {
             mobileNumber: pickFirstValue(profile, ['mobileNumber', 'mobileNo']) || '',
             email: pickFirstValue(profile, ['email', 'emailId']) || '',
             heightId: profile.heightId || '',
+            weight: profile.weight ?? '',
             maritalStatusId: profile.maritalStatusId || '',
             occupationId: profile.occupationId || '',
+            occupation: profile.designation || profile.occupation || '',
+            company: profile.companyName || '',
             educationId: profile.educationId || '',
             annualIncomeId: profile.incomeId || '',
-            city: profile.city || '',
+            city: profile.city || profile.address || '',
             religionId: profile.religionId || '',
             motherTongueId: profile.motherTongueId || '',
             communityId: profile.communityId || '',
             countryId: profile.countryId || '',
+            stateId: profile.stateId || '',
+            districtId: profile.districtId || '',
+            pincode: profile.pincode || '',
             aboutMe: profile.aboutMe || '',
             fatherName: profile.fatherName || '',
             motherName: profile.motherName || '',
             familyTypeId: profile.familyTypeId || '',
+            familyStatusId: profile.familyStatusId || '',
+            familyValueId: profile.familyValueId || '',
+            nativePlace: profile.nativePlace || '',
+            brothers: profile.brothers ?? '',
+            sisters: profile.sisters ?? '',
+            marriedBrothers: profile.marriedBrothers ?? '',
+            marriedSisters: profile.marriedSisters ?? '',
+            aboutFamily: profile.familyAbout || '',
             photos: profile.photos || [],
           };
           setFormData(hydratedDraft);
@@ -177,7 +191,11 @@ export function AccountCompletionStepperPage() {
           // Explicitly map dob to dateOfBirth to match backend expectation
           const aboutPayload = { ...data, dateOfBirth: data.dob };
           delete aboutPayload.dob; // Clean up the old key
-          apiCall = api.saveProfile(sanitizePayload({ userId, ...aboutPayload }));
+          {
+            const profilePayload = sanitizePayload({ userId, ...aboutPayload });
+            console.log('[AccountCompletionStepperPage] saveProfile payload:', profilePayload);
+            apiCall = api.saveProfile(profilePayload);
+          }
           break;
         case 'family':
           apiCall = api.saveFamily(sanitizePayload({ userId, ...data }));
