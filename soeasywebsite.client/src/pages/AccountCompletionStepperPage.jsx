@@ -38,6 +38,16 @@ export function AccountCompletionStepperPage() {
   const [communityOptions, setCommunityOptions] = useState([])
 
   const userId = session.getUserId()
+  const resolvedLookingForGender = (() => {
+    const genderId = session.getGenderId()
+    if (genderId === 2) return 'Groom'
+    if (genderId === 1) return 'Bride'
+
+    const gender = String(formData.gender ?? '').toLowerCase()
+    if (gender === 'female') return 'Groom'
+    if (gender === 'male') return 'Bride'
+    return 'Partner'
+  })()
 
   useEffect(() => {
     if (!userId) {
@@ -87,7 +97,7 @@ export function AccountCompletionStepperPage() {
 
     async function loadProfileData() {
       try {
-        const response = await api.getProfile(userId);
+        const response = await api.getProfile(userId, userId);
         const profile = response?.data ?? response?.Data ?? response;
         if (profile) {
           const hydratedDraft = {
@@ -247,6 +257,8 @@ export function AccountCompletionStepperPage() {
       masterData: { ...masterData, communities: communityOptions },
       isSubmitting,
       mode: 'create', // Use 'create' mode UI for this flow
+      userGender: formData.gender,
+      lookingForGender: resolvedLookingForGender,
     };
 
     switch (currentStep) {

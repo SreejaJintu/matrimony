@@ -742,6 +742,95 @@
   border-radius: 12px;
 }
 
+.view-profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.view-profile-modal {
+  position: relative;
+  width: min(100%, 420px);
+  border-radius: 24px;
+  background: #fff;
+  padding: 28px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.view-profile-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+}
+
+.view-profile-modal-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #fff7e8;
+  font-size: 24px;
+}
+
+.view-profile-modal h3 {
+  margin: 0;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 26px;
+  color: var(--text-dark);
+}
+
+.view-profile-modal p {
+  margin: 10px 0 0;
+  color: #6d4a45;
+}
+
+.view-profile-modal-offer {
+  margin: 18px 0 20px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 246, 221, 0.9);
+  color: #7a0828;
+  font-weight: 600;
+}
+
+.view-profile-modal-primary,
+.view-profile-modal-secondary {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  font: 700 14px/1 Inter, sans-serif;
+}
+
+.view-profile-modal-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--primary-maroon);
+  color: #fff;
+}
+
+.view-profile-modal-secondary {
+  margin-top: 10px;
+  background: #f5f1ef;
+  color: var(--text-dark);
+}
+
 
 .how-it-works {
   padding: 92px 0;

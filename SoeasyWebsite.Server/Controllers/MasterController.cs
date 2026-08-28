@@ -38,6 +38,10 @@ public class MasterController : ControllerBase
     public async Task<IActionResult> GetDistrict(int stateId)
         => Ok(await _masterService.GetDistrict(stateId));
 
+    [HttpGet("districts")]
+    public async Task<IActionResult> GetDistricts()
+        => Ok(await _masterService.GetAllDistricts());
+
     [HttpGet("education")]
     public async Task<IActionResult> GetEducation()
         => Ok(await _masterService.GetEducation());

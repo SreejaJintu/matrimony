@@ -41,6 +41,9 @@ export function ProfileDetail() {
 
   const [actionState, setActionState] = useState({ sending: false, sent: false });
   const [shortlistState, setShortlistState] = useState({ sending: false, sent: false });
+  const [shortlistMessage, setShortlistMessage] = useState('');
+  const isOwnProfile = Boolean(currentLoggedUserId && String(userId) === String(currentLoggedUserId));
+  const isLocked = Boolean(profile?.isLocked || profile?.canViewFullProfile === false) && !isOwnProfile;
 
   // Resolve ID -> Name robustly
   const resolveName = (list, id) => {
@@ -136,6 +139,39 @@ export function ProfileDetail() {
     return () => { isMounted = false; };
   }, [userId]);
 
+  useEffect(() => {
+    if (!profile?.userId || isOwnProfile || !session.isAuthenticated()) {
+      setShortlistState({ sending: false, sent: false });
+      setShortlistMessage('');
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadShortlistState() {
+      try {
+        const response = await api.shortlistCheck(profile.userId);
+        const isShortlisted = Boolean(response?.data?.isShortlisted ?? response?.data?.IsShortlisted);
+
+        if (isMounted) {
+          setShortlistState({ sending: false, sent: isShortlisted });
+          setShortlistMessage(isShortlisted ? 'Already shortlisted' : '');
+        }
+      } catch (error) {
+        if (isMounted) {
+          setShortlistState({ sending: false, sent: false });
+          setShortlistMessage('');
+        }
+      }
+    }
+
+    loadShortlistState();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [profile?.userId, isOwnProfile]);
+
   if (loading) {
     return (
       <div className="pd-page">
@@ -198,19 +234,33 @@ export function ProfileDetail() {
   const imageUrl = profile.imageUrl || profile.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
   const isVerified = Boolean(profile.isVerified || profile.verified || profile.isProfileCompleted);
 
-  const isOwnProfile = Boolean(currentLoggedUserId && String(userId) === String(currentLoggedUserId));
-  const isLocked = Boolean(profile.isLocked || profile.canViewFullProfile === false) && !isOwnProfile;
-
   const handleSendInterest = () => {
     if (actionState.sending || actionState.sent) return;
     setActionState({ sending: true, sent: false });
     setTimeout(() => setActionState({ sending: false, sent: true }), 1000);
   };
 
-  const handleShortlist = () => {
-    if (shortlistState.sending || shortlistState.sent) return;
+  const handleShortlist = async () => {
+    if (shortlistState.sending || !profile?.userId || isOwnProfile) return;
+
     setShortlistState({ sending: true, sent: false });
-    setTimeout(() => setShortlistState({ sending: false, sent: true }), 800);
+
+    try {
+      if (shortlistState.sent) {
+        await api.shortlistRemove(profile.userId);
+        setShortlistState({ sending: false, sent: false });
+        setShortlistMessage('Removed from shortlist');
+        return;
+      }
+
+      await api.shortlistAdd(profile.userId);
+      setShortlistState({ sending: false, sent: true });
+      setShortlistMessage('Shortlisted successfully');
+    } catch (error) {
+      console.error('Failed to shortlist profile:', error);
+      setShortlistState({ sending: false, sent: false });
+      setShortlistMessage(error.message || 'Unable to shortlist this profile.');
+    }
   };
 
   return (
@@ -311,11 +361,18 @@ export function ProfileDetail() {
             <button 
               className={`pd-btn-outline ${shortlistState.sent ? 'pd-btn-outline-success' : ''}`}
               onClick={handleShortlist}
-              disabled={shortlistState.sending || shortlistState.sent}
+              disabled={shortlistState.sending}
             >
               <Bookmark size={16} />
-              {shortlistState.sending ? 'Saving...' : shortlistState.sent ? 'Shortlisted' : 'Shortlist'}
+              {shortlistState.sending ? 'Saving...' : shortlistState.sent ? 'Remove Shortlist' : 'Add to Shortlist'}
             </button>
+          </div>
+        )}
+
+        {shortlistMessage && !isOwnProfile && (
+          <div className={`pd-shortlist-banner ${shortlistState.sent ? 'success' : 'info'}`} role="status">
+            <Bookmark size={16} />
+            <span>{shortlistMessage}</span>
           </div>
         )}
 
@@ -518,10 +575,10 @@ export function ProfileDetail() {
                   <button 
                     className={`pd-btn-outline ${shortlistState.sent ? 'pd-btn-outline-success' : ''}`} 
                     onClick={handleShortlist}
-                    disabled={shortlistState.sending || shortlistState.sent}
+                    disabled={shortlistState.sending}
                   >
                     <Bookmark size={16} />
-                    <span>{shortlistState.sending ? 'Saving...' : shortlistState.sent ? 'Shortlisted' : 'Shortlist Profile'}</span>
+                    <span>{shortlistState.sending ? 'Saving...' : shortlistState.sent ? 'Remove Shortlist' : 'Add to Shortlist'}</span>
                   </button>
 
                   {isLocked && (

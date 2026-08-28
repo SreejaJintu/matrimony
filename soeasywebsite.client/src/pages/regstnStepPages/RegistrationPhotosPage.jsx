@@ -21,10 +21,13 @@ const STEPS = [
 
 export function RegistrationPhotosPage() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState(() => getRegistrationDraft() ?? {})
+  const [formData, setFormData] = useState(() => ({
+    ...(getRegistrationDraft() ?? {}),
+    gender: getRegistrationDraft()?.gender,
+  }))
 
   useEffect(() => {
-    saveRegistrationDraft(formData, 'photos')
+    saveRegistrationDraft({ ...getRegistrationDraft(), ...formData }, 'photos')
   }, [formData])
 
   const handleBack = () => navigate(`/register/${getPreviousRegistrationStep('photos') ?? 'preferences'}`, { replace: true })
@@ -32,7 +35,7 @@ export function RegistrationPhotosPage() {
   const handleSubmit = async (data) => {
     const merged = { ...formData, ...data }
     setFormData(merged)
-    saveRegistrationDraft(merged, 'photos')
+    saveRegistrationDraft({ ...getRegistrationDraft(), ...merged }, 'photos')
 
     try {
       const userId = session.getUserId()

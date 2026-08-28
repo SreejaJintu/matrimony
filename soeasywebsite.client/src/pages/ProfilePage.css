@@ -90,6 +90,13 @@
   align-items: start;
 }
 
+.profile-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
 .profile-summary-card,
 .profile-center-column,
 .profile-right-rail,
@@ -110,6 +117,20 @@
 
 .profile-summary-card {
   padding: 16px;
+}
+
+.profile-summary-interests {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f0ebe7;
+}
+
+.profile-summary-interests h3 {
+  margin: 0 0 10px;
+  color: #171414;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .profile-online-pill {
@@ -151,6 +172,21 @@
   height: 100%;
   display: block;
   object-fit: cover;
+}
+
+.owner-profile-photo-wrap img.is-loading {
+  opacity: 0;
+}
+
+.owner-profile-photo-wrap img.is-loaded {
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+
+.owner-profile-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f2e7df, #e8ddd4);
 }
 
 .profile-photo-action {
@@ -239,10 +275,46 @@
 
 .profile-credit-card {
   margin-top: 14px;
-  padding: 14px 15px;
+  padding: 16px 15px 18px;
+  min-height: 300while px;
   border-radius: 10px;
   background: #fcf4f0;
   border: 1px solid #f1e2dd;
+}
+
+.profile-credit-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profile-credit-stat {
+  padding: 10px 0 0;
+  border-top: 1px solid #f0ebe7;
+}
+
+.profile-credit-stat span {
+  display: block;
+  margin-bottom: 4px;
+  color: #8a817b;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.profile-credit-stat strong {
+  display: block;
+  color: #2c2724;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.profile-credit-note {
+  margin: 16px 0 0;
+  color: #6f6762;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .profile-credit-top {
@@ -639,10 +711,6 @@
   .profile-credit-card {
     margin-top: 12px;
   }
-}
-
-.profile-about-copy + .profile-interests {
-  margin-top: 10px;
 }
 
 @media (max-width: 1180px) {

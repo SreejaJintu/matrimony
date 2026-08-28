@@ -16,6 +16,7 @@ import { AccountCompletionStepperPage } from '../pages/AccountCompletionStepperP
 import { ProfileEditPage } from '../pages/ProfileEditPage'
 import { SubscriptionPage } from '../pages/SubscriptionPage'
 import { MatchesPage } from '../pages/MatchesPage'
+import { ShortlistedPage } from '../pages/ShortlistedPage'
 
 // Admin pages
 import AdminLogin from '../admin/pages/AdminLogin'
@@ -24,6 +25,9 @@ import AdminDashboard from '../admin/pages/AdminDashboard'
 import AdminProfiles from "../admin/pages/AdminProfiles";
 import AdminProfileDetail from "../admin/pages/AdminProfileDetail";
 import AdminSubscriptionPage from '../admin/pages/AdminSubscriptionPage'
+import AdminPlansPage from '../admin/pages/AdminPlansPage'
+import LeadsManagementPage from '../admin/pages/LeadsManagementPage'
+
 export function AppRoutes() {
   const navigate = useNavigate()
 
@@ -158,6 +162,11 @@ export function AppRoutes() {
         element={<SubscriptionPage />}
       />
 
+      <Route
+        path="/shortlisted"
+        element={<ShortlistedPage />}
+      />
+
 
       {/* =========================
           ADMIN ROUTES
@@ -196,6 +205,17 @@ export function AppRoutes() {
   path="subscriptions"
   element={<AdminSubscriptionPage />}
 />
+
+ <Route
+  path="plans"
+  element={<AdminPlansPage />}
+/>
+
+ <Route
+  path="leads"
+  element={<LeadsManagementPage />}
+/>
+
 </Route>
 
 

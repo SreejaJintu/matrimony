@@ -74,6 +74,17 @@ public class MasterRepository : IMasterRepository
             commandType: System.Data.CommandType.StoredProcedure);
     }
 
+    public async Task<IEnumerable<MasterDto>> GetAllDistricts()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<MasterDto>(
+            """
+            SELECT DistrictId AS Id, DistrictName AS Name
+            FROM DistrictMaster
+            ORDER BY DistrictName;
+            """);
+    }
+
     public async Task<IEnumerable<MasterDto>> GetEducation()
     {
         using var connection = _connectionFactory.CreateConnection();

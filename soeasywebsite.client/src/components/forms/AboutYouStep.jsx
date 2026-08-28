@@ -40,6 +40,17 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
   return (
     <form onSubmit={handleSubmit} className="reg-form" noValidate>
       <div className="reg-grid">
+        {field('Date of Birth',
+          iconInput(<Calendar size={18} className="reg-input-icon" />,
+            <input
+              type="date"
+              value={formData.dob || ''}
+              onChange={(e) => handleChange('dob', e.target.value)}
+              className="reg-input"
+              max={new Date().toISOString().split('T')[0]}
+            />
+          ))}
+
         {field('Height',
           <div className="reg-input-wrap">
             <Ruler size={18} className="reg-input-icon" />

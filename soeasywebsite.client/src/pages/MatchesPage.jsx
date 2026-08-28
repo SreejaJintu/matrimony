@@ -9,11 +9,13 @@ import {
   Menu,
   X,
   ChevronDown,
+  PhoneCall,
+  CheckCircle,
 } from 'lucide-react'
 import { Header } from '../components/Layout/Header'
 import { AccountSidebar } from '../components/Layout/AccountSidebar'
 import { ProfileDrawer } from '../components/drawers/ProfileDrawer'
-import { api } from '../services/api'
+import { api, session } from '../services/api'
 import { AuthContext } from '../contexts/AuthContext'
 import './MatchesPage.css'
 
@@ -25,7 +27,7 @@ const professionOptions = ['Any', 'Medicine', 'Engineering', 'Education', 'Busin
 const educationOptions = ['Any', 'Graduate', 'Postgraduate', 'Doctorate', 'Professional', 'Diploma']
 
 export function MatchesPage() {
-  const { user } = useContext(AuthContext)
+  const { user, isAuthenticated } = useContext(AuthContext)
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
@@ -49,12 +51,35 @@ export function MatchesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [lockedProfile, setLockedProfile] = useState(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false)
+  const [shortlistStatusByUserId, setShortlistStatusByUserId] = useState({})
+  const [shortlistLoadingByUserId, setShortlistLoadingByUserId] = useState({})
+
+  // ── Lead Capture Modal Local State ──────────────────────────
+  const [showLeadForm, setShowLeadForm] = useState(false)
+  const [leadSubmitted, setLeadSubmitted] = useState(false)
+  const [leadSubmitting, setLeadSubmitting] = useState(false)
+  const [leadFormData, setLeadFormData] = useState({
+    name: '',
+    mobileNumber: '',
+    email: '',
+  })
+
+  // Autofill name from session when user state loads
+  useEffect(() => {
+    if (user) {
+      setLeadFormData((prev) => ({
+        ...prev,
+        name: user.fullName || session.getFullName() || '',
+        email: user.email || '',
+      }))
+    }
+  }, [user])
 
   // ── Live subscription status ───────────────────────────────
   const [subscriptionStatus, setSubscriptionStatus] = useState(null)
-  const [unlockingUserId, setUnlockingUserId] = useState(null) // per-card loading
+  const [unlockingUserId, setUnlockingUserId] = useState(null)
 
-  // Derived from real API data (not a stale session flag)
   const isPaidMember = Boolean(
     subscriptionStatus?.isApproved &&
     (subscriptionStatus?.hasFullAccess || subscriptionStatus?.remainingCredits > 0)
@@ -62,7 +87,6 @@ export function MatchesPage() {
   const remainingCredits = subscriptionStatus?.remainingCredits ?? 0
   const profileLimit = subscriptionStatus?.profileViewLimit ?? 20
   const profilesUsed = subscriptionStatus?.profileViewsUsed ?? 0
-
 
   useEffect(() => {
     const queryLookingFor = searchParams.get('lookingFor')
@@ -146,7 +170,7 @@ export function MatchesPage() {
         name: match.fullName || '',
         age: match.age || 0,
         location: match.location || '',
-        image: match.imageUrl || '',
+        image: match.imageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
         profession: match.profession || '',
         height: match.height || '-',
         community: match.community || '',
@@ -201,6 +225,56 @@ export function MatchesPage() {
       })
   }, [profiles, ageFrom, ageTo, community, profession, religion, location, education, sortOption])
 
+  useEffect(() => {
+    if (!isAuthenticated || filteredProfiles.length === 0) {
+      setShortlistStatusByUserId({})
+      setShortlistLoadingByUserId({})
+      return
+    }
+
+    let isMounted = true
+    const visibleIds = filteredProfiles
+      .map((profile) => profile.raw?.userId)
+      .filter(Boolean)
+
+    async function loadShortlistStatuses() {
+      try {
+        setShortlistLoadingByUserId(
+          Object.fromEntries(visibleIds.map((id) => [String(id), true]))
+        )
+
+        const entries = await Promise.all(
+          visibleIds
+            .map(async (targetUserId) => {
+              try {
+                const response = await api.shortlistCheck(targetUserId)
+                const isShortlisted = Boolean(response?.data?.isShortlisted ?? response?.data?.IsShortlisted)
+                return [String(targetUserId), isShortlisted]
+              } catch {
+                return [String(targetUserId), false]
+              }
+            })
+        )
+
+        if (isMounted) {
+          setShortlistStatusByUserId(Object.fromEntries(entries))
+          setShortlistLoadingByUserId({})
+        }
+      } catch {
+        if (isMounted) {
+          setShortlistStatusByUserId({})
+          setShortlistLoadingByUserId({})
+        }
+      }
+    }
+
+    loadShortlistStatuses()
+
+    return () => {
+      isMounted = false
+    }
+  }, [isAuthenticated, filteredProfiles])
+
   const handleSearch = (event) => {
     event.preventDefault()
 
@@ -236,24 +310,11 @@ export function MatchesPage() {
     const targetUserId = profile.raw?.userId
     const viewerUserId = user?.userId
 
-    // No subscription at all → show locked modal
-    if (!subscriptionStatus?.isApproved) {
+    if (!subscriptionStatus?.isApproved || (!subscriptionStatus.hasFullAccess && remainingCredits <= 0) || !targetUserId || !viewerUserId) {
       setLockedProfile(profile)
       return
     }
 
-    // Has full access (e.g. female free plan) OR has remaining credits
-    if (!subscriptionStatus.hasFullAccess && remainingCredits <= 0) {
-      setLockedProfile(profile)
-      return
-    }
-
-    if (!targetUserId || !viewerUserId) {
-      setLockedProfile(profile)
-      return
-    }
-
-    // Call the unlock API
     setUnlockingUserId(targetUserId)
     try {
       const response = await api.unlockProfile(viewerUserId, targetUserId)
@@ -261,7 +322,6 @@ export function MatchesPage() {
       if (response?.success && response?.data) {
         const unlockData = response.data
 
-        // Decrement credit count in local state only for a NEW unlock
         if (unlockData.creditDeducted) {
           setSubscriptionStatus((prev) =>
             prev
@@ -270,10 +330,8 @@ export function MatchesPage() {
           )
         }
 
-        // Navigate to the full profile detail page
         navigate(`/profile-detail/${targetUserId}`)
       } else {
-        // Unlock returned false (e.g. no credits left, not approved)
         setLockedProfile(profile)
       }
     } catch {
@@ -283,28 +341,106 @@ export function MatchesPage() {
     }
   }, [user?.userId, subscriptionStatus, remainingCredits, navigate])
 
+  const handleShortlistProfile = useCallback(async (profile) => {
+    const targetUserId = profile.raw?.userId
+
+    if (!targetUserId) {
+      return
+    }
+
+    if (!isAuthenticated) {
+      setLoginPromptOpen(true)
+      return
+    }
+
+    if (shortlistStatusByUserId[String(targetUserId)]) {
+      try {
+        setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: true }))
+        await api.shortlistRemove(targetUserId)
+        setShortlistStatusByUserId((prev) => ({ ...prev, [String(targetUserId)]: false }))
+        setInterestStatus(`Removed ${profile.name || 'member'} from shortlist.`)
+      } catch (error) {
+        console.error('Failed to remove shortlist:', error)
+        const message = String(error?.message || '').includes('401')
+          ? 'Your session has expired. Please log in again to manage shortlist.'
+          : error.message || 'Unable to remove from shortlist.'
+        setInterestStatus(message)
+      } finally {
+        setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: false }))
+      }
+      return
+    }
+
+    try {
+      setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: true }))
+      await api.shortlistAdd(targetUserId)
+      setInterestStatus(`Shortlisted ${profile.name || 'member'}.`)
+      setShortlistStatusByUserId((prev) => ({ ...prev, [String(targetUserId)]: true }))
+    } catch (error) {
+      console.error('Failed to shortlist profile:', error)
+      const message = String(error?.message || '').includes('401')
+        ? 'Your session has expired. Please log in again to shortlist profiles.'
+        : error.message || 'Unable to shortlist this profile.'
+      setInterestStatus(message)
+    } finally {
+      setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: false }))
+    }
+  }, [isAuthenticated, shortlistStatusByUserId])
+
+  const closeLeadModal = () => {
+    setLockedProfile(null)
+    setShowLeadForm(false)
+    setLeadSubmitted(false)
+  }
+
+  const handleLeadSubmit = async (e) => {
+    e.preventDefault()
+    setLeadSubmitting(true)
+
+    try {
+      const payload = {
+        userId: user?.userId || session.getUserId() || null,
+        name: leadFormData.name,
+        mobileNumber: leadFormData.mobileNumber,
+        email: leadFormData.email || null,
+        preferredPlan: '₹2,000 Membership',
+      }
+
+      await api.submitLead(payload)
+      setLeadSubmitted(true)
+    } catch (err) {
+      alert(err.message || 'Failed to submit lead request. Please try again.')
+    } finally {
+      setLeadSubmitting(false)
+    }
+  }
+
   return (
     <div className="account-page-shell">
       <Header />
 
       <div className="account-layout">
-        <AccountSidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          isMember={isPaidMember}
-          profilesUsed={profilesUsed}
-          profileLimit={profileLimit}
-        />
+        {isAuthenticated && (
+          <AccountSidebar
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            isMember={isPaidMember}
+            profilesUsed={profilesUsed}
+            profileLimit={profileLimit}
+          />
+        )}
 
         <main id="matches" className="matches-page">
-          <button
-            type="button"
-            className="mobile-sidebar-trigger"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu size={19} />
-            <span>Menu</span>
-          </button>
+          {isAuthenticated && (
+            <button
+              type="button"
+              className="mobile-sidebar-trigger"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu size={19} />
+              <span>Menu</span>
+            </button>
+          )}
 
           <section className="matches-page-heading">
             <div>
@@ -476,8 +612,10 @@ export function MatchesPage() {
 
                       <button
                         type="button"
-                        className="favorite-button"
+                        className={`favorite-button ${shortlistStatusByUserId[String(profile.raw?.userId)] ? 'active' : ''} ${shortlistLoadingByUserId[String(profile.raw?.userId)] ? 'loading' : ''}`}
                         aria-label={`Shortlist ${profile.name}`}
+                        onClick={() => handleShortlistProfile(profile)}
+                        disabled={Boolean(shortlistLoadingByUserId[String(profile.raw?.userId)])}
                       >
                         <Heart size={18} />
                       </button>
@@ -537,9 +675,14 @@ export function MatchesPage() {
                           : 'View Profile'}
                       </button>
 
-                      <button type="button" className="shortlist-button">
+                      <button
+                        type="button"
+                        className={`shortlist-button ${shortlistStatusByUserId[String(profile.raw?.userId)] ? 'active' : ''} ${shortlistLoadingByUserId[String(profile.raw?.userId)] ? 'loading' : ''}`}
+                        onClick={() => handleShortlistProfile(profile)}
+                        disabled={Boolean(shortlistLoadingByUserId[String(profile.raw?.userId)])}
+                      >
                         <Heart size={15} />
-                        Shortlist
+                        {shortlistStatusByUserId[String(profile.raw?.userId)] ? 'Remove Shortlist' : 'Add to Shortlist'}
                       </button>
                     </div>
                   </article>
@@ -570,8 +713,9 @@ export function MatchesPage() {
         }}
       />
 
+      {/* ── Updated Membership Lead Modal ───────────────────────── */}
       {lockedProfile && (
-        <div className="membership-modal-backdrop" onClick={() => setLockedProfile(null)}>
+        <div className="membership-modal-backdrop" onClick={closeLeadModal}>
           <div
             className="membership-modal"
             role="dialog"
@@ -582,7 +726,140 @@ export function MatchesPage() {
             <button
               type="button"
               className="membership-modal-close"
-              onClick={() => setLockedProfile(null)}
+              onClick={closeLeadModal}
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+
+            {!showLeadForm ? (
+              /* Step 1: Initial Pitch */
+              <>
+                <div className="membership-modal-icon">
+                  <LockKeyhole size={24} />
+                </div>
+
+                <h2 id="membership-modal-title">View Full Profile</h2>
+
+                <p>
+                  Become a Soesy member to view full profile details and connect with verified members.
+                </p>
+
+                <div className="membership-plan-preview">
+                  <strong>₹2,000</strong>
+                  <span>Membership · Access up to 20 profiles</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="membership-modal-button"
+                  onClick={() => setShowLeadForm(true)}
+                >
+                  Become a Member
+                </button>
+
+                <button
+                  type="button"
+                  className="membership-modal-secondary"
+                  onClick={closeLeadModal}
+                >
+                  Continue Browsing
+                </button>
+              </>
+            ) : leadSubmitted ? (
+              /* Step 3: Success Confirmation */
+              <div className="lead-success-view">
+                <CheckCircle size={48} className="success-icon" style={{ color: '#16a34a', margin: '0 auto 12px' }} />
+                <h2>Request Received!</h2>
+                <p>
+                  Our executive will call you shortly to assist with your membership activation.
+                </p>
+                <button
+                  type="button"
+                  className="membership-modal-button"
+                  onClick={closeLeadModal}
+                  style={{ marginTop: '16px' }}
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              /* Step 2: Contact Form */
+              <div className="lead-form-view">
+                <div className="lead-form-header" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <PhoneCall size={20} style={{ color: '#7f1d1d' }} />
+                  <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Request Executive Call</h2>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '16px' }}>
+                  Please provide your contact details. Our team will reach out to activate your membership.
+                </p>
+
+                <form onSubmit={handleLeadSubmit} className="lead-form" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ textAlign: 'left' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#374151', marginBottom: '4px' }}>Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={leadFormData.name}
+                      onChange={(e) => setLeadFormData({ ...leadFormData, name: e.target.value })}
+                      placeholder="Enter your name"
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.875rem' }}
+                    />
+                  </div>
+
+                  <div style={{ textAlign: 'left' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#374151', marginBottom: '4px' }}>Mobile Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={leadFormData.mobileNumber}
+                      onChange={(e) => setLeadFormData({ ...leadFormData, mobileNumber: e.target.value })}
+                      placeholder="Enter mobile number"
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.875rem' }}
+                    />
+                  </div>
+
+                  <div style={{ textAlign: 'left' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#374151', marginBottom: '4px' }}>Email (Optional)</label>
+                    <input
+                      type="email"
+                      value={leadFormData.email}
+                      onChange={(e) => setLeadFormData({ ...leadFormData, email: e.target.value })}
+                      placeholder="name@example.com"
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.875rem' }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={leadSubmitting}
+                    className="membership-modal-button"
+                    style={{ marginTop: '8px' }}
+                  >
+                    {leadSubmitting ? 'Submitting...' : 'Submit Details'}
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Login & Subscribe prompt for guests clicking shortlist ─── */}
+      {loginPromptOpen && (
+        <div className="membership-modal-backdrop" onClick={() => setLoginPromptOpen(false)}>
+          <div
+            className="membership-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="login-prompt-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="membership-modal-close"
+              onClick={() => setLoginPromptOpen(false)}
               aria-label="Close"
             >
               <X size={18} />
@@ -592,11 +869,10 @@ export function MatchesPage() {
               <LockKeyhole size={24} />
             </div>
 
-            <h2 id="membership-modal-title">View Full Profile</h2>
+            <h2 id="login-prompt-title">Log in to Shortlist</h2>
 
             <p>
-              Become a Soesy member to view full profile details and connect with
-              verified members.
+              Please log in to your account and subscribe to a plan to shortlist profiles and connect with verified members.
             </p>
 
             <div className="membership-plan-preview">
@@ -607,15 +883,18 @@ export function MatchesPage() {
             <button
               type="button"
               className="membership-modal-button"
-              onClick={() => navigate('/membership')}
+              onClick={() => {
+                setLoginPromptOpen(false)
+                navigate('/login')
+              }}
             >
-              Become a Member
+              Log In &amp; Subscribe
             </button>
 
             <button
               type="button"
               className="membership-modal-secondary"
-              onClick={() => setLockedProfile(null)}
+              onClick={() => setLoginPromptOpen(false)}
             >
               Continue Browsing
             </button>
@@ -624,7 +903,7 @@ export function MatchesPage() {
       )}
 
       {interestStatus && (
-        <div className="matches-toast" role="status">
+        <div className={`matches-toast ${interestStatus.toLowerCase().includes('shortlisted') ? 'success' : ''}`} role="status">
           {interestStatus}
         </div>
       )}

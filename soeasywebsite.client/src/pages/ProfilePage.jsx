@@ -22,7 +22,7 @@ import {
 import './ProfilePage.css'
 
 function getProfileFromSlug(slug) {
-  return profiles.find((profile) => profile.slug === slug?.toLowerCase()) ?? profiles[0]
+  return profiles.find((profile) => profile.slug === slug?.toLowerCase()) ?? null
 }
 
 function mapServerProfile(profile) {
@@ -49,7 +49,19 @@ function mapServerProfile(profile) {
   return {
     name: pickFirstValue(profile.fullName, profile.FullName),
     age: age ?? '',
-    location: pickFirstValue(profile.district, profile.District, profile.state, profile.State, profile.country, profile.Country) || 'India',
+    location:
+      pickFirstValue(
+        profile.address,
+        profile.Address,
+        profile.city,
+        profile.City,
+        profile.district,
+        profile.District,
+        profile.state,
+        profile.State,
+        profile.country,
+        profile.Country,
+      ) || 'India',
     height: pickFirstValue(profile.height, profile.Height) || '-',
     religion: pickFirstValue(profile.religion, profile.Religion) || '-',
     profession: pickFirstValue(profile.designation, profile.Designation, profile.occupation, profile.Occupation) || '-',
@@ -97,10 +109,12 @@ function DetailCard({ title, children, accent = false }) {
 export function ProfilePage() {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const [profile, setProfile] = useState(getProfileFromSlug(slug))
+  const [profile, setProfile] = useState(() => getProfileFromSlug(slug))
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [photoLoaded, setPhotoLoaded] = useState(false)
   const editProfilePath = '/profile/edit' // New path for editing
   const [serverProfileData, setServerProfileData] = useState(null)
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -109,12 +123,23 @@ export function ProfilePage() {
 
     let active = true
     api
-      .getProfile(userId)
+      .getProfile(userId, userId)
       .then((response) => {
         const payload = response?.data ?? response?.Data
         if (active && payload) {
           setProfile(mapServerProfile(payload))
           setServerProfileData(payload) // Store raw server data
+          setPhotoLoaded(false)
+        }
+      })
+      .catch(() => {})
+
+    api
+      .getSubscriptionStatus(userId)
+      .then((response) => {
+        const payload = response?.data ?? response?.Data
+        if (active && payload) {
+          setSubscriptionStatus(payload)
         }
       })
       .catch(() => {})
@@ -124,12 +149,17 @@ export function ProfilePage() {
     }
   }, [slug])
 
+  useEffect(() => {
+    setPhotoLoaded(false)
+  }, [profile?.image])
+
   if (!profile) return null
 
   const profileId = session.getUserId() ? `GS${String(session.getUserId()).padStart(6, '0')}` : 'GS000000'
+  const profileLimit = subscriptionStatus?.profileViewLimit ?? 20
+  const profilesUsed = subscriptionStatus?.profileViewsUsed ?? 0
+  const remainingCredits = Math.max(profileLimit - profilesUsed, 0)
   const profileFacts = [
-    { label: 'Last active', value: 'Today' },
-    { label: 'Profile created on', value: '12 May 2024' },
     { label: 'Profile ID', value: profileId },
   ]
 
@@ -178,18 +208,24 @@ export function ProfilePage() {
           </div>
 
           <section className="profile-dashboard-grid">
+            <div className="profile-left-column">
             <article className="profile-summary-card">
-              <span className="profile-online-pill">
-                <span className="profile-online-dot" />
-                Online
-              </span>
+         
 
               <div className="profile-photo-shell">
                 <div className="owner-profile-photo-wrap">
-                  <img src={profile.image} alt={`${profile.name} portrait`} />
-                  <button type="button" className="profile-photo-action" aria-label="Edit photo">
-                    <Camera size={16} />
-                  </button>
+                  {profile.image ? (
+                    <img
+                      src={profile.image}
+                      alt={`${profile.name} portrait`}
+                      className={photoLoaded ? 'is-loaded' : 'is-loading'}
+                      onLoad={() => setPhotoLoaded(true)}
+                      onError={() => setPhotoLoaded(false)}
+                    />
+                  ) : (
+                    <div className="owner-profile-photo-placeholder" aria-hidden="true" />
+                  )}
+                 
                 </div>
               </div>
 
@@ -221,22 +257,27 @@ export function ProfilePage() {
                 </div>
               </div>
 
-              <div className="profile-credit-card">
-                <div className="profile-credit-top">
-                  <div className="profile-credit-badge">
-                    <span className="profile-credit-coin">S</span>
-                    <strong>15</strong>
-                    <small>Available Credits</small>
-                  </div>
-                  <Link to="/membership" className="profile-credit-button">
-                    Buy Credits
-                  </Link>
-                </div>
-                <Link to="/membership" className="profile-credit-history">
-                  View Credit History <ArrowRight size={14} />
-                </Link>
-              </div>
             </article>
+            <DetailCard title="Credits Used">
+              <div className="profile-credit-summary">
+                <div className="profile-credit-stat">
+                  <span>Used</span>
+                  <strong>{profilesUsed}</strong>
+                </div>
+                <div className="profile-credit-stat">
+                  <span>Limit</span>
+                  <strong>{profileLimit}</strong>
+                </div>
+                <div className="profile-credit-stat">
+                  <span>Remaining</span>
+                  <strong>{remainingCredits}</strong>
+                </div>
+              </div>
+              <p className="profile-credit-note">
+                These are the profile views your current membership allows and how many you have used.
+              </p>
+            </DetailCard>
+            </div>
 
             <div className="profile-center-column">
               <DetailCard title="Profile Completion">
@@ -327,25 +368,9 @@ export function ProfilePage() {
           </section>
 
           <section className="profile-lower-grid">
-            <DetailCard title="Photos">
-              <div className="profile-photo-strip">
-                {[profile.image, profile.image, profile.image].map((src, index) => (
-                  <div key={`${src}-${index}`} className="profile-photo-thumb">
-                    <img src={src} alt={`${profile.name} photo ${index + 1}`} />
-                  </div>
-                ))}
-              </div>
-            </DetailCard>
+            
 
-            <DetailCard title="Interests">
-              <div className="profile-interests">
-                {profile.interests.map((interest) => (
-                  <span key={interest} className="interest-pill">
-                    {interest}
-                  </span>
-                ))}
-              </div>
-            </DetailCard>
+           
           </section>
 
           <div className="profile-support-strip">

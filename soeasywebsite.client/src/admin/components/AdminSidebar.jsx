@@ -32,7 +32,10 @@ const AdminSidebar = () => {
           <span>◆</span>
           Memberships
         </NavLink>
-
+       <NavLink to="/admin/plans">
+          <span>◆</span>
+          Add Plans 
+        </NavLink>
         <NavLink to="/admin/reports">
           <span>!</span>
           Reports

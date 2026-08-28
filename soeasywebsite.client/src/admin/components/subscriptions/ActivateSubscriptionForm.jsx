@@ -1,14 +1,7 @@
 import { useState, useEffect, useRef } from "react"
-import { activateSubscription } from "../../services/adminSubscriptionService"
+import { activateSubscription, getMembershipPlans } from "../../services/adminSubscriptionService"
 import adminProfileService from "../../services/adminProfileService"
 import "../../styles/adminSubscription.css"
-
-// Plan definitions – single source of truth on the frontend.
-const MEMBERSHIP_PLANS = [
-  { id: 1, name: "Free",     amount: 0,    days: 30,  profileViews: 0  },
-  { id: 2, name: "Standard", amount: 999,  days: 90,  profileViews: 20 },
-  { id: 3, name: "Premium",  amount: 1999, days: 180, profileViews: 20 },
-]
 
 export default function ActivateSubscriptionForm() {
   // User search
@@ -19,11 +12,13 @@ export default function ActivateSubscriptionForm() {
   const [showDropdown, setShowDropdown]   = useState(false)
   const debounceRef = useRef(null)
   const wrapperRef  = useRef(null)
+  const [membershipPlans, setMembershipPlans] = useState([])
+  const [plansLoading, setPlansLoading] = useState(false)
 
   // Plan
   const [selectedPlanId, setSelectedPlanId] = useState("")
-  const selectedPlan = MEMBERSHIP_PLANS.find(
-    (p) => p.id === Number(selectedPlanId)
+  const selectedPlan = membershipPlans.find(
+    (p) => Number(p.membershipPlanId ?? p.id) === Number(selectedPlanId)
   ) || null
 
   // Other fields
@@ -47,6 +42,24 @@ export default function ActivateSubscriptionForm() {
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  useEffect(() => {
+    const loadPlans = async () => {
+      try {
+        setPlansLoading(true)
+        const result = await getMembershipPlans()
+        const plans = result?.data ?? result ?? []
+        setMembershipPlans(Array.isArray(plans) ? plans : [])
+      } catch (err) {
+        console.error("Failed to load membership plans:", err)
+        setMembershipPlans([])
+      } finally {
+        setPlansLoading(false)
+      }
+    }
+
+    loadPlans()
   }, [])
 
   // Debounced user search (400 ms)
@@ -222,37 +235,41 @@ export default function ActivateSubscriptionForm() {
           <select
             className="sub-select"
             value={selectedPlanId}
+            disabled={plansLoading}
             onChange={(e) => {
               setSelectedPlanId(e.target.value)
               setValidationError("")
             }}
           >
-            <option value="">-- Select a plan --</option>
-            {MEMBERSHIP_PLANS.map((p) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
+            <option value="">{plansLoading ? "-- Loading plans --" : "-- Select a plan --"}</option>
+            {membershipPlans.map((p) => {
+              const planId = p.membershipPlanId ?? p.id
+              return (
+                <option key={planId} value={planId}>{p.planName ?? p.name}</option>
+              )
+            })}
           </select>
 
           {selectedPlan && (
             <div className="sub-plan-details">
               <div className="sub-plan-detail-item">
                 <span>Plan</span>
-                <strong>{selectedPlan.name}</strong>
+                <strong>{selectedPlan.planName ?? selectedPlan.name}</strong>
               </div>
               <div className="sub-plan-detail-item">
                 <span>Amount</span>
-                <strong>&#8377;{selectedPlan.amount.toLocaleString("en-IN")}</strong>
+                <strong>&#8377;{Number(selectedPlan.amount).toLocaleString("en-IN")}</strong>
               </div>
               <div className="sub-plan-detail-item">
                 <span>Validity</span>
-                <strong>{selectedPlan.days} days</strong>
+                <strong>{selectedPlan.validityDays ?? selectedPlan.days} days</strong>
               </div>
               <div className="sub-plan-detail-item">
                 <span>Profile Views</span>
                 <strong>
-                  {selectedPlan.profileViews === 0
+                  {(selectedPlan.profileViewCredits ?? selectedPlan.profileViews) === 0
                     ? "Unlimited"
-                    : selectedPlan.profileViews}
+                    : (selectedPlan.profileViewCredits ?? selectedPlan.profileViews)}
                 </strong>
               </div>
             </div>
@@ -267,7 +284,7 @@ export default function ActivateSubscriptionForm() {
             className="sub-input sub-input-readonly"
             value={
               selectedPlan !== null
-                ? "Rs." + selectedPlan.amount.toLocaleString("en-IN")
+                ? "Rs." + Number(selectedPlan.amount).toLocaleString("en-IN")
                 : "--"
             }
             readOnly

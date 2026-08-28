@@ -80,6 +80,17 @@ public class MasterService : IMasterService
         };
     }
 
+    public async Task<ApiResponse<IEnumerable<MasterDto>>> GetAllDistricts()
+    {
+        var data = await _masterRepository.GetAllDistricts();
+        return new ApiResponse<IEnumerable<MasterDto>>
+        {
+            Success = true,
+            Message = "District master fetched successfully.",
+            Data = data
+        };
+    }
+
     public async Task<ApiResponse<IEnumerable<MasterDto>>> GetEducation()
     {
         var data = await _masterRepository.GetEducation();

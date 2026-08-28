@@ -169,8 +169,8 @@ public class ProfileRepository : IProfileRepository
             var parameters = new DynamicParameters(dto);
             parameters.Add(
                 "DateOfBirth",
-                dto.DateOfBirth.HasValue ? dto.DateOfBirth.Value : DBNull.Value,
-                DbType.DateTime);
+                dto.DateOfBirth.HasValue ? dto.DateOfBirth.Value.Date : DBNull.Value,
+                DbType.Date);
 
             using var grid = await connection.QueryMultipleAsync(
                 "usp_Profile_Upsert",

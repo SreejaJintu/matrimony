@@ -61,7 +61,10 @@ const buildProfilePayload = (draft, userId) => {
 
 export function RegistrationAboutPage() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState(() => sanitizeAboutDraft(getRegistrationDraft()))
+  const [formData, setFormData] = useState(() => ({
+    ...sanitizeAboutDraft(getRegistrationDraft()),
+    gender: getRegistrationDraft()?.gender,
+  }))
   const [masterData, setMasterData] = useState(EMPTY_MASTER_DATA)
 
   useEffect(() => {
@@ -99,7 +102,7 @@ export function RegistrationAboutPage() {
   }, [])
 
   useEffect(() => {
-    saveRegistrationDraft(formData, 'about')
+    saveRegistrationDraft({ ...getRegistrationDraft(), ...formData }, 'about')
   }, [formData])
 
   const handleBack = () => {
@@ -108,7 +111,11 @@ export function RegistrationAboutPage() {
   }
 
   const handleSubmit = async (data) => {
-    const merged = sanitizeAboutDraft({ ...formData, ...data })
+    const merged = {
+      ...getRegistrationDraft(),
+      ...sanitizeAboutDraft({ ...formData, ...data }),
+      gender: getRegistrationDraft()?.gender ?? formData.gender,
+    }
     setFormData(merged)
     saveRegistrationDraft(merged, 'about')
 

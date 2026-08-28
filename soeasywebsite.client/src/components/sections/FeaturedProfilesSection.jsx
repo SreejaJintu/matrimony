@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../../services/api'
 import { Heart, ShieldCheck } from 'lucide-react'
 
-export function FeaturedProfilesSection() {
+export function FeaturedProfilesSection({ onViewProfile }) {
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -74,9 +74,13 @@ export function FeaturedProfilesSection() {
                   <p className="featured-role">{profile.profession || profile.occupation || 'N/A'}</p>
                   <p className="featured-location">{profile.location || profile.district || profile.state || 'N/A'}</p>
                   <div className="featured-actions">
-                    <Link className="button button-primary" to={`/profile-detail/${profile.userId}`}>
+                    <button
+                      type="button"
+                      className="button button-primary"
+                      onClick={onViewProfile}
+                    >
                       View Profile
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </article>

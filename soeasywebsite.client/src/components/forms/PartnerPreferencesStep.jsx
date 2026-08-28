@@ -16,9 +16,17 @@ const resolveOptionLabel = (item) =>
   item?.Value ??
   '';
 
-export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, mode = 'create' }) => {
+export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, mode = 'create', userGender, lookingForGender }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const normalizedGender = String(userGender ?? formData.gender ?? '').toLowerCase();
+  const roleLabel =
+    lookingForGender ||
+    (normalizedGender === 'female' || normalizedGender === '2'
+      ? 'Groom'
+      : normalizedGender === 'male' || normalizedGender === '1'
+        ? 'Bride'
+        : 'Bride/Groom');
 
   useEffect(() => {
     setFormData(initialData || {});
@@ -70,15 +78,10 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
 
   return (
     <form onSubmit={handleSubmit} className="reg-form" noValidate>
-      {field('Seeking',
-        <div className="reg-choice-row">
-          {['Female', 'Male', 'Everyone'].map((g) => (
-            <button type="button" key={g}
-              onClick={() => handleChange('lookingForGender', g)}
-              className={`reg-choice ${formData.lookingForGender === g ? 'is-active' : ''}`}>
-              {g}
-            </button>
-          ))}
+      {field('You are looking for',
+        <div className="reg-note">
+          <Heart size={16} className="reg-note-icon" />
+          <p>{roleLabel}</p>
         </div>)}
 
       {field('Preferred Age Range',
@@ -187,19 +190,21 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
           </div>)}
       </div>
 
-      {field('Preferred Location',
+      {field('Preferred District',
         <div className="reg-input-wrap">
           <MapPin size={18} className="reg-input-icon" />
           <select
             value={formData.locationPreference || ''}
             onChange={(e) => handleChange('locationPreference', e.target.value)}
             className="reg-input reg-select"
-            disabled={!isLoaded}
+            disabled={!isLoaded || !masterData.districts?.length}
           >
-            <option value="">Select preferred location</option>
-            {masterData.countries?.map((c, i) => (
-              <option key={`loc-country-${c.id ?? i}-${i}`} value={resolveOptionLabel(c)}>
-                {resolveOptionLabel(c)}
+            <option value="">
+              {masterData.districts?.length ? 'Select district' : 'Loading districts...'}
+            </option>
+            {masterData.districts?.map((d, i) => (
+              <option key={`district-${d.id ?? i}-${i}`} value={resolveOptionLabel(d)}>
+                {resolveOptionLabel(d)}
               </option>
             ))}
           </select>

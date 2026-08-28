@@ -39,9 +39,8 @@ async function request(path, options = {}) {
 }
 
 function normalizeProfilePayload(payload = {}) {
-  const { dateOfBirth, ...rest } = payload
   return {
-    ...rest,
+    ...payload,
   }
 }
 
@@ -57,6 +56,7 @@ export const api = {
   getMasterCountry: () => request('/api/master/country'),
   getMasterState: (countryId) => request(`/api/master/state/${countryId}`),
   getMasterDistrict: (stateId) => request(`/api/master/district/${stateId}`),
+  getMasterDistricts: () => request('/api/master/districts'),
   getMasterEducation: () => request('/api/master/education'),
   getMasterMaritalStatus: () => request('/api/master/marital-status'),
   getMasterMotherTongue: () => request('/api/master/mother-tongue'),
@@ -87,6 +87,10 @@ export const api = {
   savePreference: (payload) => request('/api/profile/preference', { method: 'PUT', data: payload }),
   savePhoto: (payload) => request('/api/profile/photo', { method: 'POST', data: payload }),
   searchMatches: (payload) => request('/api/match/search', { method: 'POST', data: payload }),
+  shortlistGet: () => request('/api/shortlist'),
+  shortlistAdd: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'POST' }),
+  shortlistRemove: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'DELETE' }),
+  shortlistCheck: (targetUserId) => request(`/api/shortlist/check/${targetUserId}`),
   
   // File Upload
   uploadPhoto: async (file) => {
@@ -98,7 +102,8 @@ export const api = {
     })
     return response.data
   },
-
+// Add inside the api object in api.js
+  submitLead: (payload) => request('/api/subscription/lead', { method: 'POST', data: payload }),
   // Subscription / Membership
   getSubscriptionStatus: (userId) => request(`/api/subscription/status/${userId}`),
   submitPayment: (payload) => request('/api/subscription/submit-payment', { method: 'POST', data: payload }),

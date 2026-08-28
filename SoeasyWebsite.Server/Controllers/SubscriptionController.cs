@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Dapper;
+using SoeasyWebsite.Server.Common;
+using SoeasyWebsite.Server.Data;
 using SoeasyWebsite.Server.DTOs.Subscription;
 using SoeasyWebsite.Server.Interfaces;
 
@@ -9,10 +12,40 @@ namespace SoeasyWebsite.Server.Controllers;
 public class SubscriptionController : ControllerBase
 {
     private readonly ISubscriptionService _subscriptionService;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public SubscriptionController(ISubscriptionService subscriptionService)
+    public SubscriptionController(
+        ISubscriptionService subscriptionService,
+        IDbConnectionFactory connectionFactory)
     {
         _subscriptionService = subscriptionService;
+        _connectionFactory = connectionFactory;
+    }
+
+    [HttpPost("lead")]
+    public async Task<IActionResult> CaptureLead([FromBody] CreateLeadRequestDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.MobileNumber))
+        {
+            return BadRequest(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Name and Mobile Number are required."
+            });
+        }
+
+        using var connection = _connectionFactory.CreateConnection();
+        const string sql = @"
+            INSERT INTO [dbo].[Lead] ([UserId], [Name], [MobileNumber], [Email], [PreferredPlan], [Status], [CreatedAt])
+            VALUES (@UserId, @Name, @MobileNumber, @Email, @PreferredPlan, 'New', GETDATE());";
+
+        var result = await connection.ExecuteAsync(sql, dto);
+
+        return Ok(new ApiResponse<bool>
+        {
+            Success = result > 0,
+            Message = "Lead captured successfully."
+        });
     }
 
     [HttpPost("submit-payment")]

@@ -18,7 +18,7 @@ export function Footer() {
               <Link to="/">About Us</Link>
             </li>
             <li>
-              <Link to="/">Careers</Link>
+              <Link to="/admin/login">Admin</Link>
             </li>
             <li>
               <Link to="/">Blog</Link>

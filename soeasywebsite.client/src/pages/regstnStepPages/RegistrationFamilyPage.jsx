@@ -60,7 +60,10 @@ const buildFamilyPayload = (draft, userId) => ({
 
 export function RegistrationFamilyPage() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState(() => sanitizeFamilyDraft(getRegistrationDraft()))
+  const [formData, setFormData] = useState(() => ({
+    ...sanitizeFamilyDraft(getRegistrationDraft()),
+    gender: getRegistrationDraft()?.gender,
+  }))
   const [masterData, setMasterData] = useState(EMPTY_MASTER_DATA)
 
   useEffect(() => {
@@ -87,13 +90,17 @@ export function RegistrationFamilyPage() {
   }, [])
 
   useEffect(() => {
-    saveRegistrationDraft(formData, 'family')
+    saveRegistrationDraft({ ...getRegistrationDraft(), ...formData }, 'family')
   }, [formData])
 
   const handleBack = () => navigate(`/register/${getPreviousRegistrationStep('family') ?? 'about'}`, { replace: true })
 
   const handleSubmit = async (data) => {
-    const merged = sanitizeFamilyDraft({ ...formData, ...data })
+    const merged = {
+      ...getRegistrationDraft(),
+      ...sanitizeFamilyDraft({ ...formData, ...data }),
+      gender: getRegistrationDraft()?.gender ?? formData.gender,
+    }
     setFormData(merged)
     saveRegistrationDraft(merged, 'family')
 

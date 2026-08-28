@@ -345,6 +345,40 @@
   background: rgba(255, 255, 255, 0.94);
   color: #85002a;
   cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.favorite-button.active,
+.favorite-button:disabled {
+  background: #85002a;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(133, 0, 42, 0.28);
+}
+
+.favorite-button.active {
+  transform: scale(1.06);
+}
+
+.favorite-button.loading {
+  position: absolute;
+  overflow: hidden;
+}
+
+.favorite-button.loading::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 35%,
+    transparent 50%
+  );
+  animation: shortlist-shimmer 0.9s linear infinite;
+}
+
+.favorite-button:disabled {
+  cursor: default;
 }
 
 .match-card-body {
@@ -487,6 +521,37 @@
   border: 1px solid #dcc5b5;
   background: #fff;
   color: #700019;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.shortlist-button.active,
+.shortlist-button:disabled {
+  border-color: #85002a;
+  background: #fff1f4;
+  color: #85002a;
+  box-shadow: inset 0 0 0 1px rgba(133, 0, 42, 0.12);
+}
+
+.shortlist-button.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.shortlist-button.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.45) 35%,
+    transparent 50%
+  );
+  animation: shortlist-shimmer 0.9s linear infinite;
+}
+
+.shortlist-button:disabled {
+  cursor: default;
 }
 
 /* Loading */
@@ -708,12 +773,35 @@
   right: 24px;
   bottom: 24px;
   z-index: 1100;
-  padding: 11px 15px;
-  border-radius: 8px;
+  padding: 13px 16px;
+  border-radius: 12px;
   background: #700019;
   color: #fff;
-  box-shadow: 0 8px 24px rgba(64, 0, 20, 0.2);
-  font-size: 11px;
+  box-shadow: 0 16px 34px rgba(64, 0, 20, 0.24);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.matches-toast.success {
+  background: linear-gradient(135deg, #85002a 0%, #b31237 100%);
+}
+
+.matches-toast::before {
+  content: '❤';
+  display: inline-block;
+  margin-right: 8px;
+  color: #fff;
+}
+
+@keyframes shortlist-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Tablet */

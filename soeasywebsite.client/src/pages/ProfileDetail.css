@@ -611,6 +611,30 @@
   background: #F1F8F2;
 }
 
+.pd-shortlist-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 22px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(112, 0, 25, 0.12);
+}
+
+.pd-shortlist-banner.success {
+  background: linear-gradient(135deg, #85002a 0%, #b31237 100%);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(133, 0, 42, 0.2);
+}
+
+.pd-shortlist-banner.info {
+  background: #fff1f4;
+  color: #85002a;
+}
+
 .pd-safety-badge {
   display: flex;
   align-items: center;

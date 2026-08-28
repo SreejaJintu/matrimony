@@ -20,7 +20,6 @@ const STEPS = [
 ]
 
 const SUPPORTED_FIELDS = [
-  'lookingForGender',
   'ageRangeMin',
   'ageRangeMax',
   'preferredReligionId',
@@ -41,12 +40,19 @@ const sanitizePreferenceDraft = (draft = {}) => {
   return cleaned
 }
 
+const resolveLookingForGender = (gender) => {
+  if (gender === 2 || String(gender || '').toLowerCase() === 'female') return 'Groom'
+  if (gender === 1 || String(gender || '').toLowerCase() === 'male') return 'Bride'
+  return 'Partner'
+}
+
 const buildPreferencePayload = (draft, userId) => {
   const ageFrom = Number(draft.ageRangeMin || 21)
   const ageTo = Number(draft.ageRangeMax || 30)
 
   const preferredProfession = draft.preferredProfession || null
   const preferredLocation = draft.locationPreference || null
+  const lookingForGender = draft.lookingForGender || null
 
   return {
     userId,
@@ -67,15 +73,20 @@ const buildPreferencePayload = (draft, userId) => {
     preferredDescription: [
       preferredProfession ? `Profession: ${preferredProfession}` : null,
       preferredLocation ? `Location: ${preferredLocation}` : null,
-      draft.lookingForGender ? `Looking for: ${draft.lookingForGender}` : null,
+      lookingForGender ? `Looking for: ${lookingForGender}` : null,
     ].filter(Boolean).join(' | ') || null,
   }
 }
 
 export function RegistrationPreferencesPage() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState(() => sanitizePreferenceDraft(getRegistrationDraft()))
-  const [masterData, setMasterData] = useState({ religions: [], educations: [], maritalStatuses: [], communities: [] })
+  const registrationDraft = getRegistrationDraft() ?? {}
+  const [formData, setFormData] = useState(() => ({
+    ...sanitizePreferenceDraft(getRegistrationDraft()),
+    gender: registrationDraft.gender ?? session.getGenderId(),
+  }))
+  const [masterData, setMasterData] = useState({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [] })
+  const resolvedLookingForGender = resolveLookingForGender(formData.gender ?? registrationDraft?.gender ?? session.getGenderId())
 
   useEffect(() => {
     const loadMasters = async () => {
@@ -92,6 +103,7 @@ export function RegistrationPreferencesPage() {
           educations: educations?.data ?? educations ?? [],
           maritalStatuses: maritalStatuses?.data ?? maritalStatuses ?? [],
           communities: [],
+          districts: [],
         })
 
         // If religion already selected (e.g. from draft), load communities
@@ -100,9 +112,12 @@ export function RegistrationPreferencesPage() {
           const communities = await api.getMasterCommunity(savedReligionId)
           setMasterData(prev => ({ ...prev, communities: communities?.data ?? communities ?? [] }))
         }
+
+        const districts = await api.getMasterDistricts()
+        setMasterData(prev => ({ ...prev, districts: districts?.data ?? districts ?? [] }))
       } catch (error) {
         console.error('Failed to load preference master data:', error)
-        setMasterData({ religions: [], educations: [], maritalStatuses: [], communities: [] })
+        setMasterData({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [] })
       }
     }
 
@@ -122,13 +137,18 @@ export function RegistrationPreferencesPage() {
   }
 
   useEffect(() => {
-    saveRegistrationDraft(formData, 'preferences')
+    saveRegistrationDraft({ ...getRegistrationDraft(), ...formData }, 'preferences')
   }, [formData])
 
   const handleBack = () => navigate(`/register/${getPreviousRegistrationStep('preferences') ?? 'family'}`, { replace: true })
 
   const handleSubmit = async (data) => {
-    const merged = sanitizePreferenceDraft({ ...formData, ...data })
+    const merged = {
+      ...getRegistrationDraft(),
+      ...sanitizePreferenceDraft({ ...formData, ...data }),
+      gender: formData.gender ?? registrationDraft?.gender ?? session.getGenderId(),
+      lookingForGender: resolvedLookingForGender,
+    }
     setFormData(merged)
     saveRegistrationDraft(merged, 'preferences')
 
@@ -162,6 +182,8 @@ export function RegistrationPreferencesPage() {
         onBack={handleBack}
         masterData={masterData}
         onReligionChange={handleReligionChange}
+        userGender={formData.gender ?? registrationDraft?.gender ?? session.getGenderId()}
+        lookingForGender={resolvedLookingForGender}
       />
     </RegistrationShell>
   )

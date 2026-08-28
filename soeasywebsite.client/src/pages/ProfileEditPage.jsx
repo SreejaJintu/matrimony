@@ -44,6 +44,7 @@ const initialForm = {
   education: '',
   annualIncome: '',
   city: '',
+  dob: '',
   fatherName: '',
   fatherOccupation: '',
   motherName: '',
@@ -176,7 +177,7 @@ export function ProfileEditPage() {
     // Load user profile data
     async function loadProfileData() {
       try {
-        const response = await api.getProfile(userId);
+        const response = await api.getProfile(userId, userId);
         const profile = response?.data ?? response?.Data ?? response;
         if (profile) {
           const profileImageUrl =
@@ -191,6 +192,7 @@ export function ProfileEditPage() {
             ...initialForm,
             fullName: profile.fullName || '',
             gender: profile.genderId === 2 ? 'Female' : profile.genderId === 3 ? 'Other' : profile.genderId === 1 ? 'Male' : '',
+            dob: profile.dateOfBirth ? String(profile.dateOfBirth).slice(0, 10) : '',
             mobileNumber: pickFirstValue(profile, ['mobileNumber', 'mobileNo', 'phoneNumber', 'phone', 'contactNumber', 'mobile']) || '',
             email: pickFirstValue(profile, ['email', 'emailId', 'emailAddress', 'mail', 'userEmail']) || '',
             heightId: profile.heightId || '',
@@ -200,7 +202,7 @@ export function ProfileEditPage() {
             occupation: profile.designation || profile.occupation || '',
             educationId: profile.educationId || '',
             annualIncomeId: profile.incomeId || '',
-            city: profile.city || profile.district || profile.state || profile.country || '',
+            city: profile.city || profile.address || profile.district || profile.state || profile.country || '',
             religionId: profile.religionId || '',
             motherTongueId: profile.motherTongueId || '',
             communityId: profile.communityId || '',
@@ -295,6 +297,7 @@ export function ProfileEditPage() {
             fullName: mergedData.fullName, // Basic details are part of profile
             genderId: mergedData.gender === 'Female' ? 2 : mergedData.gender === 'Other' ? 3 : 1,
             heightId: mergedData.heightId,
+            dateOfBirth: mergedData.dob ? new Date(`${mergedData.dob}T00:00:00`).toISOString() : null,
             weight: Number(mergedData.weight),
             maritalStatusId: mergedData.maritalStatusId,
             occupationId: mergedData.occupationId,
@@ -302,6 +305,7 @@ export function ProfileEditPage() {
             educationId: mergedData.educationId,
             incomeId: mergedData.annualIncomeId,
             city: mergedData.city,
+            address: mergedData.city,
             religionId: mergedData.religionId,
             motherTongueId: mergedData.motherTongueId,
             communityId: mergedData.communityId,

@@ -11,6 +11,7 @@ public interface IMasterService
     Task<ApiResponse<IEnumerable<MasterDto>>> GetCountry();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetState(int countryId);
     Task<ApiResponse<IEnumerable<MasterDto>>> GetDistrict(int stateId);
+    Task<ApiResponse<IEnumerable<MasterDto>>> GetAllDistricts();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetEducation();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetMaritalStatus();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetMotherTongue();
