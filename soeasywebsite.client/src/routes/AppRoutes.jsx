@@ -27,6 +27,9 @@ import AdminProfileDetail from "../admin/pages/AdminProfileDetail";
 import AdminSubscriptionPage from '../admin/pages/AdminSubscriptionPage'
 import AdminPlansPage from '../admin/pages/AdminPlansPage'
 import LeadsManagementPage from '../admin/pages/LeadsManagementPage'
+import AdminLocations from '../admin/pages/AdminLocations'
+import AdminBrokers from '../admin/pages/AdminBrokers'
+import AdminProtectedRoute from '../admin/components/AdminProtectedRoute'
 
 export function AppRoutes() {
   const navigate = useNavigate()
@@ -172,51 +175,29 @@ export function AppRoutes() {
           ADMIN ROUTES
       ========================= */}
 
-  <Route
-  path="/admin/login"
-  element={<AdminLogin />}
-/>
+      <Route path="/admin/login" element={<AdminLogin />} />
 
-<Route
-  path="/admin"
-  element={<AdminLayout />}
->
-  <Route
-    index
-    element={<Navigate to="/admin/dashboard" replace />}
-  />
+      <Route element={<AdminProtectedRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
 
-  <Route
-    path="dashboard"
-    element={<AdminDashboard />}
-  />
+          <Route path="dashboard" element={<AdminDashboard />} />
 
-  <Route
-    path="profiles"
-    element={<AdminProfiles />}
-  />
+          <Route path="profiles" element={<AdminProfiles />} />
 
-  <Route
-    path="profiles/:userId"
-    element={<AdminProfileDetail />}
-  />
+          <Route path="profiles/:userId" element={<AdminProfileDetail />} />
 
-  <Route
-  path="subscriptions"
-  element={<AdminSubscriptionPage />}
-/>
+          <Route path="subscriptions" element={<AdminSubscriptionPage />} />
 
- <Route
-  path="plans"
-  element={<AdminPlansPage />}
-/>
+          <Route path="plans" element={<AdminPlansPage />} />
 
- <Route
-  path="leads"
-  element={<LeadsManagementPage />}
-/>
+          <Route path="locations" element={<AdminLocations />} />
 
-</Route>
+          <Route path="leads" element={<LeadsManagementPage />} />
+
+          <Route path="brokers" element={<AdminBrokers />} />
+        </Route>
+      </Route>
 
 
       {/* =========================

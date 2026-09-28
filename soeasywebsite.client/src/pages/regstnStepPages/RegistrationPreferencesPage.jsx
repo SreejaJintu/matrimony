@@ -27,6 +27,7 @@ const SUPPORTED_FIELDS = [
   'educationPreferenceId',
   'preferredProfession',
   'preferredMaritalStatusId',
+  'preferredDistrictId',
   'locationPreference',
 ]
 
@@ -52,6 +53,7 @@ const buildPreferencePayload = (draft, userId) => {
 
   const preferredProfession = draft.preferredProfession || null
   const preferredLocation = draft.locationPreference || null
+  const preferredDistrictId = draft.preferredDistrictId !== undefined && draft.preferredDistrictId !== null && draft.preferredDistrictId !== '' ? Number(draft.preferredDistrictId) : null
   const lookingForGender = draft.lookingForGender || null
 
   return {
@@ -69,7 +71,7 @@ const buildPreferencePayload = (draft, userId) => {
     incomeId: null,
     countryId: null,
     stateId: null,
-    districtId: null,
+    districtId: preferredDistrictId,
     preferredDescription: [
       preferredProfession ? `Profession: ${preferredProfession}` : null,
       preferredLocation ? `Location: ${preferredLocation}` : null,
@@ -85,7 +87,7 @@ export function RegistrationPreferencesPage() {
     ...sanitizePreferenceDraft(getRegistrationDraft()),
     gender: registrationDraft.gender ?? session.getGenderId(),
   }))
-  const [masterData, setMasterData] = useState({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [] })
+  const [masterData, setMasterData] = useState({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [], locations: [] })
   const resolvedLookingForGender = resolveLookingForGender(formData.gender ?? registrationDraft?.gender ?? session.getGenderId())
 
   useEffect(() => {
@@ -104,6 +106,7 @@ export function RegistrationPreferencesPage() {
           maritalStatuses: maritalStatuses?.data ?? maritalStatuses ?? [],
           communities: [],
           districts: [],
+          locations: [],
         })
 
         // If religion already selected (e.g. from draft), load communities
@@ -114,10 +117,17 @@ export function RegistrationPreferencesPage() {
         }
 
         const districts = await api.getMasterDistricts()
-        setMasterData(prev => ({ ...prev, districts: districts?.data ?? districts ?? [] }))
+        const districtList = districts?.data ?? districts ?? []
+        setMasterData(prev => ({ ...prev, districts: districtList }))
+
+        const savedDistrictId = getRegistrationDraft()?.preferredDistrictId
+        if (savedDistrictId) {
+          const locations = await api.getMasterLocations(savedDistrictId)
+          setMasterData(prev => ({ ...prev, locations: locations?.data ?? locations ?? [] }))
+        }
       } catch (error) {
         console.error('Failed to load preference master data:', error)
-        setMasterData({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [] })
+        setMasterData({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [], locations: [] })
       }
     }
 
@@ -134,6 +144,38 @@ export function RegistrationPreferencesPage() {
     } catch (e) {
       console.error('Failed to load communities:', e)
     }
+  }
+
+  const handleDistrictChange = async (districtId) => {
+    const resolvedDistrictId = districtId === '' ? '' : Number(districtId)
+    setFormData((prev) => ({
+      ...prev,
+      preferredDistrictId: resolvedDistrictId,
+      locationPreference: '',
+    }))
+    setMasterData((prev) => ({ ...prev, locations: [] }))
+
+    if (!resolvedDistrictId) return
+
+    try {
+      const locations = await api.getMasterLocations(resolvedDistrictId)
+      setMasterData((prev) => ({ ...prev, locations: locations?.data ?? locations ?? [] }))
+    } catch (error) {
+      console.error('Failed to load locations:', error)
+    }
+  }
+
+  const handleLocationChange = (locationId) => {
+    const selectedLocation =
+      masterData.locations.find(
+        (location) => String(location.id ?? location.Id) === String(locationId)
+      )
+
+    setFormData((prev) => ({
+      ...prev,
+      preferredLocationId: locationId === '' ? '' : Number(locationId),
+      locationPreference: selectedLocation?.name ?? selectedLocation?.Name ?? '',
+    }))
   }
 
   useEffect(() => {
@@ -182,6 +224,8 @@ export function RegistrationPreferencesPage() {
         onBack={handleBack}
         masterData={masterData}
         onReligionChange={handleReligionChange}
+        onDistrictChange={handleDistrictChange}
+        onLocationChange={handleLocationChange}
         userGender={formData.gender ?? registrationDraft?.gender ?? session.getGenderId()}
         lookingForGender={resolvedLookingForGender}
       />

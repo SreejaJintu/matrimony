@@ -91,6 +91,17 @@ public class MasterService : IMasterService
         };
     }
 
+    public async Task<ApiResponse<IEnumerable<MasterDto>>> GetLocations(int districtId)
+    {
+        var data = await _masterRepository.GetLocations(districtId);
+        return new ApiResponse<IEnumerable<MasterDto>>
+        {
+            Success = true,
+            Message = "Location master fetched successfully.",
+            Data = data
+        };
+    }
+
     public async Task<ApiResponse<IEnumerable<MasterDto>>> GetEducation()
     {
         var data = await _masterRepository.GetEducation();

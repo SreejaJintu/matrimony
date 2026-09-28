@@ -1,0 +1,4 @@
+Starting migration tool, limit 10 records...
+Fetched 10 source records.
+RegID 1182 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Completed. Success=9, Skipped=1, Error=0.

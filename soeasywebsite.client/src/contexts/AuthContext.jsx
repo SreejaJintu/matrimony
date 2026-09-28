@@ -24,8 +24,49 @@ export function AuthProvider({ children }) {
     }
 
     const payload = response.data
+
+    if (payload?.requiresOtp === true) {
+      return payload
+    }
+
     if (!payload?.token) {
       throw new Error('Login succeeded, but authentication token was not received from the server.')
+    }
+
+    const authData = {
+      userId: payload.userId,
+      fullName: payload.fullName,
+      genderId: payload.genderId,
+      subscription: payload.subscription ?? 'Free',
+      token: payload.token,
+    }
+
+    session.setAuth(authData)
+
+    const loggedInUser = {
+      userId: authData.userId,
+      fullName: authData.fullName,
+      genderId: authData.genderId,
+      subscription: authData.subscription,
+      token: authData.token,
+    }
+
+    setIsAuthenticated(true)
+    setUser(loggedInUser)
+
+    return loggedInUser
+  }, [])
+
+  const verifyLoginOtp = useCallback(async (userId, otp) => {
+    const response = await api.verifyLoginOtp({ userId, otp })
+
+    if (response?.success !== true) {
+      throw new Error(response?.message || 'OTP verification failed.')
+    }
+
+    const payload = response.data
+    if (!payload?.token) {
+      throw new Error('OTP verification succeeded, but authentication token was not received from the server.')
     }
 
     const authData = {
@@ -59,7 +100,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, verifyLoginOtp, logout }}>
       {children}
     </AuthContext.Provider>
   )

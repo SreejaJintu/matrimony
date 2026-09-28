@@ -8,12 +8,7 @@ const AdminSidebar = () => {
     <aside className="admin-sidebar">
 
       <div className="admin-brand">
-        <div className="admin-logo">S</div>
-
-        <div>
-          <h2>Soesy</h2>
-          <span>Admin Panel</span>
-        </div>
+        <img className="admin-brand-image" src="/maroon_favicon.svg" alt="Viswaas" />
       </div>
 
       <nav className="admin-nav">
@@ -28,6 +23,11 @@ const AdminSidebar = () => {
           Profiles
         </NavLink>
 
+        <NavLink to="/admin/brokers">
+          <span>♧</span>
+          Broker Management
+        </NavLink>
+
         <NavLink to="/admin/subscriptions">
           <span>◆</span>
           Memberships
@@ -36,9 +36,9 @@ const AdminSidebar = () => {
           <span>◆</span>
           Add Plans 
         </NavLink>
-        <NavLink to="/admin/reports">
-          <span>!</span>
-          Reports
+        <NavLink to="/admin/locations">
+         <span>⌖</span>
+           Locations
         </NavLink>
 
         <NavLink to="/admin/leads">
@@ -46,11 +46,7 @@ const AdminSidebar = () => {
           Leads
         </NavLink>
 
-        <NavLink to="/admin/executives">
-          <span>♟</span>
-          Executives
-        </NavLink>
-
+       
         <NavLink to="/admin/settings">
           <span>⚙</span>
           Settings

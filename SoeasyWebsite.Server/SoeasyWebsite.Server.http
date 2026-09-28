@@ -4,3 +4,10 @@ GET {{SoeasyWebsite.Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+PUT {{SoeasyWebsite.Server_HostAddress}}/api/admin/profiles/1/mobile
+Content-Type: application/json
+
+{
+	"mobileNumber": "9876543210"
+}

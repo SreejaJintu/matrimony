@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj": {}
+    "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj": {}
   },
   "projects": {
-    "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj": {
+    "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
+        "projectUniqueName": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
         "projectName": "SoeasyWebsite.Server",
-        "projectPath": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
+        "projectPath": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
         "packagesPath": "C:\\Users\\sreej\\.nuget\\packages\\",
-        "outputPath": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\obj\\",
+        "outputPath": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -45,10 +46,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "BCrypt.Net-Next": {
@@ -99,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

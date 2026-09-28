@@ -16,7 +16,7 @@ const resolveOptionLabel = (item) =>
   item?.Value ??
   '';
 
-export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, mode = 'create', userGender, lookingForGender }) => {
+export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, onDistrictChange, onLocationChange, mode = 'create', userGender, lookingForGender }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
   const normalizedGender = String(userGender ?? formData.gender ?? '').toLowerCase();
@@ -62,6 +62,21 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
     handleChange('preferredReligionId', religionId);
     handleChange('preferredCommunityId', '');
     onReligionChange?.(religionId);
+  };
+
+  const handleDistrictSelect = (value) => {
+    const districtId = value === '' ? '' : Number(value);
+    setFormData((prev) => ({
+      ...prev,
+      preferredDistrictId: districtId,
+      locationPreference: '',
+    }));
+    onDistrictChange?.(districtId);
+  };
+
+  const handleLocationSelect = (locationName) => {
+    setFormData((prev) => ({ ...prev, locationPreference: locationName }));
+    onLocationChange?.(locationName);
   };
 
   const handleSubmit = (e) => {
@@ -190,25 +205,60 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
           </div>)}
       </div>
 
-      {field('Preferred District',
-        <div className="reg-input-wrap">
-          <MapPin size={18} className="reg-input-icon" />
-          <select
-            value={formData.locationPreference || ''}
-            onChange={(e) => handleChange('locationPreference', e.target.value)}
-            className="reg-input reg-select"
-            disabled={!isLoaded || !masterData.districts?.length}
-          >
-            <option value="">
-              {masterData.districts?.length ? 'Select district' : 'Loading districts...'}
-            </option>
-            {masterData.districts?.map((d, i) => (
-              <option key={`district-${d.id ?? i}-${i}`} value={resolveOptionLabel(d)}>
-                {resolveOptionLabel(d)}
+      <div className="reg-grid">
+        {field('Preferred District',
+          <div className="reg-input-wrap">
+            <MapPin size={18} className="reg-input-icon" />
+            <select
+              value={formData.preferredDistrictId || ''}
+              onChange={(e) => handleDistrictSelect(e.target.value)}
+              className="reg-input reg-select"
+              disabled={!isLoaded || !masterData.districts?.length}
+            >
+              <option value="">
+                {masterData.districts?.length ? 'Select district' : 'Loading districts...'}
               </option>
-            ))}
-          </select>
-        </div>)}
+              {masterData.districts?.map((d, i) => (
+                <option key={`district-${d.id ?? i}-${i}`} value={d.id ?? d.Id ?? ''}>
+                  {resolveOptionLabel(d)}
+                </option>
+              ))}
+            </select>
+          </div>)}
+
+        {field('Preferred Location',
+          <div className="reg-input-wrap">
+            <MapPin size={18} className="reg-input-icon" />
+            <select
+              value={formData.preferredLocationId || ''}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedLocation = masterData.locations?.find(
+                  (location) => String(location.id ?? location.Id) === String(selectedId)
+                );
+                setFormData((prev) => ({
+                  ...prev,
+                  preferredLocationId: selectedId,
+                  locationPreference: selectedLocation?.name ?? selectedLocation?.Name ?? '',
+                }));
+                onLocationChange?.(selectedId);
+              }}
+              className="reg-input reg-select"
+              disabled={!formData.preferredDistrictId || !masterData.locations?.length}
+            >
+              <option value="">
+                {formData.preferredDistrictId
+                  ? masterData.locations?.length ? 'Select location' : 'Loading locations...'
+                  : 'Select district first'}
+              </option>
+              {masterData.locations?.map((location, i) => (
+                <option key={`location-${location.id ?? i}-${i}`} value={location.id ?? location.Id ?? ''}>
+                  {location.name ?? location.Name ?? ''}
+                </option>
+              ))}
+            </select>
+          </div>)}
+      </div>
 
       <div className="reg-note">
         <Heart size={16} className="reg-note-icon" />

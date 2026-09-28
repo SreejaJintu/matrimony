@@ -1,0 +1,28 @@
+Starting migration tool, limit 120 records...
+Fetched 120 source records.
+RegID 1182 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1192 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1194 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1195 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1196 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1197 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1199 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1202 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1204 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1205 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1206 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1207 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1208 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1210 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1211 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1212 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1213 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1214 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1215 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1217 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1218 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1219 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1220 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1221 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1222: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1222).
+The statement has been terminated.

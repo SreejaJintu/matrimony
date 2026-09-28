@@ -40,4 +40,25 @@ public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
         });
     }
 }
+
+[HttpPost("verify-login-otp")]
+public async Task<IActionResult> VerifyLoginOtp(
+    [FromBody] VerifyLoginOtpRequestDto dto)
+{
+    try
+    {
+        var response = await _authService.VerifyLoginOtp(dto);
+
+        return Ok(response);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new
+        {
+            Message = ex.Message,
+            StackTrace = ex.StackTrace,
+            InnerException = ex.InnerException?.Message
+        });
+    }
+}
 }

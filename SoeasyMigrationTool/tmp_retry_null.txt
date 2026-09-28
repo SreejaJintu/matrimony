@@ -1,0 +1,23 @@
+Starting migration tool, limit 50 records...
+Initialized EXCLUDED tracker: 0 unmigrated non-female records bypassed via idempotency schema.
+
+Selected 50 eligible female candidates for pipeline evaluation.
+Error on RegID 1895: Violation of UNIQUE KEY constraint 'UQ__UserAcco__250375B146AC73B1'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1895 Failed.
+Error on RegID 1896: Violation of UNIQUE KEY constraint 'UQ__UserAcco__250375B146AC73B1'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1896 Failed.
+RegID 1907 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+Error on RegID 1914: Violation of UNIQUE KEY constraint 'UQ__UserAcco__250375B146AC73B1'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1914 Failed.
+
+=== PILOT MIGRATION REPORT ===
+Source records checked: 8485
+Female eligible: 1905
+Male excluded: 6488
+Other/missing gender: 92
+------------------------------
+Successfully migrated: 46
+Skipped (Conflict/Invalid): 1
+Failed (Application Error): 3
+------------------------------
+Remaining female candidates: 1656

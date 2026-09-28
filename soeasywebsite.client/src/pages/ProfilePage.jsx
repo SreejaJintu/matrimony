@@ -360,7 +360,7 @@ export function ProfilePage() {
                     <strong>{profileId}</strong>
                   </div>
                 </div>
-                <Link to="/membership" className="profile-rail-action">
+                <Link to="/subscription" className="profile-rail-action">
                   View Membership
                 </Link>
               </DetailCard>

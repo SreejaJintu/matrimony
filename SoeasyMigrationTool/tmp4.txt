@@ -1,0 +1,13 @@
+Starting migration tool, limit 10 records...
+Fetched 10 source records.
+RegID 1182 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1183 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1184 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1185 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1186 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1187 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1188 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1191 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1192 Skipped. Reasons: EX-GENDER-MISSING
+RegID 1194 Skipped. Reasons: EX-GENDER-MISSING
+Completed. Success=0, Skipped=10, Error=0.

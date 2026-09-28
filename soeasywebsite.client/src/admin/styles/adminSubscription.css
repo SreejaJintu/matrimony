@@ -30,6 +30,95 @@
   padding: 28px 30px;
 }
 
+.sub-plan-list-card {
+  margin-top: 24px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.sub-plan-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sub-plan-list-header .sub-form-title {
+  margin: 0 0 4px;
+}
+
+.sub-plan-list-header p {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.sub-plan-list-state {
+  padding: 28px 12px;
+  color: #777;
+  text-align: center;
+  font-size: 14px;
+}
+
+.sub-plan-table-wrap {
+  overflow-x: auto;
+}
+
+.sub-plan-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sub-plan-table th,
+.sub-plan-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.sub-plan-table th {
+  color: #666;
+  background: #fafafa;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sub-plan-table td {
+  color: #444;
+}
+
+.sub-plan-table td strong {
+  color: #222;
+}
+
+.sub-plan-features {
+  white-space: normal;
+  min-width: 170px;
+}
+
+.sub-plan-status {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.sub-plan-status.is-active {
+  background: #e7f7ed;
+  color: #19713a;
+}
+
+.sub-plan-status.is-inactive {
+  background: #f1f1f1;
+  color: #666;
+}
+
 .sub-form-title {
   margin: 0 0 26px;
   font-size: 18px;
@@ -277,6 +366,71 @@
 
 .sub-submit-btn:hover:not(:disabled) {
   background: #000;
+}
+
+.sub-plan-flags {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.sub-plan-active-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.sub-cancel-edit-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sub-plan-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.sub-plan-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+}
+
+.sub-plan-action-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.sub-plan-action-btn.is-delete {
+  border-color: #e7b9b9;
+  color: #a32626;
+}
+
+.sub-plan-action-btn.is-delete:hover:not(:disabled) {
+  background: #fff1f1;
+}
+
+.sub-plan-action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .sub-submit-btn:disabled {

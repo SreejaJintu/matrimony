@@ -11,6 +11,7 @@ public interface IMasterRepository
     Task<IEnumerable<MasterDto>> GetState(int countryId);
     Task<IEnumerable<MasterDto>> GetDistrict(int stateId);
     Task<IEnumerable<MasterDto>> GetAllDistricts();
+    Task<IEnumerable<MasterDto>> GetLocations(int districtId);
     Task<IEnumerable<MasterDto>> GetEducation();
     Task<IEnumerable<MasterDto>> GetMaritalStatus();
     Task<IEnumerable<MasterDto>> GetMotherTongue();

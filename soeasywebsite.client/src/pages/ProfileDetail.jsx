@@ -26,6 +26,7 @@ export function ProfileDetail() {
   const navigate = useNavigate();
 
   const currentLoggedUserId = session.getUserId();
+  const currentLoggedGenderId = session.getGenderId();
   const userId = paramUserId || searchParams.get('userId') || currentLoggedUserId;
 
   const [loading, setLoading] = useState(() => Boolean(userId));
@@ -70,8 +71,14 @@ export function ProfileDetail() {
 
     async function loadData() {
       try {
-        const viewerId = session.getUserId();
-        const pResponse = await api.getProfile(userId, viewerId);
+        const viewerId = session.getUserId() || null;
+        let pResponse;
+        try {
+          pResponse = await api.getProfile(userId, viewerId);
+        } catch (error) {
+          if (!viewerId) throw error;
+          pResponse = await api.getProfile(userId);
+        }
         const pData = pResponse?.data ?? pResponse?.Data ?? (pResponse?.success ? pResponse : null);
 
         if (!isMounted) return;

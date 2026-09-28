@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Camera, Upload, X, Star, ImagePlus, Loader } from 'lucide-react';
 import { api } from '../../services/api';
+import { processPhotoToStandardSize } from '../../utils/imageProcess';
 
 export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, mode = 'create' }) => {
   const [photos, setPhotos] = useState(initialData.photos || []);
@@ -12,8 +13,8 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
   const handleFiles = async (files) => {
     setError('');
     const validFiles = Array.from(files).filter((file) => {
-      if (!file.type.startsWith('image/')) { setError('Only image files are allowed.'); return false; }
-      if (file.size > 5 * 1024 * 1024) { setError('Each photo must be under 5MB.'); return false; }
+      if (!file.type.startsWith('image/')) { setError('Only image files (JPG, PNG, WebP) are allowed.'); return false; }
+      if (file.size > 10 * 1024 * 1024) { setError('Each photo must be under 10MB.'); return false; }
       return true;
     });
     if (validFiles.length === 0) return;
@@ -23,8 +24,13 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
 
     setUploading(true);
 
+    // Process each image to standard 4:5 portrait size (600x750)
+    const standardizedFiles = await Promise.all(
+      filesToProcess.map((file) => processPhotoToStandardSize(file, 600, 750))
+    );
+
     // Add placeholder items with uploading state
-    const placeholders = filesToProcess.map((file) => ({
+    const placeholders = standardizedFiles.map((file) => ({
       id: `uploading-${Date.now()}-${file.name}`,
       name: file.name,
       url: URL.createObjectURL(file), // preview only while uploading
@@ -33,16 +39,16 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
     setPhotos((prev) => [...prev, ...placeholders].slice(0, 6));
 
     try {
-      // Upload each file to the server and get back real public URLs
+      // Upload each standardized file to the server
       const uploaded = await Promise.all(
-        filesToProcess.map(async (file, i) => {
-          const result = await api.uploadPhoto(file)
+        standardizedFiles.map(async (file, i) => {
+          const result = await api.uploadPhoto(file);
           return {
             id: `photo-${Date.now()}-${i}-${file.name}`,
             name: file.name,
-            url: result.data, // real public URL from assetsmatrimony.kaliweb.in
+            url: result.data, // real public URL
             uploading: false,
-          }
+          };
         })
       );
 
@@ -53,8 +59,11 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
       });
     } catch (err) {
       console.error('Upload failed:', err);
-      setError('Failed to upload one or more photos. Please try again.');
-      // Remove placeholders on failure
+      const serverMessage =
+        err.response?.data?.message ||
+        err.response?.data?.Message ||
+        err.message;
+      setError(serverMessage || 'Failed to upload one or more photos. Please try again.');
       setPhotos((prev) => prev.filter((p) => !p.uploading));
     } finally {
       setUploading(false);
@@ -84,7 +93,7 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
         <Camera size={28} className="reg-upload-icon" />
         <div>
           <strong>Add Your Photos</strong>
-          <p>Upload up to 6 photos. Your photos are saved securely. You can change them anytime.</p>
+          <p>Upload up to 6 photos. Standard 4:5 portrait size (600×750 px) is applied automatically so your photos fit featured cards and profile views perfectly.</p>
         </div>
       </div>
 
@@ -95,7 +104,7 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
             {photo.uploading && (
               <div className="reg-upload-progress">
                 <Loader size={20} className="reg-upload-spinner" />
-                <span>Uploading...</span>
+                <span>Fitting & Uploading...</span>
               </div>
             )}
             {!photo.uploading && index === profilePhotoIndex && (
@@ -135,7 +144,9 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
 
       <div className="reg-upload-note">
         <Upload size={16} />
-        <p>JPG, PNG or WebP. Max 5MB per photo. Photos are stored securely on our servers.</p>
+        <p>
+          <strong>Required Size:</strong> Portrait orientation (4:5 ratio, min 600×750 px). All photos will be automatically auto-cropped to the required frame without distortion.
+        </p>
       </div>
 
       <div className="reg-actions">

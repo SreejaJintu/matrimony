@@ -48,14 +48,22 @@ export function FeaturedProfilesSection({ onViewProfile }) {
         ) : profiles.length === 0 ? (
           <p>No featured profiles available.</p>
         ) : (
-          profiles.slice(0, 5).map((profile) => {
+          profiles.slice(0, 6).map((profile) => {
             const isVerified = Boolean(profile.isVerified || profile.verified || profile.verifiedProfile);
-            const image = profile.imageUrl || profile.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
+            const image = profile.imageUrl || profile.image || '/images/default-profile.png';
+            const locationText = [profile.district, profile.state].filter(Boolean).join(', ') || profile.location || 'N/A';
             
             return (
               <article className="featured-card" key={profile.userId || profile.slug}>
                 <div className="featured-image">
-                  <img src={image} alt={profile.fullName || profile.name} />
+                  <img
+                    src={image}
+                    alt={profile.fullName || profile.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80';
+                    }}
+                  />
                   <div className="featured-image-overlay" />
                   {isVerified && (
                     <div className="featured-badge">
@@ -69,10 +77,10 @@ export function FeaturedProfilesSection({ onViewProfile }) {
                 <div className="featured-body">
                   <h3>{profile.fullName || profile.name}</h3>
                   <p className="featured-meta">
-                    {profile.age || 'N/A'} Years • {profile.height || 'N/A'}
+                    {profile.age ? `${profile.age} Years` : 'N/A'} {profile.height ? `• ${profile.height}` : ''}
                   </p>
                   <p className="featured-role">{profile.profession || profile.occupation || 'N/A'}</p>
-                  <p className="featured-location">{profile.location || profile.district || profile.state || 'N/A'}</p>
+                  <p className="featured-location">{locationText}</p>
                   <div className="featured-actions">
                     <button
                       type="button"

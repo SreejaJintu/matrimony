@@ -1,18 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X, PhoneCall, CheckCircle } from 'lucide-react'
 import { api, session } from '../../services/api'
 
-export function MembershipLeadModal({ isOpen, onClose }) {
-  const [showForm, setShowForm] = useState(false)
+export function MembershipLeadModal({ isOpen, onClose, directForm = false }) {
+  const [showForm, setShowForm] = useState(directForm)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
-    name: session.getFullName() || '',
+    name: '',
     mobileNumber: '',
     email: '',
   })
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowForm(directForm)
+      setSubmitted(false)
+      setFormData({
+        name: session.getFullName() || '',
+        mobileNumber: '',
+        email: '',
+      })
+    }
+  }, [isOpen, directForm])
 
   if (!isOpen) return null
 
@@ -46,59 +58,63 @@ export function MembershipLeadModal({ isOpen, onClose }) {
 
   return createPortal(
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-      style={{ zIndex: 99999 }}
+      className="lead-modal-overlay"
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Membership Request Modal"
     >
-      <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+      <div className="lead-modal-container" onClick={(e) => e.stopPropagation()}>
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="lead-modal-close"
+          aria-label="Close modal"
         >
-          <X className="h-5 w-5" />
+          <X size={20} />
         </button>
 
         {!showForm ? (
-          /* Initial View */
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-700">
-              <span className="text-2xl">🔒</span>
+          /* Initial Info View */
+          <div>
+            <div className="lead-modal-icon-badge">
+              <span>🔒</span>
             </div>
 
-            <h3 className="text-2xl font-serif font-bold text-gray-900">View Full Profile</h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <h3 className="lead-modal-title">View Full Profile</h3>
+            <p className="lead-modal-subtitle">
               Become a Soesy member to view full profile details and connect with verified members.
             </p>
 
-            <div className="my-5 rounded-xl bg-amber-50/60 p-4 font-medium text-amber-900">
-              <span className="text-xl font-bold text-red-900">₹2,000</span> Membership · Access up to 20 profiles
+            <div className="lead-modal-highlight-box">
+              <strong style={{ fontSize: '18px', color: '#800020' }}>₹2,000</strong> Membership · Access up to 20 profiles
             </div>
 
             <button
               onClick={() => setShowForm(true)}
-              className="w-full rounded-xl bg-red-900 py-3 font-semibold text-white transition hover:bg-red-950"
+              className="lead-modal-submit-btn"
             >
               Become a Member
             </button>
 
             <button
               onClick={handleClose}
-              className="mt-3 w-full rounded-xl border border-gray-200 py-2.5 font-medium text-gray-700 hover:bg-gray-50"
+              className="lead-modal-secondary-btn"
             >
               Continue Browsing
             </button>
           </div>
         ) : submitted ? (
           /* Success View */
-          <div className="py-6 text-center">
-            <CheckCircle className="mx-auto h-12 w-12 text-green-600" />
-            <h3 className="mt-3 text-xl font-bold text-gray-900">Request Received!</h3>
-            <p className="mt-2 text-sm text-gray-600">
+          <div className="lead-modal-success">
+            <CheckCircle className="lead-modal-success-icon" />
+            <h3 className="lead-modal-title">Request Received!</h3>
+            <p className="lead-modal-subtitle">
               Our executive will call you shortly to assist with your membership activation.
             </p>
             <button
               onClick={handleClose}
-              className="mt-6 w-full rounded-xl bg-red-900 py-2.5 font-semibold text-white hover:bg-red-950"
+              className="lead-modal-submit-btn"
             >
               Done
             </button>
@@ -106,47 +122,47 @@ export function MembershipLeadModal({ isOpen, onClose }) {
         ) : (
           /* Contact Form View */
           <div>
-            <div className="mb-4 flex items-center gap-2 text-red-900">
-              <PhoneCall className="h-5 w-5" />
-              <h3 className="text-xl font-bold">Request Executive Call</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#800020' }}>
+              <PhoneCall size={20} />
+              <h3 className="lead-modal-title" style={{ margin: 0 }}>Request Executive Call</h3>
             </div>
 
-            <p className="mb-4 text-xs text-gray-500">
-              Please provide your contact details. Our team will reach out to activate your membership.
+            <p className="lead-modal-subtitle" style={{ textAlign: 'left', marginBottom: '16px' }}>
+              Please provide your contact details. Our relationship manager will reach out to activate your membership and assist you.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-gray-700">Full Name</label>
+            <form onSubmit={handleSubmit} className="lead-modal-form">
+              <div className="lead-modal-form-group">
+                <label className="lead-modal-label">Full Name *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-900 focus:outline-none"
-                  placeholder="Enter your name"
+                  className="lead-modal-input"
+                  placeholder="Enter your full name"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-700">Mobile Number</label>
+              <div className="lead-modal-form-group">
+                <label className="lead-modal-label">Mobile Number *</label>
                 <input
                   type="tel"
                   required
                   value={formData.mobileNumber}
                   onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-900 focus:outline-none"
-                  placeholder="Enter mobile number"
+                  className="lead-modal-input"
+                  placeholder="Enter 10-digit mobile number"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-700">Email (Optional)</label>
+              <div className="lead-modal-form-group">
+                <label className="lead-modal-label">Email (Optional)</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-900 focus:outline-none"
+                  className="lead-modal-input"
                   placeholder="name@example.com"
                 />
               </div>
@@ -154,9 +170,9 @@ export function MembershipLeadModal({ isOpen, onClose }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-4 w-full rounded-xl bg-red-900 py-3 font-semibold text-white hover:bg-red-950 disabled:opacity-50"
+                className="lead-modal-submit-btn"
               >
-                {loading ? 'Submitting...' : 'Submit Details'}
+                {loading ? 'Submitting...' : 'Submit Call Request'}
               </button>
             </form>
           </div>

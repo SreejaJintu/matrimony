@@ -1,0 +1,7 @@
+MaritalStatusId,MaritalStatusName
+---------------,-----------------
+2,Divorced
+1,Never Married
+3,Widowed
+
+(3 rows affected)

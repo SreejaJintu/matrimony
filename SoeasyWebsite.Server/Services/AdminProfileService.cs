@@ -17,6 +17,22 @@ public async Task<AdminProfileDetailResult?> GetById(int userId)
 {
     return await _repository.GetById(userId);
 }
+
+public async Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId)
+{
+    return await _repository.GetPhotos(userId);
+}
+
+public async Task<bool> DeleteProfile(int userId)
+{
+    return await _repository.DeleteProfile(userId);
+}
+
+public async Task<bool> UpdateMobileNumber(int userId, string? mobileNumber)
+{
+    return await _repository.UpdateMobileNumber(userId, mobileNumber);
+}
+
     public async Task<IEnumerable<AdminProfileDto>> GetAll(
         string? search,
         byte? genderId,
@@ -36,6 +52,11 @@ public async Task<AdminProfileDetailResult?> GetById(int userId)
         userId,
         profileStatusId);
 }
+
+    public async Task<bool> UpdateMaritalStatus(int userId, bool isMarried)
+    {
+        return await _repository.UpdateMaritalStatus(userId, isMarried);
+    }
 
 public async Task<AdminMarkMarriedResult?> MarkAsMarried(
     int userId,

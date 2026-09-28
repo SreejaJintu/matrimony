@@ -85,6 +85,19 @@ public class MasterRepository : IMasterRepository
             """);
     }
 
+    public async Task<IEnumerable<MasterDto>> GetLocations(int districtId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<MasterDto>(
+            """
+            SELECT LocationId AS Id, LocationName AS Name
+            FROM LocationMaster
+            WHERE DistrictId = @DistrictId AND IsActive = 1
+            ORDER BY LocationName;
+            """,
+            new { DistrictId = districtId });
+    }
+
     public async Task<IEnumerable<MasterDto>> GetEducation()
     {
         using var connection = _connectionFactory.CreateConnection();

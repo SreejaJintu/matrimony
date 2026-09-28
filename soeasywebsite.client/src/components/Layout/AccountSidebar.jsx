@@ -1,16 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard,
   Search,
   Heart,
-  Mail,
   User,
   Crown,
   Settings,
   HelpCircle,
   LogOut,
   X,
-  Sparkles,
 } from 'lucide-react'
 import './AccountSidebar.css'
 
@@ -42,7 +39,7 @@ export function AccountSidebar({
 
   const handleMembership = () => {
     onClose?.()
-    navigate('/membership')
+    navigate('/subscription')
   }
 
   return (
@@ -132,6 +129,7 @@ export function AccountSidebar({
           )}
         </div>
       </aside>
+
     </>
   )
 }

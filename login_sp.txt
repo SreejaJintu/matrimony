@@ -1,0 +1,51 @@
+Changed database context to 'kaliweb1_soesy2026'.
+Text
+----
+CREATE   PROCEDURE [dbo].[usp_User_Login]
+
+(
+
+    @UserName NVARCHAR(150)
+
+)
+
+AS
+
+BEGIN
+
+    SET NOCOUNT ON;
+
+
+
+    SELECT
+
+        UserId,
+
+        ProfileCode,
+
+        FullName,
+
+        MobileNumber,
+
+        Email,
+
+        PasswordHash,
+
+        GenderId,
+
+        MembershipPlanId,
+
+        ProfileStatusId,
+
+        IsActive
+
+    FROM UserAccount
+
+    WHERE
+
+        MobileNumber=@UserName
+
+        OR Email=@UserName;
+
+END
+

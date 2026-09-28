@@ -1,0 +1,23 @@
+Starting migration tool, limit 10 records...
+Fetched 10 source records.
+Error on RegID 1182: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1182).
+The statement has been terminated.
+Error on RegID 1183: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1183).
+The statement has been terminated.
+Error on RegID 1184: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1184).
+The statement has been terminated.
+Error on RegID 1185: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1185).
+The statement has been terminated.
+Error on RegID 1186: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1186).
+The statement has been terminated.
+Error on RegID 1187: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1187).
+The statement has been terminated.
+Error on RegID 1188: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1188).
+The statement has been terminated.
+Error on RegID 1191: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1191).
+The statement has been terminated.
+Error on RegID 1192: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1192).
+The statement has been terminated.
+Error on RegID 1194: Violation of UNIQUE KEY constraint 'UQ_MigrationSource'. Cannot insert duplicate key in object 'dbo.MigrationSourceRecord'. The duplicate key value is (oldSoesyDB, 1194).
+The statement has been terminated.
+Completed. Success=0, Skipped=0, Error=10.

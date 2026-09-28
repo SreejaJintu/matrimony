@@ -33,10 +33,68 @@ public class AdminProfileRepository : IAdminProfileRepository
                     GenderId = genderId,
                     ProfileStatusId = profileStatusId
                 },
-                commandType: CommandType.StoredProcedure
+                commandType: CommandType.StoredProcedure,
+                commandTimeout: 60
             );
 
-        return result;
+        var profiles = result.ToList();
+        if (profiles.Count == 0)
+        {
+            return profiles;
+        }
+
+        var maritalStatuses = await connection.QueryAsync<ProfileMaritalStatusRow>(
+            "SELECT UserId, IsMarried FROM dbo.UserAccount WHERE UserId IN @UserIds",
+            new { UserIds = profiles.Select(profile => profile.UserId).ToArray() }
+        );
+        var maritalStatusByUserId = maritalStatuses.ToDictionary(row => row.UserId, row => row.IsMarried);
+        foreach (var profile in profiles)
+        {
+            profile.IsMarried = maritalStatusByUserId.GetValueOrDefault(profile.UserId);
+        }
+
+        var membershipPlans = await connection.QueryAsync<ProfileMembershipPlanRow>(
+            """
+            ;WITH RankedActiveSubscriptions AS
+            (
+                SELECT
+                    US.UserId,
+                    US.MembershipPlanId,
+                    ROW_NUMBER() OVER
+                    (
+                        PARTITION BY US.UserId
+                        ORDER BY US.CreatedAt DESC, US.SubscriptionId DESC
+                    ) AS RowNumber
+                FROM dbo.UserSubscription US
+                WHERE US.UserId IN @UserIds
+                  AND US.IsActive = 1
+                  AND US.IsApproved = 1
+                  AND US.StartDate <= CONVERT(date, GETDATE())
+                  AND US.EndDate >= CONVERT(date, GETDATE())
+            )
+            SELECT
+                UA.UserId,
+                COALESCE(ActivePlan.PlanName, N'Free') AS MembershipPlanName
+            FROM dbo.UserAccount UA
+            LEFT JOIN RankedActiveSubscriptions ActiveSubscription
+                ON ActiveSubscription.UserId = UA.UserId
+               AND ActiveSubscription.RowNumber = 1
+            LEFT JOIN dbo.MembershipPlanMaster ActivePlan
+                ON ActivePlan.MembershipPlanId = ActiveSubscription.MembershipPlanId
+            WHERE UA.UserId IN @UserIds;
+            """,
+            new { UserIds = profiles.Select(profile => profile.UserId).ToArray() }
+        );
+        var membershipPlanByUserId = membershipPlans.ToDictionary(
+            row => row.UserId,
+            row => row.MembershipPlanName
+        );
+        foreach (var profile in profiles)
+        {
+            profile.MembershipPlanName = membershipPlanByUserId.GetValueOrDefault(profile.UserId);
+        }
+
+        return profiles;
     }
    public async Task<AdminProfileDetailResult?> GetById(int userId)
 {
@@ -56,6 +114,51 @@ public class AdminProfileRepository : IAdminProfileRepository
     return result;
 }
 
+public async Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId)
+{
+    using var connection = _connectionFactory.CreateConnection();
+
+    return await connection.QueryAsync<AdminProfilePhotoDto>(
+        """
+        SELECT PhotoId, PhotoUrl, IsProfilePhoto, DisplayOrder
+        FROM dbo.UserPhoto
+        WHERE UserId = @UserId AND IsActive = 1
+        ORDER BY IsProfilePhoto DESC, DisplayOrder, PhotoId;
+        """,
+        new { UserId = userId }
+    );
+}
+
+public async Task<bool> DeleteProfile(int userId)
+{
+    using var connection = _connectionFactory.CreateConnection();
+
+    var affectedRows = await connection.ExecuteAsync(
+        "UPDATE dbo.UserAccount SET IsActive = 0, UpdatedAt = GETDATE() WHERE UserId = @UserId AND IsActive = 1",
+        new { UserId = userId }
+    );
+
+    return affectedRows > 0;
+}
+
+public async Task<bool> UpdateMobileNumber(int userId, string? mobileNumber)
+{
+    using var connection = _connectionFactory.CreateConnection();
+
+    const string sql = """
+        UPDATE dbo.UserAccount
+        SET MobileNumber = @MobileNumber,
+            IsMobileVerified = CASE
+                WHEN ISNULL(MobileNumber, '') <> ISNULL(@MobileNumber, '') THEN 0
+                ELSE IsMobileVerified
+            END,
+            UpdatedAt = GETDATE()
+        WHERE UserId = @UserId AND IsActive = 1;
+        """;
+
+    return await connection.ExecuteAsync(sql, new { UserId = userId, MobileNumber = mobileNumber }) > 0;
+}
+
 public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(
     int userId,
     byte profileStatusId)
@@ -73,6 +176,20 @@ public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(
         commandType: CommandType.StoredProcedure
     );
 }
+
+public async Task<bool> UpdateMaritalStatus(int userId, bool isMarried)
+{
+    using var connection = _connectionFactory.CreateConnection();
+    const string sql = """
+        UPDATE dbo.UserAccount
+        SET IsMarried = @IsMarried,
+            UpdatedAt = GETDATE()
+        WHERE UserId = @UserId AND IsActive = 1;
+        """;
+
+    return await connection.ExecuteAsync(sql, new { UserId = userId, IsMarried = isMarried }) > 0;
+}
+
 public async Task<AdminMarkMarriedResult?> MarkAsMarried(
     int userId,
     int adminUserId)
@@ -89,5 +206,19 @@ public async Task<AdminMarkMarriedResult?> MarkAsMarried(
         },
         commandType: CommandType.StoredProcedure
     );
+}
+
+private sealed class ProfileMaritalStatusRow
+{
+    public int UserId { get; set; }
+
+    public bool IsMarried { get; set; }
+}
+
+private sealed class ProfileMembershipPlanRow
+{
+    public int UserId { get; set; }
+
+    public string? MembershipPlanName { get; set; }
 }
 }

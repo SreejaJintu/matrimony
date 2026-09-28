@@ -1,1 +1,2 @@
 D:\g7\SoeasyWebsite\soeasywebsite.client\obj\Debug\soeasywebsite.client.esproj.CoreCompileInputs.cache
+D:\SoeasyWebsiteCopy\soeasywebsite.client\obj\Debug\soeasywebsite.client.esproj.CoreCompileInputs.cache

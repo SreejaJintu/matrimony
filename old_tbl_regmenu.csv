@@ -1,0 +1,30 @@
+menu_id,headno,headname
+-------,------,--------
+1,1,MATRIMONY
+2,2,REGISTRATION
+3,3,Marital Status
+4,4,Looking For*
+5,5,Name*
+6,6,Contact No*
+7,7,Whatsapp No*
+8,8,Star*
+9,9,Religion & Caste*
+10,10,Weight (Kg)
+11,11,Height (cm)
+12,12,Education
+13,13,Job 
+14,14,Age*
+15,15,DOB (dd/mm/yyy)
+16,16,Father's Name
+17,17,Mother's Name
+18,18,Address*
+19,19,District*
+20,20,Annual Income (in Lakhs)
+21,21,Description
+22,22,Email*
+23,23,6X4 Full size photo
+24,24,6X4 Full size 2
+25,25,Jathakam
+26,26,6X4 Full size 3
+
+(26 rows affected)

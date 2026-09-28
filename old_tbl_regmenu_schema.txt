@@ -1,0 +1,10 @@
+COLUMN_NAME|DATA_TYPE|CHARACTER_MAXIMUM_LENGTH|IS_NULLABLE
+-----------|---------|------------------------|-----------
+menu_id|int|NULL|NO
+servicetype|int|NULL|YES
+headno|int|NULL|YES
+headname|nvarchar|50|YES
+status|bit|NULL|YES
+siteid|int|NULL|YES
+
+(6 rows affected)

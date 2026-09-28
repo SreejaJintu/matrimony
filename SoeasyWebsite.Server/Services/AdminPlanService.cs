@@ -35,4 +35,20 @@ public class AdminPlanService : IAdminPlanService
             Data = id > 0
         };
     }
+
+    public async Task<ApiResponse<bool>> UpdatePlanAsync(int planId, CreatePlanRequestDto dto)
+    {
+        var updated = await _repository.UpdatePlanAsync(planId, dto);
+        return new ApiResponse<bool>
+        {
+            Success = updated,
+            Message = updated ? "Membership plan updated successfully." : "Plan not found.",
+            Data = updated
+        };
+    }
+
+    public async Task<bool> DeactivatePlanAsync(int planId)
+    {
+        return await _repository.DeactivatePlanAsync(planId);
+    }
 }

@@ -42,6 +42,10 @@ public class MasterController : ControllerBase
     public async Task<IActionResult> GetDistricts()
         => Ok(await _masterService.GetAllDistricts());
 
+    [HttpGet("locations/{districtId:int}")]
+    public async Task<IActionResult> GetLocations(int districtId)
+        => Ok(await _masterService.GetLocations(districtId));
+
     [HttpGet("education")]
     public async Task<IActionResult> GetEducation()
         => Ok(await _masterService.GetEducation());

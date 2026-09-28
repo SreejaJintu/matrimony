@@ -37,8 +37,8 @@ public class ProfileController : ControllerBase
     [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetByUserId(int userId, [FromQuery] int? viewerUserId = null)
     {
-        // Enforce credit check & subscription authorization if viewerUserId is provided
-        if (viewerUserId.HasValue)
+        // Never charge or block a user from viewing their own profile.
+        if (viewerUserId.HasValue && viewerUserId.Value != userId)
         {
             var checkResult = await _subscriptionRepository.CheckAndDeductProfileView(viewerUserId.Value, userId);
 

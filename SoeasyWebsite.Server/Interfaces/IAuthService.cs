@@ -8,4 +8,7 @@ public interface IAuthService
     Task<ApiResponse<RegisterResponseDto>> Register(RegisterRequestDto dto);
 
     Task<ApiResponse<LoginResponseDto>> Login(LoginRequestDto dto);
+
+    Task<ApiResponse<VerifyOtpResponseDto>> VerifyLoginOtp(
+        VerifyLoginOtpRequestDto dto);
 }

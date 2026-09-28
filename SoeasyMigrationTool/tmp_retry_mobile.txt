@@ -1,0 +1,23 @@
+Starting migration tool, limit 50 records...
+Initialized EXCLUDED tracker: 0 unmigrated non-female records bypassed via idempotency schema.
+
+Selected 50 eligible female candidates for pipeline evaluation.
+RegID 1968 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2017 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2018 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2030 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2031 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2051 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+RegID 2059 Skipped. Reasons: EX-DUP-TARGET-CONFLICT-MOBILE
+
+=== PILOT MIGRATION REPORT ===
+Source records checked: 8485
+Female eligible: 1905
+Male excluded: 6488
+Other/missing gender: 92
+------------------------------
+Successfully migrated: 43
+Skipped (Conflict/Invalid): 7
+Failed (Application Error): 0
+------------------------------
+Remaining female candidates: 1606

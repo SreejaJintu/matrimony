@@ -1,0 +1,122 @@
+Starting migration tool, limit 100 records...
+Fetched 100 source records.
+RegID 1182 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1195: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1196: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1197: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1199: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1202: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1204: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1205: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1206: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1207: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1208: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1210: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1211: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1212: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1213: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1214: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1215: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1217: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1218: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1219: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1220: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1221: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1222: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1223: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1224: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1225: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1226: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1227: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1228: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1229: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1230: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1231: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1232: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1233: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1234: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1235: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1236: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1238: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1240: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1246: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1247: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1249: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1250: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1254: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1256: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1259: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1261: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1265: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1266: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1268: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1269: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1273: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1278: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1281: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1282: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1285: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1286: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1296: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1297: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Error on RegID 1300: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserProfile_MaritalStatus". The conflict occurred in database "kaliweb1_soesy2026", table "dbo.MaritalStatusMaster", column 'MaritalStatusId'.
+The statement has been terminated.
+Completed. Success=12, Skipped=1, Error=87.

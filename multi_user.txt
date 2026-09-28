@@ -1,0 +1,6 @@
+Changed database context to 'kaliweb1_soesy2026'.
+UserId,Email,MobileNumber,PasswordHash,IsActive
+------,-----,------------,------------,--------
+290,krishaba000@gmail.com,8304065285,$2a$11$hdDPlYGRMXVNI9Fer7tygubYANTer/IhfTM8jaxCPCIWynRufv8gy,1
+
+(1 rows affected)

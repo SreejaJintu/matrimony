@@ -1,0 +1,59 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,106): error CS1525: Invalid expression term '=' [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1003: Syntax error, 'while' expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1003: Syntax error, '(' expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1525: Invalid expression term '}' [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,117): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,121): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,121): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(121,9): error CS1519: Invalid token 'catch' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(121,28): error CS8124: Tuple must contain at least two elements. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(122,9): error CS1519: Invalid token '{' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,30): error CS1519: Invalid token '(' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1031: Type expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS8124: Tuple must contain at least two elements. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1519: Invalid token '$"Error on RegID {ctx.Source.reg_id}: {ex.Message}"' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(127,5): error CS1022: Type or namespace definition, or end-of-file expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(129,5): error CS8803: Top-level statements must precede namespace and type declarations. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(129,5): error CS0106: The modifier 'private' is not valid for this item [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(139,1): error CS1022: Type or namespace definition, or end-of-file expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+
+Build FAILED.
+
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,103): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,106): error CS1525: Invalid expression term '=' [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1003: Syntax error, 'while' expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1003: Syntax error, '(' expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1525: Invalid expression term '}' [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,116): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,117): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,121): error CS1002: ; expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(111,121): error CS1513: } expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(121,9): error CS1519: Invalid token 'catch' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(121,28): error CS8124: Tuple must contain at least two elements. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(122,9): error CS1519: Invalid token '{' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,30): error CS1519: Invalid token '(' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1031: Type expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS8124: Tuple must contain at least two elements. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1026: ) expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(124,31): error CS1519: Invalid token '$"Error on RegID {ctx.Source.reg_id}: {ex.Message}"' in a member declaration [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(127,5): error CS1022: Type or namespace definition, or end-of-file expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(129,5): error CS8803: Top-level statements must precede namespace and type declarations. [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(129,5): error CS0106: The modifier 'private' is not valid for this item [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SqlAgent.cs(139,1): error CS1022: Type or namespace definition, or end-of-file expected [D:\SoeasyWebsiteCopy\SoeasyMigrationTool\SoeasyMigrationTool.csproj]
+    0 Warning(s)
+    24 Error(s)
+
+Time Elapsed 00:00:04.15
+
+Workload updates are available. Run `dotnet workload list` for more information.

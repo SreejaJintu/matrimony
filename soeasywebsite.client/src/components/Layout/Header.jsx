@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../../contexts/AuthContext'
+import { MembershipLeadModal } from '../forms/MembershipLeadModal'
+import { BrandLogoImage } from '../BrandLogoImage'
 
 export function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const { isAuthenticated, user, logout } = useContext(AuthContext)
   const location = useLocation()
   const fullName = user?.fullName ?? ''
@@ -31,10 +34,7 @@ export function Header() {
     <header className="topbar rich-topbar" ref={headerRef}>
       <div className="container topbar-inner">
         <Link className="brand" to="/" aria-label="Soesy Matrimony home">
-          <span>
-            <strong>Soesy Matrimony</strong>
-            <small>Trusted Matrimony</small>
-          </span>
+          <BrandLogoImage className="site-brand-image" />
         </Link>
 
         <button
@@ -54,7 +54,16 @@ export function Header() {
           <Link to="/matches" className={location.pathname === '/matches' ? 'active' : ''}>Search</Link>
           <Link to="/subscription" className={location.pathname === '/subscription' ? 'active' : ''}>Plans</Link>
           <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Success Stories</Link>
-          <Link to="/#footer">Contact</Link>
+          <button
+            type="button"
+            className="nav-link-btn"
+            onClick={() => {
+              setIsMobileNavOpen(false)
+              setIsContactModalOpen(true)
+            }}
+          >
+            Contact
+          </button>
           {!isAuthenticated && (
             <div className="nav-buttons-mobile">
               <button type="button" className="button button-outline" onClick={() => navigate('/login')}>
@@ -101,6 +110,12 @@ export function Header() {
           )}
         </div>
       </div>
+
+      <MembershipLeadModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        directForm={true}
+      />
     </header>
   )
 }

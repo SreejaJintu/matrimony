@@ -9,7 +9,10 @@ const apiClient = axios.create({
 
 // Request interceptor automatically attaches the Auth token to every request
 apiClient.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem('soeasy_token')
+  const token =
+    sessionStorage.getItem('soeasy_token') ||
+    localStorage.getItem('soesyAdminToken')
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -48,6 +51,8 @@ export const api = {
   // Auth
   register: (payload) => request('/api/auth/register', { method: 'POST', data: payload }),
   login: (payload) => request('/api/auth/login', { method: 'POST', data: payload }),
+  verifyLoginOtp: (payload) =>
+    request('/api/auth/verify-login-otp', { method: 'POST', data: payload }),
 
   // Masters
   getMasterHeight: () => request('/api/master/height'),
@@ -57,6 +62,7 @@ export const api = {
   getMasterState: (countryId) => request(`/api/master/state/${countryId}`),
   getMasterDistrict: (stateId) => request(`/api/master/district/${stateId}`),
   getMasterDistricts: () => request('/api/master/districts'),
+  getMasterLocations: (districtId) => request(`/api/master/locations/${districtId}`),
   getMasterEducation: () => request('/api/master/education'),
   getMasterMaritalStatus: () => request('/api/master/marital-status'),
   getMasterMotherTongue: () => request('/api/master/mother-tongue'),
@@ -70,7 +76,11 @@ export const api = {
   getAccountBasics: (userId) => request(`/api/account/${userId}`),
   saveAccountBasics: (payload) => request('/api/account/basics', { method: 'PUT', data: payload }),
   getProfile: (userId, viewerUserId) =>
-    request(viewerUserId ? `/api/profile/${userId}?viewerUserId=${viewerUserId}` : `/api/profile/${userId}`),
+    request(
+      viewerUserId && String(viewerUserId) !== String(userId)
+        ? `/api/profile/${userId}?viewerUserId=${viewerUserId}`
+        : `/api/profile/${userId}`
+    ),
   saveProfile: (payload) => {
     const normalized = normalizeProfilePayload(payload)
     const resolvedUserId = Number(normalized.userId ?? session.getUserId() ?? 0)
@@ -92,6 +102,22 @@ export const api = {
   shortlistRemove: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'DELETE' }),
   shortlistCheck: (targetUserId) => request(`/api/shortlist/check/${targetUserId}`),
   
+
+    // Admin Location Management
+  getAdminDistricts: (stateId) =>
+    request(`/api/admin/locations/districts/${stateId}`),
+
+  getAdminLocations: (districtId) =>
+    request(`/api/admin/locations/locations/${districtId}`),
+
+  addAdminLocation: (districtId, locationName) =>
+    request('/api/admin/locations/locations', {
+      method: 'POST',
+      data: {
+        districtId: Number(districtId),
+        locationName: locationName.trim(),
+      },
+    }),
   // File Upload
   uploadPhoto: async (file) => {
     const formData = new FormData()

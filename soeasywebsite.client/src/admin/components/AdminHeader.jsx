@@ -1,7 +1,15 @@
+import { Link, useNavigate } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 import { useAdminAuth } from "../context/AdminAuthContext";
 
 const AdminHeader = () => {
-  const { admin } = useAdminAuth();
+  const navigate = useNavigate();
+  const { admin, logout } = useAdminAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin/login", { replace: true });
+  };
 
   return (
     <header className="admin-header">
@@ -12,16 +20,32 @@ const AdminHeader = () => {
 
       <div className="admin-header-user">
 
+        <Link
+          to="/"
+          className="admin-header-website"
+          aria-label="Visit website"
+          title="Visit Website"
+        >
+          <ExternalLink size={15} aria-hidden="true" />
+          <span>Visit Website</span>
+        </Link>
+
         <div className="admin-user-avatar">
           {admin?.fullName?.charAt(0)?.toUpperCase() || "A"}
         </div>
 
         <div className="admin-user-info">
-          <strong>{admin?.fullName || "Admin"}</strong>
-          <span>
-            {admin?.isSuperAdmin ? "Super Admin" : "Admin"}
-          </span>
+          <strong>{admin?.isSuperAdmin ? "Super Admin" : admin?.fullName || "Admin"}</strong>
+          {!admin?.isSuperAdmin && <span>Admin</span>}
         </div>
+
+        <button
+          type="button"
+          className="admin-header-logout"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
 
       </div>
 

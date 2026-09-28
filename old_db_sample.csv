@@ -1,0 +1,9 @@
+reg_id,ddl_1_id,ddl_2_id,m5,m6,m9,m15,img1,img2,img3,img4
+------,--------,--------,--,--,--,---,----,----,----,----
+1194,5,4,Nimisha Joshy,+919645302259,Hindu-Ezhava,10/01/2000,uploads/1194_img1.jpg,uploads/1194_img2.jpg,uploads/1194_img3.jpg,uploads/1194_img4.jpg
+1195,5,4,Darsana,+919895050992,Hindu-Ezhava,11/01/1998,uploads/1195_img1.jpg,uploads/1195_img2.jpg,uploads/1195_img3.jpg,uploads/1195_img4.jpg
+1197,5,3,Shyam K R,+918921010384,Hindu-Ezhava,04/11/1990,uploads/1197_img1.jpg,uploads/1197_img2.jpg,uploads/1197_img3.jpg,uploads/1197_img4.jpg
+1199,5,3,Amarnath V S,+919048818141,Hindu-Ezhava,05/05/1995,uploads/1199_img1.jpg,uploads/1199_img2.jpg,uploads/1199_img3.jpg,uploads/1199_img4.jpg
+1202,5,3,Sanjay.K A,+919946895944,Hindu-Ezhava,12/11/1991,uploads/1202_img1.jpg,uploads/1202_img2.jpg,uploads/1202_img3.jpg,uploads/1202_img4.jpg
+
+(5 rows affected)

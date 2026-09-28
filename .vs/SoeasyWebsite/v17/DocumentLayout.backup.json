@@ -1,37 +1,56 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\g7\\SoeasyWebsite\\",
+  "WorkspaceRootPath": "D:\\SoeasyWebsiteCopy\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\g7\\soeasywebsite\\soeasywebsite.client\\src\\pages\\profilepage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\profilepage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\SoeasyWebsiteCopy\\src\\admin\\pages\\AdminProfiles.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\admin\\pages\\AdminProfiles.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\g7\\soeasywebsite\\soeasywebsite.client\\src\\pages\\matchespage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\matchespage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\g7\\soeasywebsite\\soeasywebsite.client\\src\\pages\\profiledetail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\profiledetail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\g7\\soeasywebsite\\soeasywebsite.client\\src\\routes\\approutes.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\routes\\approutes.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\g7\\soeasywebsite\\soeasywebsite.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\g7\\soeasywebsite\\soeasywebsite.server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\components\\forms\\registrationbenefits.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\components\\forms\\registrationbenefits.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\pages\\registrationpage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\registrationpage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\pages\\matchespage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\matchespage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\pages\\logincard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\logincard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\pages\\profilepage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\profilepage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\pages\\profiledetail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\pages\\profiledetail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|d:\\soeasywebsitecopy\\soeasywebsite.client\\src\\routes\\approutes.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DB52B410-D291-4DAD-0170-5209358CEEB1}|soeasywebsite.client\\soeasywebsite.client.esproj|solutionrelative:soeasywebsite.client\\src\\routes\\approutes.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\g7\\soeasywebsite\\soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
@@ -42,7 +61,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,34 +69,95 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminProfiles.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\src\\admin\\pages\\AdminProfiles.jsx",
+              "RelativeDocumentMoniker": "src\\admin\\pages\\AdminProfiles.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\src\\admin\\pages\\AdminProfiles.jsx",
+              "RelativeToolTip": "src\\admin\\pages\\AdminProfiles.jsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-09-25T10:59:50.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ProfileController.cs",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
+              "RelativeDocumentMoniker": "SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
+              "RelativeToolTip": "SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-23T08:16:24.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RegistrationBenefits.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
+              "RelativeDocumentMoniker": "soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
+              "RelativeToolTip": "soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACEAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-09-19T07:17:23.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RegistrationPage.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
+              "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
+              "RelativeToolTip": "soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAEEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-09-19T06:58:05.634Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoginCard.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\LoginCard.jsx",
+              "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\LoginCard.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\LoginCard.jsx",
+              "RelativeToolTip": "soeasywebsite.client\\src\\pages\\LoginCard.jsx",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAAAPIAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-09-19T06:56:50.967Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "AdminProfileDetailDto.cs",
               "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
-              "RelativeDocumentMoniker": "SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
+              "RelativeDocumentMoniker": "..\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
               "ToolTip": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
-              "RelativeToolTip": "SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
+              "RelativeToolTip": "..\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-18T10:30:19.248Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "MatchesPage.jsx",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
-              "ViewState": "AgIAAEMBAAAAAAAAAAAuwFEBAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEABAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2026-08-16T07:20:45.659Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "ProfileDetail.jsx",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "ViewState": "AgIAAHkAAAAAAAAAAAAAwAAAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
@@ -85,24 +165,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "ProfilePage.jsx",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAQwDwAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2026-08-16T06:49:06.161Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-16T06:49:06.161Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "AppRoutes.jsx",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
               "RelativeToolTip": "soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
               "ViewState": "AgIAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
@@ -110,23 +189,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\appsettings.json",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.json",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\appsettings.json",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\appsettings.json",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.json",
               "RelativeToolTip": "SoeasyWebsite.Server\\appsettings.json",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAswCYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-08-07T09:56:56.681Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "appsettings.Development.json",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\appsettings.Development.json",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.Development.json",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\appsettings.Development.json",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\appsettings.Development.json",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.Development.json",
               "RelativeToolTip": "SoeasyWebsite.Server\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -134,11 +213,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "SoeasyWebsite.Server.csproj",
-              "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
+              "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
-              "ToolTip": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
+              "ToolTip": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
               "RelativeToolTip": "SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",

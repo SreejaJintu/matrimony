@@ -10,12 +10,16 @@ public class MatchCardDto
 
     public int? Age { get; set; }
 
-public string? District { get; set; }
+    public string? Height { get; set; }
+
+    public string? District { get; set; }
 
 public string? State { get; set; }
     public string? ImageUrl { get; set; }
 
     public string? Profession { get; set; }
+
+    public string? Religion { get; set; }
 
     public string? Community { get; set; }
 

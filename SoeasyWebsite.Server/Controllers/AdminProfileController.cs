@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using SoeasyWebsite.Server.Interfaces;
 using SoeasyWebsite.Server.DTOs.Admin;
+using SoeasyWebsite.Server.Interfaces;
 namespace SoeasyWebsite.Server.Controllers;
 
 [ApiController]
@@ -53,6 +53,74 @@ public async Task<IActionResult> GetById(int userId)
     });
 }
 
+[HttpGet("{userId:int}/photos")]
+public async Task<IActionResult> GetPhotos(int userId)
+{
+    var photos = await _service.GetPhotos(userId);
+
+    return Ok(new
+    {
+        success = true,
+        data = photos
+    });
+}
+
+[HttpDelete("{userId:int}")]
+public async Task<IActionResult> DeleteProfile(int userId)
+{
+    var deleted = await _service.DeleteProfile(userId);
+
+    if (!deleted)
+    {
+        return NotFound(new
+        {
+            success = false,
+            message = "Profile not found or already deleted."
+        });
+    }
+
+    return Ok(new
+    {
+        success = true,
+        message = "Profile deleted successfully."
+    });
+}
+
+[HttpPut("{userId:int}/mobile")]
+public async Task<IActionResult> UpdateMobileNumber(
+    int userId,
+    [FromBody] AdminProfileMobileUpdateDto request)
+{
+    if (userId <= 0)
+    {
+        return BadRequest(new
+        {
+            success = false,
+            message = "A valid user ID is required."
+        });
+    }
+
+    var mobileNumber = string.IsNullOrWhiteSpace(request.MobileNumber)
+        ? null
+        : request.MobileNumber.Trim();
+    var updated = await _service.UpdateMobileNumber(userId, mobileNumber);
+
+    if (!updated)
+    {
+        return NotFound(new
+        {
+            success = false,
+            message = "Profile not found."
+        });
+    }
+
+    return Ok(new
+    {
+        success = true,
+        message = "Phone number updated successfully."
+    });
+}
+
 [HttpPut("{userId:int}/status")]
 public async Task<IActionResult> UpdateStatus(
     int userId,
@@ -102,5 +170,37 @@ public async Task<IActionResult> MarkAsMarried(
     }
 
     return Ok(result);
+}
+
+[HttpPut("{userId:int}/marital-status")]
+public async Task<IActionResult> UpdateMaritalStatus(
+    int userId,
+    [FromBody] AdminProfileMaritalStatusUpdateDto request)
+{
+    if (userId <= 0)
+    {
+        return BadRequest(new
+        {
+            success = false,
+            message = "A valid user ID is required."
+        });
+    }
+
+    var updated = await _service.UpdateMaritalStatus(userId, request.IsMarried);
+    if (!updated)
+    {
+        return NotFound(new
+        {
+            success = false,
+            message = "Active profile not found."
+        });
+    }
+
+    return Ok(new
+    {
+        success = true,
+        message = request.IsMarried ? "Profile marked as married." : "Married status removed.",
+        isMarried = request.IsMarried
+    });
 }
 }

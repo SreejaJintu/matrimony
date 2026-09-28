@@ -20,6 +20,7 @@ export function QuickSearchSection() {
   const handleSearch = (event) => {
     event.preventDefault()
     const params = new URLSearchParams()
+    if (lookingFor) params.set('lookingFor', lookingFor)
     if (ageFrom) params.set('ageFrom', ageFrom)
     if (ageTo) params.set('ageTo', ageTo)
     if (religion && religion !== 'Any') params.set('religion', religion)

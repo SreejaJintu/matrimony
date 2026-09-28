@@ -58,17 +58,23 @@
   background: rgba(101, 0, 31, 0.96);
 }
 
-.topbar .brand strong {
-  color: #ffffff;
+.site-brand-image {
+  display: block;
+  width: 198px;
+  height: 132px;
+  object-fit: contain;
+  mix-blend-mode: screen;
 }
 
-.topbar .brand small {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.topbar .nav a {
+.topbar .nav a,
+.topbar .nav button.nav-link-btn {
   color: rgba(255, 255, 255, 0.92);
   position: relative;
+}
+
+.topbar .nav a:hover,
+.topbar .nav button.nav-link-btn:hover {
+  color: var(--gold);
 }
 
 .topbar .nav a.active {
@@ -114,6 +120,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  position: relative;
 }
 
 .nav-toggle {
@@ -165,6 +172,22 @@
   gap: 14px;
   text-decoration: none;
   color: inherit;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.topbar-inner > .nav {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.footer-brand-image {
+  display: block;
+  width: 180px;
+  height: auto;
+  object-fit: contain;
 }
 
 .brand-mark {
@@ -218,14 +241,22 @@
   transition: color 160ms ease, border-color 160ms ease;
 }
 
-.nav a {
+.nav a,
+.nav button.nav-link-btn {
   font: 700 18px/1.2 'Source Serif 4', Georgia, serif;
   font-size: 18px;
+  border: none;
   border-bottom: 1px solid transparent;
   padding: 4px 0;
+  background: transparent;
+  color: #4c6078;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+  font-family: inherit;
 }
 
 .nav a:hover,
+.nav button.nav-link-btn:hover,
 .text-link:hover,
 .footer a:hover {
   color: #800020;
@@ -653,14 +684,17 @@
 
 .featured-image {
   position: relative;
-  min-height: 260px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
+  background: #f4ece6;
 }
 
 .featured-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 18%;
   display: block;
   transition: transform 260ms ease;
 }
@@ -829,6 +863,199 @@
   margin-top: 10px;
   background: #f5f1ef;
   color: var(--text-dark);
+}
+
+/* Membership Lead Modal / Executive Call Request Modal */
+.lead-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.lead-modal-container {
+  position: relative;
+  width: min(100%, 460px);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.lead-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lead-modal-close:hover {
+  background: #f3f4f6;
+  color: #111;
+}
+
+.lead-modal-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff8eb;
+  color: #b45309;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 14px;
+}
+
+.lead-modal-title {
+  margin: 0 0 6px;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+}
+
+.lead-modal-subtitle {
+  margin: 0 0 20px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #6b7280;
+  text-align: center;
+}
+
+.lead-modal-highlight-box {
+  background: #fdf6ec;
+  border: 1px solid #f9dfb9;
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #7a0828;
+  font-weight: 600;
+}
+
+.lead-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lead-modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+
+.lead-modal-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.lead-modal-input {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #111827;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.lead-modal-input:focus {
+  outline: none;
+  border-color: #800020;
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.12);
+}
+
+.lead-modal-submit-btn {
+  width: 100%;
+  padding: 13px 20px;
+  background: #800020;
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+
+.lead-modal-submit-btn:hover:not(:disabled) {
+  background: #600018;
+}
+
+.lead-modal-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lead-modal-secondary-btn {
+  width: 100%;
+  padding: 11px 20px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+
+.lead-modal-secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+.lead-modal-success {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.lead-modal-success-icon {
+  width: 52px;
+  height: 52px;
+  color: #16a34a;
+  margin: 0 auto 12px;
 }
 
 
@@ -1311,6 +1538,11 @@
     padding: 16px 0;
   }
 
+  .site-brand-image {
+    width: 165px;
+    height: 110px;
+  }
+
   .search-panel-card {
     padding: 24px 18px 18px;
   }
@@ -1380,6 +1612,11 @@
 @media (max-width: 520px) {
   .topbar-inner {
     justify-content: center;
+  }
+
+  .site-brand-image {
+    width: 150px;
+    height: 100px;
   }
 
   .hero-copy,
@@ -3494,6 +3731,16 @@
     width: min(1200px, calc(100% - 32px));
   }
 
+  .brand {
+    position: static;
+    transform: none;
+    height: 54px;
+  }
+
+  .topbar-inner > .nav {
+    margin-inline: 0;
+  }
+
   .profile-grid,
   .pillar-grid,
   .stats-grid {
@@ -3503,6 +3750,11 @@
   .topbar-inner {
     flex-wrap: wrap;
     padding: 14px 0;
+  }
+
+  .site-brand-image {
+    width: 180px;
+    height: 120px;
   }
 
   .nav {

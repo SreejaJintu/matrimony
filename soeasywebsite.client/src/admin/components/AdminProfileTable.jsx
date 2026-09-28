@@ -1,4 +1,4 @@
-import AdminProfileStatusBadge from "./AdminProfileStatusBadge";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 const calculateAge = (dateOfBirth) => {
   if (!dateOfBirth) {
@@ -26,7 +26,23 @@ const calculateAge = (dateOfBirth) => {
   return age;
 };
 
-const AdminProfileTable = ({ profiles, onView }) => {
+const getImageCandidates = (url) => {
+  if (!url) return ["/images/default-profile.png"];
+
+  const candidates = [url];
+  const legacyMarker = "/uploads/old/uploads/";
+
+  if (url.includes(legacyMarker)) {
+    const fileName = url.split(legacyMarker).pop();
+    candidates.push(`https://assetsmatrimony.kaliweb.in/uploads/${fileName}`);
+    candidates.push(`https://assetsmatrimony.kaliweb.in/uploads/old/${fileName}`);
+  }
+
+  candidates.push("/images/default-profile.png");
+  return candidates;
+};
+
+const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange, onMarriedChange, statusUpdatingId, marriedUpdatingId }) => {
   if (!profiles.length) {
     return (
       <div className="profile-empty">
@@ -50,7 +66,8 @@ const AdminProfileTable = ({ profiles, onView }) => {
             <th>Gender</th>
             <th>Location</th>
             <th>Profession</th>
-            <th>Status</th>
+            <th>Approved</th>
+            <th>Marital Status</th>
             <th>Membership</th>
             <th>Action</th>
           </tr>
@@ -63,16 +80,25 @@ const AdminProfileTable = ({ profiles, onView }) => {
 
               <td>
                 <div className="admin-profile-user">
-
                   <img
-                    src={
+                    src={getImageCandidates(
                       profile.profileImageUrl ||
-                      "/images/default-profile.png"
-                    }
+                      profile.ProfileImageUrl ||
+                      profile.imageUrl ||
+                      profile.ImageUrl
+                    )[0]}
                     alt={profile.fullName}
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        "/images/default-profile.png";
+                    data-image-candidates={JSON.stringify(getImageCandidates(
+                      profile.profileImageUrl ||
+                      profile.ProfileImageUrl ||
+                      profile.imageUrl ||
+                      profile.ImageUrl
+                    ))}
+                    onError={(event) => {
+                      const candidates = JSON.parse(event.currentTarget.dataset.imageCandidates || "[]");
+                      const nextIndex = Number(event.currentTarget.dataset.imageIndex || 0) + 1;
+                      event.currentTarget.dataset.imageIndex = String(nextIndex);
+                      event.currentTarget.src = candidates[nextIndex] || "/images/default-profile.png";
                     }}
                   />
 
@@ -111,32 +137,79 @@ const AdminProfileTable = ({ profiles, onView }) => {
               </td>
 
               <td>
-                <AdminProfileStatusBadge
-                  statusId={profile.profileStatusId}
-                  statusName={profile.statusName}
-                />
-              </td>
-
-              <td>
-                {profile.isPremium ? (
-                  <span className="premium-badge">
-                    Premium
-                  </span>
-                ) : (
-                  <span className="free-badge">
-                    Free
-                  </span>
-                )}
+                <button
+                  type="button"
+                  className="profile-approval-toggle"
+                  role="switch"
+                  aria-checked={Number(profile.profileStatusId) === 2}
+                  aria-label={`${Number(profile.profileStatusId) === 2 ? "Revoke approval for" : "Approve"} ${profile.fullName}`}
+                  title={Number(profile.profileStatusId) === 2 ? "Approved: click to reject" : Number(profile.profileStatusId) === 1 ? "Pending: click to approve" : "Rejected: click to approve"}
+                  data-state={Number(profile.profileStatusId) === 2 ? "approved" : Number(profile.profileStatusId) === 3 ? "rejected" : "pending"}
+                  onClick={() => onStatusChange(profile, Number(profile.profileStatusId) === 2 ? 3 : 2)}
+                  disabled={statusUpdatingId === profile.userId}
+                >
+                  <span className="profile-approval-switch-track" aria-hidden="true" />
+                </button>
               </td>
 
               <td>
                 <button
                   type="button"
-                  className="view-profile-btn"
-                  onClick={() => onView(profile)}
+                  className="profile-married-toggle"
+                  role="switch"
+                  aria-checked={Boolean(profile.isMarried ?? profile.IsMarried)}
+                  aria-label={`${Boolean(profile.isMarried ?? profile.IsMarried) ? "Mark as not married" : "Mark as married"}: ${profile.fullName}`}
+                  title={Boolean(profile.isMarried ?? profile.IsMarried) ? "Mark as not married" : "Mark as married"}
+                  onClick={() => onMarriedChange(profile)}
+                  disabled={marriedUpdatingId === profile.userId}
                 >
-                  View
+                  <span className="profile-married-switch-track" aria-hidden="true" />
+                  <span>{Boolean(profile.isMarried ?? profile.IsMarried) ? "Married" : "Not married"}</span>
                 </button>
+              </td>
+
+              <td>
+                {(profile.membershipPlanName ?? profile.MembershipPlanName ?? "Free").toLowerCase() === "free" ? (
+                  <span className="free-badge">
+                    {profile.membershipPlanName ?? profile.MembershipPlanName ?? "Free"}
+                  </span>
+                ) : (
+                  <span className="premium-badge">
+                    {profile.membershipPlanName ?? profile.MembershipPlanName ?? "Free"}
+                  </span>
+                )}
+              </td>
+
+              <td>
+                <div className="admin-profile-actions">
+                  <button
+                    type="button"
+                    className="view-profile-btn"
+                    onClick={() => onView(profile)}
+                    aria-label={`View ${profile.fullName}'s profile`}
+                    title="View profile"
+                  >
+                    <Eye size={16} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="edit-profile-btn"
+                    onClick={() => onEdit(profile)}
+                    aria-label={`Edit ${profile.fullName}'s profile`}
+                    title="Edit profile"
+                  >
+                    <Pencil size={16} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="delete-profile-btn"
+                    onClick={() => onDelete(profile)}
+                    aria-label={`Delete ${profile.fullName}'s profile`}
+                    title="Delete profile"
+                  >
+                    <Trash2 size={16} aria-hidden="true" />
+                  </button>
+                </div>
               </td>
 
             </tr>

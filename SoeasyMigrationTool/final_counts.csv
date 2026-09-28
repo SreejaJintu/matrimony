@@ -1,0 +1,12 @@
+Changed database context to 'kaliweb1_soesy2026'.
+Status,cnt
+------,---
+SKIPPED,66
+SUCCESS,54
+
+(2 rows affected)
+TargetUsers
+-----------
+106
+
+(1 rows affected)

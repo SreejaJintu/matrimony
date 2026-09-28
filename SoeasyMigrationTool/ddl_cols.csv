@@ -1,0 +1,8 @@
+COLUMN_NAME
+-----------
+ddl_slno
+servicetype_id
+menu_id
+ddl_name
+
+(4 rows affected)

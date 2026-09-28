@@ -43,6 +43,13 @@
   margin-bottom: 40px;
 }
 
+.login-brand-image {
+  display: block;
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+}
+
 .login-brand-icon {
   width: 36px;
   height: 36px;
@@ -335,6 +342,14 @@
   margin-top: 8px;
 }
 
+.login-otp-message {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--dark-text);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
 /* ===== Remember Me / Forgot Password ===== */
 .login-options {
   display: flex;
@@ -401,6 +416,23 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.login-back-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  color: var(--deep-burgundy-1);
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-back-button:hover {
+  text-decoration: underline;
 }
 
 /* ===== Create account ===== */

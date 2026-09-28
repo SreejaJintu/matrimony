@@ -1,9 +1,9 @@
 {
 "SpaProxyServer": {
-"ServerUrl": "https://localhost:59121",
+"ServerUrl": "http://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\..\\soeasywebsite.client",
+"WorkingDirectory": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\..\\soeasywebsite.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

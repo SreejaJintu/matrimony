@@ -137,3 +137,34 @@
 .profile-edit-card-body .reg-actions {
   justify-content: flex-end;
 }
+
+@media (max-width: 768px) {
+  .profile-edit-summary-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 16px;
+    gap: 16px;
+  }
+
+  .profile-edit-summary-footer {
+    margin-left: 0;
+    width: 100%;
+    align-items: flex-start;
+    border-top: 1px solid var(--border, #e7ded5);
+    padding-top: 12px;
+  }
+
+  .profile-edit-summary-footer .profile-completion-head {
+    width: 100%;
+  }
+
+  .profile-edit-card-header {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .profile-edit-card-body {
+    padding: 18px 16px;
+  }
+}

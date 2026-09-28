@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
+import { BrandLogoImage } from '../BrandLogoImage'
 
 export function Footer() {
   return (
     <footer id="footer" className="footer footer-rich">
       <div className="container footer-grid-rich">
         <div className="footer-branding">
-          <p className="eyebrow footer-eyebrow">Soesy Matrimony</p>
+          <BrandLogoImage className="footer-brand-image" />
           <p className="footer-description">
             Helping you find your perfect life partner with trust and confidence.
           </p>

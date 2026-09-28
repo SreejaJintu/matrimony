@@ -37,8 +37,8 @@ export function MatchesPage() {
   const [sortOption, setSortOption] = useState('recent')
 
   const [lookingFor, setLookingFor] = useState('Bride')
-  const [ageFrom, setAgeFrom] = useState('24')
-  const [ageTo, setAgeTo] = useState('35')
+  const [ageFrom, setAgeFrom] = useState('')
+  const [ageTo, setAgeTo] = useState('')
   const [religion, setReligion] = useState('Any')
   const [community, setCommunity] = useState('All Communities')
   const [location, setLocation] = useState('Any')
@@ -89,30 +89,15 @@ export function MatchesPage() {
   const profilesUsed = subscriptionStatus?.profileViewsUsed ?? 0
 
   useEffect(() => {
-    const queryLookingFor = searchParams.get('lookingFor')
-    const queryAgeFrom = searchParams.get('ageFrom')
-    const queryAgeTo = searchParams.get('ageTo')
-    const queryReligion = searchParams.get('religion')
-    const queryCommunity = searchParams.get('community')
-    const queryLocation = searchParams.get('location')
-    const queryEducation = searchParams.get('education')
-    const queryProfession = searchParams.get('profession')
-
-    if (queryLookingFor) setLookingFor(queryLookingFor)
-    if (queryAgeFrom) setAgeFrom(queryAgeFrom)
-    if (queryAgeTo) setAgeTo(queryAgeTo)
-    if (queryReligion) setReligion(queryReligion)
-    if (queryCommunity) setCommunity(queryCommunity)
-    if (queryLocation) setLocation(queryLocation)
-    if (queryEducation) setEducation(queryEducation)
-    if (queryProfession) setProfession(queryProfession)
-  }, [searchParams])
-
-  useEffect(() => {
-    if (!searchParams.get('lookingFor') && user?.genderId) {
-      setLookingFor(user.genderId === 1 ? 'Bride' : 'Groom')
-    }
-  }, [user?.genderId, searchParams])
+    setLookingFor(searchParams.get('lookingFor') || (user?.genderId === 1 ? 'Bride' : 'Groom'))
+    setAgeFrom(searchParams.get('ageFrom') || '')
+    setAgeTo(searchParams.get('ageTo') || '')
+    setReligion(searchParams.get('religion') || 'Any')
+    setCommunity(searchParams.get('community') || 'All Communities')
+    setLocation(searchParams.get('location') || 'Any')
+    setEducation(searchParams.get('education') || 'Any')
+    setProfession(searchParams.get('profession') || 'Any')
+  }, [searchParams, user?.genderId])
 
   useEffect(() => {
     async function loadMatches() {
@@ -120,10 +105,11 @@ export function MatchesPage() {
       setError('')
 
       try {
+        const activeLookingFor = searchParams.get('lookingFor') || (user?.genderId === 1 ? 'Bride' : 'Groom')
         const targetGenderId = user?.userId
-          ? lookingFor === 'Bride'
+          ? activeLookingFor === 'Bride'
             ? 2
-            : lookingFor === 'Groom'
+            : activeLookingFor === 'Groom'
               ? 1
               : null
           : null
@@ -144,7 +130,7 @@ export function MatchesPage() {
     }
 
     loadMatches()
-  }, [user?.userId, user?.genderId, lookingFor])
+  }, [user?.userId, user?.genderId, searchParams])
 
   // ── Fetch live subscription status ─────────────────────────
   useEffect(() => {
@@ -165,65 +151,74 @@ export function MatchesPage() {
 
   const profiles = useMemo(
     () =>
-      matches.map((match) => ({
-        slug: `match-${match.userId}`,
-        name: match.fullName || '',
-        age: match.age || 0,
-        location: match.location || '',
-        image: match.imageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
-        profession: match.profession || '',
-        height: match.height || '-',
-        community: match.community || '',
-        role: match.profession || '',
-        religion: match.religion || 'Not shared',
-        education: match.education || 'Not shared',
-        familyType: match.familyType || 'Not shared',
-        isVerified: Boolean(match.isVerified || match.verified || match.verifiedProfile),
-        isPremium: Boolean(match.isPremium || match.premium || match.subscription === 'Premium'),
-        isOnline: Boolean(match.isOnline || match.online),
-        about: match.about || '',
-        interests: Array.isArray(match.interests) ? match.interests : [],
-        partnerPreferences: match.partnerPreferences || '',
-        raw: match,
-      })),
+      matches.map((match) => {
+        const locationText = [match.district, match.state].filter(Boolean).join(', ') || match.location || '';
+        return {
+          slug: `match-${match.userId}`,
+          name: match.fullName || '',
+          age: match.age || 0,
+          location: locationText,
+          image: match.imageUrl || '/images/default-profile.png',
+          profession: match.profession || '',
+          height: match.height || '-',
+          community: match.community || '',
+          role: match.profession || '',
+          religion: match.religion || '',
+          education: match.education || '',
+          familyType: match.familyType || '',
+          isVerified: Boolean(match.isVerified || match.verified || match.verifiedProfile),
+          isPremium: Boolean(match.isPremium || match.premium || match.subscription === 'Premium'),
+          isOnline: Boolean(match.isOnline || match.online),
+          about: match.about || '',
+          interests: Array.isArray(match.interests) ? match.interests : [],
+          partnerPreferences: match.partnerPreferences || '',
+          raw: match,
+        };
+      }),
     [matches]
   )
 
   const filteredProfiles = useMemo(() => {
+    const activeAgeFrom = searchParams.get('ageFrom') || ''
+    const activeAgeTo = searchParams.get('ageTo') || ''
+    const activeReligion = searchParams.get('religion') || 'Any'
+    const activeCommunity = searchParams.get('community') || 'All Communities'
+    const activeLocation = searchParams.get('location') || 'Any'
+
     return profiles
       .filter((profile) => {
+        const profileAge = Number(profile.age || 0);
+        const minAge = activeAgeFrom ? Number(activeAgeFrom) : null;
+        const maxAge = activeAgeTo ? Number(activeAgeTo) : null;
+
         const ageMatch =
-          Number(profile.age) >= Number(ageFrom || 0) &&
-          Number(profile.age) <= Number(ageTo || 100)
+          (!minAge || profileAge === 0 || profileAge >= minAge) &&
+          (!maxAge || profileAge === 0 || profileAge <= maxAge);
 
         const communityMatch =
-          community === 'All Communities' || profile.community === community
-
-        const professionMatch =
-          profession === 'Any' ||
-          !profession ||
-          profile.role.toLowerCase().includes(profession.toLowerCase())
+          activeCommunity === 'All Communities' ||
+          !activeCommunity ||
+          activeCommunity === 'Any' ||
+          (profile.community && profile.community.toLowerCase().includes(activeCommunity.toLowerCase()));
 
         const religionMatch =
-          religion === 'Any' ||
-          profile.religion.toLowerCase().includes(religion.toLowerCase())
+          activeReligion === 'Any' ||
+          !activeReligion ||
+          profile.religion.toLowerCase().includes(activeReligion.toLowerCase());
 
         const locationMatch =
-          location === 'Any' ||
-          profile.location.toLowerCase().includes(location.toLowerCase())
+          activeLocation === 'Any' ||
+          !activeLocation ||
+          profile.location.toLowerCase().includes(activeLocation.toLowerCase());
 
-        const educationMatch =
-          education === 'Any' ||
-          profile.education.toLowerCase().includes(education.toLowerCase())
-
-        return ageMatch && communityMatch && professionMatch && religionMatch && locationMatch && educationMatch
+        return ageMatch && communityMatch && religionMatch && locationMatch;
       })
       .sort((a, b) => {
         if (sortOption === 'ageAsc') return Number(a.age) - Number(b.age)
         if (sortOption === 'ageDesc') return Number(b.age) - Number(a.age)
         return 0
       })
-  }, [profiles, ageFrom, ageTo, community, profession, religion, location, education, sortOption])
+  }, [profiles, searchParams, sortOption])
 
   useEffect(() => {
     if (!isAuthenticated || filteredProfiles.length === 0) {
@@ -290,12 +285,13 @@ export function MatchesPage() {
     if (profession && profession !== 'Any') params.set('profession', profession)
 
     navigate(`/matches?${params.toString()}`)
+    setFiltersOpen(false)
   }
 
   const clearFilters = () => {
     setLookingFor(user?.genderId === 1 ? 'Bride' : 'Groom')
-    setAgeFrom('24')
-    setAgeTo('35')
+    setAgeFrom('')
+    setAgeTo('')
     setReligion('Any')
     setCommunity('All Communities')
     setLocation('Any')
@@ -309,8 +305,20 @@ export function MatchesPage() {
 
     const targetUserId = profile.raw?.userId
     const viewerUserId = user?.userId
+    const isFemaleViewer = user?.genderId === 2
 
-    if (!subscriptionStatus?.isApproved || (!subscriptionStatus.hasFullAccess && remainingCredits <= 0) || !targetUserId || !viewerUserId) {
+    if (!targetUserId || !viewerUserId) {
+      setLockedProfile(profile)
+      return
+    }
+
+    // Female members can view profiles without credit deduction.
+    if (isFemaleViewer) {
+      navigate(`/profile-detail/${targetUserId}`)
+      return
+    }
+
+    if (!subscriptionStatus?.isApproved || (!subscriptionStatus.hasFullAccess && remainingCredits <= 0)) {
       setLockedProfile(profile)
       return
     }
@@ -353,6 +361,12 @@ export function MatchesPage() {
       return
     }
 
+    // A logged-in user must be a subscribed member to shortlist profiles
+    if (!isPaidMember) {
+      setLockedProfile(profile)
+      return
+    }
+
     if (shortlistStatusByUserId[String(targetUserId)]) {
       try {
         setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: true }))
@@ -385,7 +399,7 @@ export function MatchesPage() {
     } finally {
       setShortlistLoadingByUserId((prev) => ({ ...prev, [String(targetUserId)]: false }))
     }
-  }, [isAuthenticated, shortlistStatusByUserId])
+  }, [isAuthenticated, isPaidMember, shortlistStatusByUserId])
 
   const closeLeadModal = () => {
     setLockedProfile(null)
@@ -599,7 +613,14 @@ export function MatchesPage() {
                 {filteredProfiles.map((profile) => (
                   <article key={profile.slug} className="match-card">
                     <div className="match-card-image">
-                      <img src={profile.image} alt={profile.name} />
+                      <img
+                        src={profile.image}
+                        alt={profile.name}
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/images/default-profile.png';
+                        }}
+                      />
 
                       <div className="match-card-badges">
                         {profile.isVerified && (
@@ -628,7 +649,7 @@ export function MatchesPage() {
                       </div>
 
                       <p className="match-basic-line">
-                        {profile.age} Years{profile.height !== '-' ? `, ${profile.height}` : ''}
+                        {profile.age > 0 ? `${profile.age} Years` : 'Age not shared'}{profile.height && profile.height !== '-' ? `, ${profile.height}` : ''}
                       </p>
 
                       <p className="match-detail">
@@ -637,7 +658,7 @@ export function MatchesPage() {
                       </p>
 
                       <p className="match-detail">
-                        {profile.religion}
+                        {profile.religion || 'Religion not shared'}
                         {profile.community ? `, ${profile.community}` : ''}
                       </p>
 

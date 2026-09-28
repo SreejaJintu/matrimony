@@ -1,0 +1,49 @@
+Starting migration tool, limit 50 records...
+Initialized EXCLUDED tracker: 6462 unmigrated non-female records bypassed via idempotency schema.
+
+Selected 50 eligible female candidates for pipeline evaluation.
+RegID 1475 Failed.
+RegID 1479 Failed.
+RegID 1482 Failed.
+RegID 1487 Failed.
+RegID 1493 Failed.
+RegID 1497 Failed.
+RegID 1498 Failed.
+RegID 1499 Failed.
+RegID 1500 Failed.
+RegID 1512 Failed.
+RegID 1515 Failed.
+RegID 1518 Failed.
+RegID 1520 Failed.
+RegID 1524 Failed.
+RegID 1525 Failed.
+RegID 1528 Failed.
+RegID 1529 Failed.
+RegID 1530 Failed.
+RegID 1539 Failed.
+RegID 1540 Failed.
+RegID 1548 Failed.
+RegID 1551 Failed.
+RegID 1558 Failed.
+RegID 1596 Failed.
+RegID 1597 Failed.
+RegID 1602 Failed.
+RegID 1606 Failed.
+RegID 1608 Failed.
+RegID 1634 Failed.
+RegID 1658 Failed.
+RegID 1660 Failed.
+RegID 1679 Failed.
+RegID 1680 Failed.
+
+=== PILOT MIGRATION REPORT ===
+Source records checked: 8485
+Female eligible: 1905
+Male excluded: 6488
+Other/missing gender: 92
+------------------------------
+Successfully migrated: 17
+Skipped (Conflict/Invalid): 0
+Failed (Application Error): 33
+------------------------------
+Remaining female candidates: 1753

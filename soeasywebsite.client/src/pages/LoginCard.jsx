@@ -13,9 +13,12 @@ export function LoginCard() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [otpUserId, setOtpUserId] = useState(null);
+  const [otp, setOtp] = useState('');
+  const [showOtpForm, setShowOtpForm] = useState(false);
 
   const navigate = useNavigate();
-  const { login: loginMember } = useContext(AuthContext);
+  const { login: loginMember, verifyLoginOtp } = useContext(AuthContext);
   const { login: loginAdmin } = useAdminAuth();
 
   const validateForm = () => {
@@ -45,7 +48,15 @@ export function LoginCard() {
         await loginAdmin(userName, password);
         navigate('/admin/dashboard', { replace: true });
       } else {
-        await loginMember(userName, password);
+        const loginResult = await loginMember(userName, password);
+
+        if (loginResult?.requiresOtp === true) {
+          setOtpUserId(loginResult.userId);
+          setOtp('');
+          setShowOtpForm(true);
+          return;
+        }
+
         navigate('/matches', { replace: true });
       }
     } catch (err) {
@@ -54,6 +65,35 @@ export function LoginCard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+
+    if (!/^\d{6}$/.test(otp)) {
+      setLoginError('Please enter the 6-digit OTP.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await verifyLoginOtp(otpUserId, otp);
+      setOtp('');
+      setOtpUserId(null);
+      navigate('/matches', { replace: true });
+    } catch (err) {
+      setLoginError(err.message || 'OTP verification failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToLogin = () => {
+    setOtp('');
+    setOtpUserId(null);
+    setShowOtpForm(false);
+    setLoginError('');
   };
 
   return (
@@ -80,6 +120,49 @@ export function LoginCard() {
         </button>
       </div>
 
+      {showOtpForm ? (
+        <form onSubmit={handleOtpSubmit}>
+          {loginError && <p className="login-error-message" style={{ textAlign: 'center', marginBottom: '20px' }}>{loginError}</p>}
+
+          <p className="login-otp-message">OTP sent to your registered mobile number.</p>
+
+          <div className="login-form-group">
+            <label htmlFor="loginOtp" className="login-form-label">
+              Enter OTP
+            </label>
+            <div className="login-input-wrapper">
+              <Lock size={20} className="input-icon" />
+              <input
+                type="text"
+                id="loginOtp"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                placeholder="Enter 6-digit OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                autoFocus
+              />
+            </div>
+          </div>
+
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 size={20} className="animate-spin" /> Verifying...
+              </>
+            ) : (
+              <>
+                Verify OTP <ArrowRight size={20} />
+              </>
+            )}
+          </button>
+
+          <button type="button" className="login-back-button" onClick={handleBackToLogin}>
+            Back to login
+          </button>
+        </form>
+      ) : (
       <form onSubmit={handleSubmit}>
         {loginError && <p className="login-error-message" style={{ textAlign: 'center', marginBottom: '20px' }}>{loginError}</p>}
 
@@ -154,9 +237,10 @@ export function LoginCard() {
           
         </button>
       </form>
+      )}
 
       <p className="login-create-account">
-        New to Soesy Matrimony? <Link to="/register">Create Account</Link>
+        New to Viswaas Matrimony? <Link to="/register">Create Account</Link>
       </p>
     </div>
   );

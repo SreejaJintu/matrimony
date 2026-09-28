@@ -31,7 +31,7 @@ export const RegistrationBenefits = () => {
         <img src={heroImage} alt="Wedding couple celebrating their matrimony" />
       </div>
       <div className="reg-benefits-card">
-        <h3>Why Join GSeven Matrimony?</h3>
+        <h3>Why Join Viswaas Matrimony?</h3>
         <ul className="reg-benefits-list">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
             <li key={title} className="reg-benefit-item">

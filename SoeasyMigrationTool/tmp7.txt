@@ -1,0 +1,41 @@
+Starting migration tool, limit 120 records...
+Fetched 120 source records.
+RegID 1182 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1222: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+Error on RegID 1227: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1237 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1241 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1243 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1245 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1248 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1251 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1253 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1255 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1258 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1260 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1262 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1264 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1267 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1270 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1273: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1274 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1275 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1276 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1277 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1278: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1279 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1280 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1283 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1284 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1287 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1288 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1290 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1291 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1292 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1293 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1297: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+RegID 1298 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1299 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1301 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+Error on RegID 1307: Violation of UNIQUE KEY constraint 'UQ__UserAcco__A9D10534C41AE2D7'. Cannot insert duplicate key in object 'dbo.UserAccount'. The duplicate key value is (<NULL>).
+Completed. Success=54, Skipped=32, Error=34.

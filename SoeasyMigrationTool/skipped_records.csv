@@ -1,0 +1,71 @@
+Changed database context to 'oldSoesyDb'.
+reg_id,OldName,OldEmail,OldMobile
+------,-------,--------,---------
+1194,Nimisha Joshy,soesyservices@gmail.com,+919645302259
+1197,Shyam K R,soesyservices@gmail.com,+918921010384
+1243,Gayathri,soeasyclassifieds@gmail.com,+919895186169
+1183,Hasna,hasnakasim2019@gmail.com,+919995961279
+1182,Farshida,farshidaf77@gmail.com,+919995974999
+1184,Sivangi,suprabhamadhv@gmail.com,+917356297238
+1185,Rohini,suprabhamadhv@gmail.com,+919846903929
+1187,Malavika K.k,malavikakannan266@gmail.com,+919605550762
+1188,Swetha K S,shekeerarifa@gmail.com,+919539165213
+1191,Kavya,shekeerarifa@gmail.com,+919539956832
+1192,swetha k.s,soesyservices@gmail.com,+919400964752
+1212,Monika,soeasyclassifides@gmail.com,+919496901789
+1214,Athira,soeasyclassifides@gmail.com,+917994786806
+1224,Niva,soeasyclassifieds@gmail.com,+919400033232
+1225,Athulya K.S,soeasyclassifides@gmail.com,+919446313110
+1226,Kareeshma Krishnakumar,soeasyclassifiedes@gmail.com,+919511236835
+1228,Aswathi,soeasyclassifieds@gmail.com,+919526449552
+1233,Amrutha,soeasyclassifieds@gmail.com,+919746941651
+1186,Dhanik,dhanik1989@gmail.com,+919846461044
+1236,Priyanka Chandrashekar,soeasyclassifieds@gmail.com,+919400917049
+1238,Vinayak Rajeev,soeasyclassifiedes@gmail.com,+919744971520
+1251,Swathy K P,soeasyclassifieds@gmail.com,+919846249841
+1255,Akash KS,soeasyclassifieds@gmail.com,+918086219341
+1276,krshnapriya,soeasyclassifieds@gmail.com,+919605117328
+1221,Charutha .T R,soeasyclassifieds@gmail.com,+919048701585
+1258,Meenu Raj KB,soeasyclassifieds@gmail.com,+919447992241
+1262,swathi,soeasyclassifieds@gmail.com,+919495226477
+1264,Gopika T G,soeasyclassifieds@gmail.com,+919656787749
+1267,Aswathy EB,soeasyclassifieds@gmail.com,+919846780517
+1220,Karthik Babu,soeasyclassifieds@gmail.com,+919947105506
+1231,Vidhu K.,soeasyclassifieds@gmail.com,+917560966933
+1253,Anisha TM,soeasyclassifieds@gmail.com,+919745809477
+1265,Arjun ,soeasyclassifiedes@gmail.com,+919400872685
+1270,Gopika K.S,soeasyclassifieds@gmail.com,+919744098696
+1275,Rahul,soeasyclassifieds@gmail.com,+919847336700
+1219,Nikhil T.V,soeasyclassifieds@gmail.com,+918590758040
+1245,Nerma KG,soeasyclassifieds@gmail.com,+919020649219
+1279,Vimal das,soeasyclassifieds@gmail.com,+919495632204
+1282,Anusha VS,soeasyclassifiedes@gmail.com,+919020775111
+1260,Avani N B,soeasyclassifieds@gmail.com,+919016612939
+1286,Aiswarya ES ,nirmala4sures@gmail.com,+918086440005
+1290,Vimal das,soeasyclassifieds@gmail.com,+919495632204
+1291,Rachan Arakkal,soeasyclassifieds@gmail.com,+919496982905
+1293,suneesh ps ,soeasyclassifieds@gmail.com,+919400960218
+1298,Vasu kp,soeasyclassifieds@gmail.com,+9194002970047
+1248,Subeesh CS,soeasyclassifieds@gmail.com,+919846320053
+1292,Suneesh PS,soeasyclassifieds@gmail.com,+919400960218
+1299,Rimesh,soeasyclassifieds@gmail.com,+919048168438
+1302,aishwarya ,soeasyclassifieds@gmail.com,+919497107890
+1313,Akshay C A,soeasyclassifieds@gmail.com,+919895014425
+1280,Pooja Das KM,soeasyclassifieds@gmail.com,+919495632204
+1311,Ajeesh,soeasyclassifieds@gmail.com,+918943246914
+1317,Vani,soeasyclassifieds@gmail.com,+9185478 83398
+1318,Vani,soeasyclassifieds@gmail.com,+9185478 83398
+1331,AKHIL.P.M,soeasyclassifieds@gmail.com,+918086851175
+1241,Aswathi AR,soeasyclassifieds@gmail.com,+919061331790
+1284,saibala,prasadmasafi@gmail.com,+919447154392
+1287,Reshma,soeasyclassifieds@gmail.com,+919656808290
+1301,Shajeen M M,soeasyclassifieds@gmail.com,+918547139727
+1308,Deepesh,soeasyclassifieds@gmail.com,+919745724522
+1274,Shanid,soeasyclassifieds@gmail.com,+919400883353
+1288,Reshma,soeasyclassifieds@gmail.com,+919496570844
+1303,Dixon,soeasyclassifieds@gmail.com,+919633388061
+1312,Vimaldas,soeasyclassifieds@gmail.com,+919495632204
+1332,Krishnakumar,soeasyclassifieds@gmail.com,+919526603679
+1330,Rakesh,soeasyclassifieds@gmail.com,+919562224142
+
+(66 rows affected)

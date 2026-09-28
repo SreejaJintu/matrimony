@@ -1,0 +1,47 @@
+### OVERALL COUNTS
+Total_tbl_registration Matrimonial_tbl_registration Total_tbl_tempreg Matrimonial_tbl_tempreg
+---------------------- ---------------------------- ----------------- -----------------------
+                  8485                         8465               125                     125
+### DUPLICATES
+Metric           Groups      TotalRows  
+---------------- ----------- -----------
+Duplicate Emails         169        7168
+Metric            Groups      TotalRows  
+----------------- ----------- -----------
+Duplicate Mobiles         585        1506
+### NULL OR MISSING FIELDS
+MissingName_m5 MissingMobile_m6 MissingEmail_m22 InvalidGender_ddl2 InvalidMarital_ddl1
+-------------- ---------------- ---------------- ------------------ -------------------
+             0                0                0                 72                  86
+### DOB CLASSIFICATION
+Missing     Unparseable DDMMYYYY_Only MMDDYYYY_Only Unambiguous_BothParseToSame Ambiguous_BothParseToDifferent
+----------- ----------- ------------- ------------- --------------------------- ------------------------------
+         27          39             3          2590                         741                           5092
+### INVALID EMAILS FORMAT
+InvalidEmailFormat
+------------------
+               279
+### MASTERS COUNT
+Field                DistinctValues
+-------------------- --------------
+Education_m12                  1093
+Occupation_m13                 3240
+ReligionCommunity_m9            100
+Income_m20                       49
+Height_m11                      119
+District_m19                    125
+### STATUS
+InactiveAdminStatus InactiveProfileStatus
+------------------- ---------------------
+               8465                  7075
+### PAYMENTS
+PayStatusOne NonDecimalAmount ZeroAmount  DistinctTransactionRefs
+------------ ---------------- ----------- -----------------------
+        8464             1600         597                    3012
+Metric                 DupeGroups  TotalRows  
+---------------------- ----------- -----------
+Duplicate Transactions        1003        6456
+### PHOTOS
+img1_count  img2_count  img3_count  img4_count  NoPhotosAtAll
+----------- ----------- ----------- ----------- -------------
+       8423        8422        8422        8422            42

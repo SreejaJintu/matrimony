@@ -1,0 +1,21 @@
+Changed database context to 'kaliweb1_soesy2026'.
+Status, 
+------,-
+SKIPPED,140
+SUCCESS,80
+
+(2 rows affected)
+SourceRegistrationId,Status,ErrorMessage
+--------------------,------,------------
+1472,SKIPPED,EX-DUP-TARGET-CONFLICT
+1471,SKIPPED,EX-DUP-TARGET-CONFLICT
+1470,SKIPPED,EX-DUP-TARGET-CONFLICT
+1469,SUCCESS,DOB Ambiguous: 01/05/1994;img3 present: May be Jathakam. Skipping auto-migration.
+1468,SKIPPED,EX-DUP-TARGET-CONFLICT
+1465,SKIPPED,EX-DUP-TARGET-CONFLICT
+1464,SKIPPED,EX-DUP-TARGET-CONFLICT
+1463,SKIPPED,EX-DUP-TARGET-CONFLICT
+1462,SKIPPED,EX-DUP-TARGET-CONFLICT
+1461,SUCCESS,DOB Ambiguous: 07/05/1991;img3 present: May be Jathakam. Skipping auto-migration.
+
+(10 rows affected)

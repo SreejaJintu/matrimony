@@ -25,10 +25,36 @@ const adminProfileService = {
     return response.data;
   },
 
+  getPhotos: async (userId) => {
+    const response = await axios.get(`/api/admin/profiles/${userId}/photos`);
+    return response.data;
+  },
+
+  deleteProfile: async (userId) => {
+    const response = await axios.delete(`/api/admin/profiles/${userId}`);
+    return response.data;
+  },
+
+  updateMobileNumber: async (userId, mobileNumber) => {
+    const response = await axios.put(`/api/admin/profiles/${userId}/mobile`, {
+      mobileNumber,
+    });
+    return response.data;
+  },
+
   updateProfileStatus: async (userId, profileStatusId) => {
     const response = await axios.put(
       `/api/admin/profiles/${userId}/status`,
       { profileStatusId }
+    );
+
+    return response.data;
+  },
+
+  updateMaritalStatus: async (userId, isMarried) => {
+    const response = await axios.put(
+      `/api/admin/profiles/${userId}/marital-status`,
+      { isMarried }
     );
 
     return response.data;
@@ -42,6 +68,11 @@ const adminProfileService = {
 
   return response.data;
 },
+
+  updateProfile: async (payload) => {
+    const response = await axios.put('/api/profile/profile', payload);
+    return response.data;
+  },
 };
 
 

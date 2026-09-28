@@ -26,9 +26,13 @@ public class AdminProfileDto
 
     public bool IsPremium { get; set; }
 
+    public string? MembershipPlanName { get; set; }
+
+    public bool IsMarried { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     public string? City { get; set; }
 

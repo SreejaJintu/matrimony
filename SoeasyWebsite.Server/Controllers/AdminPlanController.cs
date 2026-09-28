@@ -28,4 +28,28 @@ public class AdminPlanController : ControllerBase
         var result = await _service.CreatePlanAsync(dto);
         return Ok(result);
     }
+
+    [HttpPut("{planId:int}")]
+    public async Task<IActionResult> UpdatePlan(int planId, [FromBody] CreatePlanRequestDto dto)
+    {
+        if (planId <= 0)
+        {
+            return BadRequest(new { success = false, message = "A valid plan ID is required." });
+        }
+
+        var result = await _service.UpdatePlanAsync(planId, dto);
+        return result.Success ? Ok(result) : NotFound(result);
+    }
+
+    [HttpDelete("{planId:int}")]
+    public async Task<IActionResult> DeactivatePlan(int planId)
+    {
+        if (planId <= 0)
+        {
+            return BadRequest(new { success = false, message = "A valid plan ID is required." });
+        }
+
+        var deactivated = await _service.DeactivatePlanAsync(planId);
+        return deactivated ? NoContent() : NotFound();
+    }
 }

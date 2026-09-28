@@ -1,0 +1,57 @@
+Starting migration tool, limit 50 records...
+Initialized EXCLUDED tracker: 0 unmigrated non-female records bypassed via idempotency schema.
+
+Selected 50 eligible female candidates for pipeline evaluation.
+RegID 1684 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1687 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1709 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1710 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1711 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1714 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1719 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1720 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1725 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1726 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1734 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1735 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1736 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1742 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1759 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1761 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1762 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1764 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1765 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1766 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1768 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1769 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1770 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1773 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1798 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1799 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1800 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1831 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1832 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1833 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1834 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1835 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1842 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1844 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1846 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1847 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1848 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1849 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1851 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1852 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+RegID 1853 Skipped. Reasons: EX-DUP-TARGET-CONFLICT
+
+=== PILOT MIGRATION REPORT ===
+Source records checked: 8485
+Female eligible: 1905
+Male excluded: 6488
+Other/missing gender: 92
+------------------------------
+Successfully migrated: 9
+Skipped (Conflict/Invalid): 41
+Failed (Application Error): 0
+------------------------------
+Remaining female candidates: 1703

@@ -1,3 +1,10 @@
+.admin-login-logo {
+  display: block;
+  width: 132px;
+  height: 88px;
+  margin: 0 auto 16px;
+  object-fit: contain;
+}
 .admin-login-page {
   min-height: 100vh;
   display: flex;

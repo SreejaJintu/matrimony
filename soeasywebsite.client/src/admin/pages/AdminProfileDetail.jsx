@@ -244,6 +244,9 @@ const AdminProfileDetail = () => {
             <img
               src={
                 profile.imageUrl ||
+                profile.ImageUrl ||
+                profile.profileImageUrl ||
+                profile.ProfileImageUrl ||
                 "/images/default-profile.png"
               }
               alt={profile.fullName}
@@ -742,12 +745,7 @@ const AdminProfileDetail = () => {
             </>
           )}
 
-          <button
-            type="button"
-            className="admin-action suspend"
-          >
-            Suspend
-          </button>
+       
 
           <button
             type="button"

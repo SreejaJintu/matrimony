@@ -40,6 +40,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireClaim("userType", "Admin"));
+});
+
 
 //---------------------------------------------------------
 // Services
@@ -95,8 +102,12 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.ISubscriptionService, SubscriptionService>();
 
 builder.Services.AddScoped<IAdminProfileRepository, AdminProfileRepository>();
-
 builder.Services.AddScoped<IAdminProfileService, AdminProfileService>();
+builder.Services.AddScoped<IAdminBrokerRepository, AdminBrokerRepository>();
+builder.Services.AddScoped<IAdminBrokerService, AdminBrokerService>();
+
+builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
 builder.Services.AddScoped<IAdminAuthRepository, AdminAuthRepository>();
 builder.Services.AddScoped<IAdminPlanRepository, AdminPlanRepository>();
@@ -110,9 +121,12 @@ builder.Services.AddScoped<
     IAdminSubscriptionService,
     AdminSubscriptionService>();
 
-
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<IShortlistRepository, ShortlistRepository>();
 builder.Services.AddScoped<ShortlistService>();
+
+builder.Services.AddHttpClient<ISmsBitsService, SmsBitsService>();
 //---------------------------------------------------------
 // CORS
 //---------------------------------------------------------
@@ -164,6 +178,13 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
+
+
+Console.WriteLine("======================================");
+Console.WriteLine("TEST PASSWORD: Test@12345");
+var hash = BCrypt.Net.BCrypt.HashPassword("Test@12345");
+Console.WriteLine(hash);
+Console.WriteLine("======================================");
 
 #if DEBUG
 Console.WriteLine("ADMIN HASH:");

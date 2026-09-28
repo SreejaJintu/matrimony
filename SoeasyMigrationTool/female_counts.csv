@@ -1,0 +1,16 @@
+Changed database context to 'oldSoesyDb'.
+Total,FemaleEligible,MaleExcluded,OtherMissing
+-----,--------------,------------,------------
+8485,1905,6488,92
+
+(1 rows affected)
+ddl_2_id,admin_status, 
+--------,------------,-
+3,NULL,6488
+10,NULL,1
+0,NULL,74
+9,NULL,16
+14,NULL,1
+4,NULL,1905
+
+(6 rows affected)

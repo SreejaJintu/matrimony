@@ -16,3 +16,17 @@ export const getMembershipPlans = async () => {
   const response = await axios.get(PLANS_API_URL)
   return response.data
 }
+
+export const createMembershipPlan = async (data) => {
+  const response = await axios.post(PLANS_API_URL, data)
+  return response.data
+}
+
+export const updateMembershipPlan = async (planId, data) => {
+  const response = await axios.put(`${PLANS_API_URL}/${planId}`, data)
+  return response.data
+}
+
+export const deactivateMembershipPlan = async (planId) => {
+  await axios.delete(`${PLANS_API_URL}/${planId}`)
+}

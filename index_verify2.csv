@@ -1,0 +1,8 @@
+Changed database context to 'kaliweb1_soesy2026'.
+IndexName,ColumnName,filter_definition
+---------,----------,-----------------
+PK__UserAcco__1788CC4CA79FC963,UserId,NULL
+UQ__UserAcco__250375B146AC73B1,MobileNumber,NULL
+UQ__UserAcco__6649688AAC8591EA,ProfileCode,NULL
+
+(3 rows affected)

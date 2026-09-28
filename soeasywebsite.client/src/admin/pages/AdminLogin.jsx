@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../context/AdminAuthContext";
 import "../styles/adminLogin.css";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { login } = useAdminAuth();
+  const { login, isAuthenticated } = useAdminAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -51,7 +56,7 @@ const AdminLogin = () => {
       <div className="admin-login-card">
 
         <div className="admin-login-header">
-          <h1>Soesy</h1>
+          <img className="admin-login-logo" src="/maroon_favicon.svg" alt="Viswaas" />
           <h2>Admin Panel</h2>
           <p>Sign in to manage your matrimony bureau</p>
         </div>
