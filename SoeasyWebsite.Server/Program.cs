@@ -45,6 +45,12 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireAuthenticatedUser()
               .RequireClaim("userType", "Admin"));
+
+    options.AddPolicy("LeadAccess", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireAssertion(context =>
+                  context.User.HasClaim("userType", "Admin") ||
+                  context.User.HasClaim("userType", "Executive")));
 });
 
 
@@ -87,12 +93,16 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ICurrentBrokerRepository, CurrentBrokerRepository>();
+builder.Services.AddScoped<IBrokerCandidateRepository, BrokerCandidateRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IMasterRepository, MasterRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.IAuthService, AuthService>();
+builder.Services.AddScoped<ICurrentBrokerService, CurrentBrokerService>();
+builder.Services.AddScoped<IBrokerCandidateService, BrokerCandidateService>();
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.IAccountService, AccountService>();
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.IMasterService, MasterService>();
 builder.Services.AddScoped<SoeasyWebsite.Server.Interfaces.IProfileService, ProfileService>();
@@ -105,6 +115,8 @@ builder.Services.AddScoped<IAdminProfileRepository, AdminProfileRepository>();
 builder.Services.AddScoped<IAdminProfileService, AdminProfileService>();
 builder.Services.AddScoped<IAdminBrokerRepository, AdminBrokerRepository>();
 builder.Services.AddScoped<IAdminBrokerService, AdminBrokerService>();
+builder.Services.AddScoped<IAdminExecutiveRepository, AdminExecutiveRepository>();
+builder.Services.AddScoped<IAdminExecutiveService, AdminExecutiveService>();
 
 builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
@@ -113,6 +125,8 @@ builder.Services.AddScoped<IAdminAuthRepository, AdminAuthRepository>();
 builder.Services.AddScoped<IAdminPlanRepository, AdminPlanRepository>();
 builder.Services.AddScoped<IAdminPlanService, AdminPlanService>();
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
+builder.Services.AddScoped<IExecutiveAuthRepository, ExecutiveAuthRepository>();
+builder.Services.AddScoped<IExecutiveAuthService, ExecutiveAuthService>();
 builder.Services.AddScoped<
     IAdminSubscriptionRepository,
     AdminSubscriptionRepository>();

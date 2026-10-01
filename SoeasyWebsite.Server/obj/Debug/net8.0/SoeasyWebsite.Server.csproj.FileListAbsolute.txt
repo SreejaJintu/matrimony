@@ -87,7 +87,6 @@ D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\appsettings.json
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\appsettings.Migration.json
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.staticwebassets.runtime.json
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.staticwebassets.endpoints.json
-D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.exe
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.deps.json
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.runtimeconfig.json
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.dll
@@ -165,7 +164,6 @@ D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\refint\SoeasyWebsite.
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\SoeasyWebsite.Server.pdb
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\SoeasyWebsite.Server.genruntimeconfig.cache
 D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\ref\SoeasyWebsite.Server.dll
-d:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\swae.build.ex.cache
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-build-check\spa.proxy.json
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-build-check\appsettings.Development.json
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-build-check\appsettings.json
@@ -254,3 +252,5 @@ C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-membership-fix-check\Soea
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-membership-fix-check\SoeasyWebsite.Server.runtimeconfig.json
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-membership-fix-check\SoeasyWebsite.Server.dll
 C:\Users\sreej\AppData\Local\Temp\SoeasyWebsite.Server-membership-fix-check\SoeasyWebsite.Server.pdb
+D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\obj\Debug\net8.0\swae.build.ex.cache
+D:\SoeasyWebsiteCopy\SoeasyWebsite.Server\bin\Debug\net8.0\SoeasyWebsite.Server.exe

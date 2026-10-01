@@ -28,6 +28,11 @@ const adminBrokerService = {
     return response.data;
   },
 
+  getBrokerCandidates: async (brokerId) => {
+    const response = await request(() => axios.get(`${API_BASE_URL}/${brokerId}/candidates`, requestConfig()));
+    return response.data;
+  },
+
   registerBroker: async (payload) => {
     const response = await request(() => axios.post(API_BASE_URL, payload, requestConfig()));
     return response.data;

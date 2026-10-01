@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAdminAuth } from "../context/AdminAuthContext";
 import "../styles/adminLogin.css";
 
@@ -101,6 +102,10 @@ const AdminLogin = () => {
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
+
+          <p className="admin-login-switch">
+            Executive staff? <Link to="/executive/login">Sign in here</Link>
+          </p>
 
         </form>
       </div>

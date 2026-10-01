@@ -62,6 +62,7 @@ const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange,
         <thead>
           <tr>
             <th>Profile</th>
+            <th>Registration Source</th>
             <th>Age</th>
             <th>Gender</th>
             <th>Location</th>
@@ -116,6 +117,16 @@ const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange,
               </td>
 
               <td>
+                <strong>{profile.registrationType || "Self Registered"}</strong>
+                {profile.registrationType === "Broker Registered" && (
+                  <small className="admin-registration-broker">
+                    {profile.brokerName || "Broker"}
+                    {profile.brokerCompanyName ? ` · ${profile.brokerCompanyName}` : ""}
+                  </small>
+                )}
+              </td>
+
+              <td>
                 {calculateAge(profile.dateOfBirth)}
               </td>
 
@@ -157,14 +168,14 @@ const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange,
                   type="button"
                   className="profile-married-toggle"
                   role="switch"
-                  aria-checked={Boolean(profile.isMarried ?? profile.IsMarried)}
-                  aria-label={`${Boolean(profile.isMarried ?? profile.IsMarried) ? "Mark as not married" : "Mark as married"}: ${profile.fullName}`}
-                  title={Boolean(profile.isMarried ?? profile.IsMarried) ? "Mark as not married" : "Mark as married"}
+                  aria-checked={profile.isMarried ?? profile.IsMarried ?? false}
+                  aria-label={`${profile.isMarried ?? profile.IsMarried ?? false ? "Mark as not married" : "Mark as married"}: ${profile.fullName}`}
+                  title={profile.isMarried ?? profile.IsMarried ?? false ? "Mark as not married" : "Mark as married"}
                   onClick={() => onMarriedChange(profile)}
                   disabled={marriedUpdatingId === profile.userId}
                 >
                   <span className="profile-married-switch-track" aria-hidden="true" />
-                  <span>{Boolean(profile.isMarried ?? profile.IsMarried) ? "Married" : "Not married"}</span>
+                  <span>{profile.isMarried ?? profile.IsMarried ?? false ? "Married" : "Not married"}</span>
                 </button>
               </td>
 

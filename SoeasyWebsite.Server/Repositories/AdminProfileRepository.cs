@@ -94,6 +94,8 @@ public class AdminProfileRepository : IAdminProfileRepository
             profile.MembershipPlanName = membershipPlanByUserId.GetValueOrDefault(profile.UserId);
         }
 
+        await ApplyBrokerAttribution(connection, profiles);
+
         return profiles;
     }
    public async Task<AdminProfileDetailResult?> GetById(int userId)
@@ -111,7 +113,46 @@ public class AdminProfileRepository : IAdminProfileRepository
             commandType: CommandType.StoredProcedure
         );
 
+    if (result is not null)
+    {
+        var attributionProfile = new AdminProfileDto { UserId = result.UserId };
+        await ApplyBrokerAttribution(connection, new[] { attributionProfile });
+        result.RegistrationType = attributionProfile.RegistrationType;
+        result.BrokerName = attributionProfile.BrokerName;
+        result.BrokerCompanyName = attributionProfile.BrokerCompanyName;
+    }
+
     return result;
+}
+
+private static async Task ApplyBrokerAttribution(
+    System.Data.IDbConnection connection,
+    IEnumerable<AdminProfileDto> profiles)
+{
+    var profileList = profiles.ToList();
+    if (profileList.Count == 0) return;
+
+    var attributionRows = await connection.QueryAsync<BrokerAttributionRow>(
+        """
+        SELECT
+            UA.UserId,
+            CASE WHEN UA.BrokerId IS NULL THEN N'Self Registered' ELSE N'Broker Registered' END AS RegistrationType,
+            BP.BrokerName,
+            BP.CompanyName AS BrokerCompanyName
+        FROM dbo.UserAccount UA
+        LEFT JOIN dbo.BrokerProfile BP ON BP.BrokerId = UA.BrokerId
+        WHERE UA.UserId IN @UserIds;
+        """,
+        new { UserIds = profileList.Select(profile => profile.UserId).ToArray() });
+
+    var byUserId = attributionRows.ToDictionary(row => row.UserId);
+    foreach (var profile in profileList)
+    {
+        if (!byUserId.TryGetValue(profile.UserId, out var attribution)) continue;
+        profile.RegistrationType = attribution.RegistrationType;
+        profile.BrokerName = attribution.BrokerName;
+        profile.BrokerCompanyName = attribution.BrokerCompanyName;
+    }
 }
 
 public async Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId)
@@ -220,5 +261,13 @@ private sealed class ProfileMembershipPlanRow
     public int UserId { get; set; }
 
     public string? MembershipPlanName { get; set; }
+}
+
+private sealed class BrokerAttributionRow
+{
+    public int UserId { get; set; }
+    public string RegistrationType { get; set; } = "Self Registered";
+    public string? BrokerName { get; set; }
+    public string? BrokerCompanyName { get; set; }
 }
 }

@@ -3,7 +3,8 @@
    ============================================================ */
 
 .admin-subscription-page {
-  max-width: 680px;
+  width: 100%;
+  max-width: none;
 }
 
 .admin-page-header {
@@ -24,6 +25,9 @@
 /* ── Card ── */
 
 .sub-form-card {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 16px;
@@ -31,6 +35,9 @@
 }
 
 .sub-plan-list-card {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
   margin-top: 24px;
   background: #fff;
   border: 1px solid #eee;
@@ -63,14 +70,16 @@
 }
 
 .sub-plan-table-wrap {
+  width: calc(100% + 48px);
+  margin-inline: -24px;
   overflow-x: auto;
 }
 
 .sub-plan-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
-  white-space: nowrap;
 }
 
 .sub-plan-table th,
@@ -88,6 +97,21 @@
   text-transform: uppercase;
 }
 
+.sub-plan-table th:nth-child(1),
+.sub-plan-table td:nth-child(1) { width: 19%; }
+.sub-plan-table th:nth-child(2),
+.sub-plan-table td:nth-child(2) { width: 10%; }
+.sub-plan-table th:nth-child(3),
+.sub-plan-table td:nth-child(3) { width: 12%; }
+.sub-plan-table th:nth-child(4),
+.sub-plan-table td:nth-child(4) { width: 13%; }
+.sub-plan-table th:nth-child(5),
+.sub-plan-table td:nth-child(5) { width: 23%; }
+.sub-plan-table th:nth-child(6),
+.sub-plan-table td:nth-child(6) { width: 12%; }
+.sub-plan-table th:nth-child(7),
+.sub-plan-table td:nth-child(7) { width: 11%; }
+
 .sub-plan-table td {
   color: #444;
 }
@@ -98,7 +122,7 @@
 
 .sub-plan-features {
   white-space: normal;
-  min-width: 170px;
+  overflow-wrap: anywhere;
 }
 
 .sub-plan-status {
@@ -447,6 +471,11 @@
 
   .sub-plan-details {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sub-plan-table {
+    min-width: 760px;
+    table-layout: auto;
   }
 
   .sub-plan-detail-item:nth-child(2) {

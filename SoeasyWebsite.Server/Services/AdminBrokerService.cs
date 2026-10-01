@@ -18,6 +18,9 @@ public class AdminBrokerService : IAdminBrokerService
 
     public Task<BrokerDto?> GetByIdAsync(int brokerId) => _repository.GetByIdAsync(brokerId);
 
+    public Task<IEnumerable<AdminBrokerCandidateDto>> GetCandidatesAsync(int brokerId) =>
+        _repository.GetCandidatesAsync(brokerId);
+
     public Task<bool> UpdateAsync(int brokerId, UpdateBrokerRequestDto request) =>
         _repository.UpdateAsync(brokerId, request);
 

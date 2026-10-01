@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
       fullName: session.getFullName(),
       genderId: session.getGenderId(),
       subscription: session.getSubscription(),
+      isBroker: session.getIsBroker(),
       token: sessionStorage.getItem('soeasy_token'),
     }
   })
@@ -38,6 +39,7 @@ export function AuthProvider({ children }) {
       fullName: payload.fullName,
       genderId: payload.genderId,
       subscription: payload.subscription ?? 'Free',
+      isBroker: payload.isBroker === true,
       token: payload.token,
     }
 
@@ -48,6 +50,7 @@ export function AuthProvider({ children }) {
       fullName: authData.fullName,
       genderId: authData.genderId,
       subscription: authData.subscription,
+      isBroker: authData.isBroker,
       token: authData.token,
     }
 
@@ -74,6 +77,7 @@ export function AuthProvider({ children }) {
       fullName: payload.fullName,
       genderId: payload.genderId,
       subscription: payload.subscription ?? 'Free',
+      isBroker: false,
       token: payload.token,
     }
 
@@ -84,6 +88,7 @@ export function AuthProvider({ children }) {
       fullName: authData.fullName,
       genderId: authData.genderId,
       subscription: authData.subscription,
+      isBroker: authData.isBroker,
       token: authData.token,
     }
 

@@ -52,6 +52,27 @@ public class AdminBrokerController : ControllerBase
         });
     }
 
+    [HttpGet("{brokerId:int}/candidates")]
+    public async Task<IActionResult> GetBrokerCandidates(int brokerId)
+    {
+        if (brokerId <= 0)
+        {
+            return BadRequest(new ApiResponse<IEnumerable<AdminBrokerCandidateDto>>
+            {
+                Success = false,
+                Message = "A valid Broker ID is required."
+            });
+        }
+
+        var candidates = await _service.GetCandidatesAsync(brokerId);
+        return Ok(new ApiResponse<IEnumerable<AdminBrokerCandidateDto>>
+        {
+            Success = true,
+            Message = "Broker candidates retrieved successfully.",
+            Data = candidates
+        });
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateBroker([FromBody] CreateBrokerRequestDto request)
     {

@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\SoeasyWebsiteCopy\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\SoeasyWebsiteCopy\\src\\admin\\pages\\AdminProfiles.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\admin\\pages\\AdminProfiles.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -48,10 +52,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|d:\\soeasywebsitecopy\\soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{63D6BFAC-DCF6-4AA1-BA3C-43884EFB45C9}|SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj|solutionrelative:soeasywebsite.server\\soeasywebsite.server.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -61,7 +61,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -69,7 +69,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AdminProfiles.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\src\\admin\\pages\\AdminProfiles.jsx",
               "RelativeDocumentMoniker": "src\\admin\\pages\\AdminProfiles.jsx",
@@ -82,7 +82,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ProfileController.cs",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\Controllers\\ProfileController.cs",
@@ -94,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "RegistrationBenefits.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\components\\forms\\RegistrationBenefits.jsx",
@@ -106,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "RegistrationPage.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\RegistrationPage.jsx",
@@ -118,7 +118,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "LoginCard.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\LoginCard.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\LoginCard.jsx",
@@ -130,7 +130,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "AdminProfileDetailDto.cs",
               "DocumentMoniker": "D:\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
               "RelativeDocumentMoniker": "..\\g7\\SoeasyWebsite\\SoeasyWebsite.Server\\DTOs\\Admin\\AdminProfileDetailDto.cs",
@@ -141,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MatchesPage.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\MatchesPage.jsx",
@@ -153,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "ProfileDetail.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\ProfileDetail.jsx",
@@ -165,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "ProfilePage.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\pages\\ProfilePage.jsx",
@@ -177,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "AppRoutes.jsx",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
               "RelativeDocumentMoniker": "soeasywebsite.client\\src\\routes\\AppRoutes.jsx",
@@ -189,7 +189,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.json",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\appsettings.json",
@@ -201,7 +201,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\appsettings.Development.json",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\appsettings.Development.json",
@@ -213,7 +213,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 0,
               "Title": "SoeasyWebsite.Server.csproj",
               "DocumentMoniker": "D:\\SoeasyWebsiteCopy\\SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
               "RelativeDocumentMoniker": "SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
@@ -221,7 +221,8 @@
               "RelativeToolTip": "SoeasyWebsite.Server\\SoeasyWebsite.Server.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-07-29T11:15:57.011Z"
+              "WhenOpened": "2026-07-29T11:15:57.011Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",

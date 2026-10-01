@@ -17,4 +17,5 @@ public class BrokerDto
     public string ProfileCode { get; set; } = string.Empty;
     public string? UserMobileNumber { get; set; }
     public string? UserEmail { get; set; }
+    public long CandidateCount { get; set; }
 }

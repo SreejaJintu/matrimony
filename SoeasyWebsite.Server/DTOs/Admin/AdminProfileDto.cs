@@ -6,6 +6,12 @@ public class AdminProfileDto
 
     public string ProfileCode { get; set; } = string.Empty;
 
+    public string RegistrationType { get; set; } = "Self Registered";
+
+    public string? BrokerName { get; set; }
+
+    public string? BrokerCompanyName { get; set; }
+
     public string FullName { get; set; } = string.Empty;
 
     public string MobileNumber { get; set; } = string.Empty;

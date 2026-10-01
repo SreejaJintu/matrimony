@@ -58,7 +58,8 @@ BEGIN
         ua.FullName AS UserFullName,
         ua.ProfileCode,
         ua.MobileNumber AS UserMobileNumber,
-        ua.Email AS UserEmail
+        ua.Email AS UserEmail,
+        (SELECT COUNT_BIG(*) FROM dbo.UserAccount candidates WHERE candidates.BrokerId = bp.BrokerId) AS CandidateCount
     FROM dbo.BrokerProfile bp
     INNER JOIN dbo.UserAccount ua ON ua.UserId = bp.UserId
     WHERE @BrokerId IS NULL OR bp.BrokerId = @BrokerId

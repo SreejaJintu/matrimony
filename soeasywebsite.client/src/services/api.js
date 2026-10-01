@@ -101,6 +101,11 @@ export const api = {
   shortlistAdd: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'POST' }),
   shortlistRemove: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'DELETE' }),
   shortlistCheck: (targetUserId) => request(`/api/shortlist/check/${targetUserId}`),
+
+  // Broker candidates
+  getBrokerCandidates: () => request('/api/broker/candidates'),
+  getBrokerCandidate: (userId) => request(`/api/broker/candidates/${userId}`),
+  createBrokerCandidate: (payload) => request('/api/broker/candidates', { method: 'POST', data: payload }),
   
 
     // Admin Location Management
@@ -152,6 +157,7 @@ export const session = {
     sessionStorage.setItem('soeasy_full_name', data.fullName ?? '')
     sessionStorage.setItem('soeasy_gender_id', String(data.genderId ?? ''))
     sessionStorage.setItem('soeasy_subscription', data.subscription ?? 'Free')
+    sessionStorage.setItem('soeasy_is_broker', data.isBroker === true ? 'true' : 'false')
   },
   setUser(data) {
     sessionStorage.setItem('soeasy_user_id', String(data.userId))
@@ -169,6 +175,7 @@ export const session = {
     sessionStorage.removeItem('soeasy_full_name')
     sessionStorage.removeItem('soeasy_gender_id')
     sessionStorage.removeItem('soeasy_subscription')
+    sessionStorage.removeItem('soeasy_is_broker')
   },
   getUserId() {
     const value = sessionStorage.getItem('soeasy_user_id')
@@ -183,6 +190,9 @@ export const session = {
   },
   getSubscription() {
     return sessionStorage.getItem('soeasy_subscription') ?? 'Free'
+  },
+  getIsBroker() {
+    return sessionStorage.getItem('soeasy_is_broker') === 'true'
   },
   isAuthenticated() {
     return Boolean(sessionStorage.getItem('soeasy_token'))

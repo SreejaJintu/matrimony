@@ -90,6 +90,17 @@ export function Header() {
               </button>
               {isUserMenuOpen && (
                 <div className="user-menu-dropdown">
+                  {user?.isBroker === true && <>
+                    <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/broker/dashboard'); }}>
+                      Broker Dashboard
+                    </button>
+                    <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/broker/candidates'); }}>
+                      My Candidates
+                    </button>
+                    <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/broker/candidates/add'); }}>
+                      Register Candidate
+                    </button>
+                  </>}
                   <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/profile'); }}>
                     My Profile
                   </button>

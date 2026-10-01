@@ -354,6 +354,16 @@ const AdminProfileDetail = () => {
           />
 
           <InfoItem
+            label="Registration Source"
+            value={profile.registrationType || "Self Registered"}
+          />
+
+          {profile.registrationType === "Broker Registered" && <>
+            <InfoItem label="Broker Name" value={profile.brokerName} />
+            {profile.brokerCompanyName && <InfoItem label="Broker Company" value={profile.brokerCompanyName} />}
+          </>}
+
+          <InfoItem
             label="Mobile Number"
             value={profile.mobileNumber}
           />

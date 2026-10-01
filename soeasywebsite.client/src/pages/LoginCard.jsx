@@ -57,7 +57,7 @@ export function LoginCard() {
           return;
         }
 
-        navigate('/matches', { replace: true });
+        navigate(loginResult?.isBroker === true ? '/broker/dashboard' : '/matches', { replace: true });
       }
     } catch (err) {
       // Handle login errors from the AuthContext/API

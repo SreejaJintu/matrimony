@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Users } from "lucide-react";
 import adminBrokerService from "../services/adminBrokerService";
 import "../styles/adminBrokers.css";
 
@@ -28,6 +28,9 @@ const AdminBrokers = () => {
   });
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [candidateBroker, setCandidateBroker] = useState(null);
+  const [brokerCandidates, setBrokerCandidates] = useState([]);
+  const [candidateLoading, setCandidateLoading] = useState(false);
 
   const loadBrokers = async () => {
     try {
@@ -209,6 +212,21 @@ const AdminBrokers = () => {
     setEditForm((current) => ({ ...current, [name]: value }));
   };
 
+  const openBrokerCandidates = async (broker) => {
+    setCandidateBroker(broker);
+    setCandidateLoading(true);
+    setBrokerCandidates([]);
+    try {
+      const result = await adminBrokerService.getBrokerCandidates(broker.brokerId);
+      setBrokerCandidates(result?.data ?? result?.Data ?? []);
+    } catch (error) {
+      setLoadError(responseMessage(error, "Unable to load broker candidates."));
+      setCandidateBroker(null);
+    } finally {
+      setCandidateLoading(false);
+    }
+  };
+
   return (
     <div className="admin-brokers-page">
       <header className="admin-brokers-header">
@@ -255,6 +273,7 @@ const AdminBrokers = () => {
                   <th>Broker</th>
                   <th>Company</th>
                   <th>Linked User</th>
+                  <th>Candidates</th>
                   <th>Contact</th>
                   <th>Email</th>
                   <th>Approval</th>
@@ -272,6 +291,7 @@ const AdminBrokers = () => {
                       <strong>{broker.userFullName}</strong>
                       <small>{broker.profileCode}</small>
                     </td>
+                    <td><button type="button" className="brokers-candidate-count" onClick={() => openBrokerCandidates(broker)}>{broker.candidateCount ?? 0} <Users size={14} /> View</button></td>
                     <td>{broker.contactNumber || broker.userMobileNumber || "-"}</td>
                     <td>{broker.email || broker.userEmail || "-"}</td>
                     <td>
@@ -322,6 +342,22 @@ const AdminBrokers = () => {
           </div>
         )}
       </section>
+
+      {candidateBroker && (
+        <div className="brokers-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setCandidateBroker(null); }}>
+          <section className="brokers-modal brokers-candidates-modal" role="dialog" aria-modal="true" aria-labelledby="broker-candidates-title">
+            <header className="brokers-modal-header">
+              <div><h2 id="broker-candidates-title">{candidateBroker.brokerName} Candidates</h2><p>{candidateBroker.companyName || "Broker registered candidates"}</p></div>
+              <button type="button" className="brokers-close-button" aria-label="Close" onClick={() => setCandidateBroker(null)}>×</button>
+            </header>
+            {candidateLoading ? <div className="brokers-state">Loading candidates...</div> : brokerCandidates.length === 0 ? <div className="brokers-state">No candidates registered by this broker.</div> : (
+              <div className="brokers-candidates-table-wrap"><table className="brokers-table"><thead><tr><th>Profile Code</th><th>Name</th><th>Gender</th><th>Mobile</th><th>Status</th><th>Created</th></tr></thead><tbody>
+                {brokerCandidates.map((candidate) => <tr key={candidate.userId}><td>{candidate.profileCode}</td><td>{candidate.fullName}</td><td>{candidate.genderName || "-"}</td><td>{candidate.mobileNumber || "-"}</td><td>{candidate.statusName || "-"}</td><td>{candidate.createdAt ? new Date(candidate.createdAt).toLocaleDateString() : "-"}</td></tr>)}
+              </tbody></table></div>
+            )}
+          </section>
+        </div>
+      )}
 
       {registerOpen && (
         <div className="brokers-modal-backdrop" onMouseDown={(event) => {

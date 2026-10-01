@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { UsersRound } from "lucide-react";
 import { useAdminAuth } from "../context/AdminAuthContext";
 
 const AdminSidebar = () => {
@@ -26,6 +27,11 @@ const AdminSidebar = () => {
         <NavLink to="/admin/brokers">
           <span>♧</span>
           Broker Management
+        </NavLink>
+
+        <NavLink to="/admin/executives">
+          <UsersRound size={17} aria-hidden="true" />
+          Executives
         </NavLink>
 
         <NavLink to="/admin/subscriptions">

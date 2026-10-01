@@ -29,7 +29,19 @@ import AdminPlansPage from '../admin/pages/AdminPlansPage'
 import LeadsManagementPage from '../admin/pages/LeadsManagementPage'
 import AdminLocations from '../admin/pages/AdminLocations'
 import AdminBrokers from '../admin/pages/AdminBrokers'
+import AdminExecutives from '../admin/pages/AdminExecutives'
+import AdminExecutiveFormPage from '../admin/pages/AdminExecutiveFormPage'
 import AdminProtectedRoute from '../admin/components/AdminProtectedRoute'
+import { BrokerProtectedRoute } from '../broker/components/BrokerProtectedRoute'
+import { BrokerLayout } from '../broker/components/BrokerLayout'
+import BrokerCandidatesPage from '../broker/pages/BrokerCandidatesPage'
+import AddBrokerCandidatePage from '../broker/pages/AddBrokerCandidatePage'
+import BrokerDashboardPage from '../broker/pages/BrokerDashboardPage'
+import ExecutiveLogin from '../executive/pages/ExecutiveLogin'
+import ExecutiveProtectedRoute from '../executive/components/ExecutiveProtectedRoute'
+import ExecutiveLayout from '../executive/components/ExecutiveLayout'
+import ExecutiveDashboard from '../executive/pages/ExecutiveDashboard'
+import ExecutiveProfile from '../executive/pages/ExecutiveProfile'
 
 export function AppRoutes() {
   const navigate = useNavigate()
@@ -170,12 +182,32 @@ export function AppRoutes() {
         element={<ShortlistedPage />}
       />
 
+      <Route element={<BrokerProtectedRoute />}>
+        <Route path="/broker" element={<BrokerLayout />}>
+          <Route index element={<Navigate to="/broker/dashboard" replace />} />
+          <Route path="dashboard" element={<BrokerDashboardPage />} />
+          <Route path="candidates" element={<BrokerCandidatesPage />} />
+          <Route path="candidates/add" element={<AddBrokerCandidatePage />} />
+        </Route>
+      </Route>
+
 
       {/* =========================
           ADMIN ROUTES
       ========================= */}
 
       <Route path="/admin/login" element={<AdminLogin />} />
+
+      <Route path="/executive/login" element={<ExecutiveLogin />} />
+
+      <Route element={<ExecutiveProtectedRoute />}>
+        <Route path="/executive" element={<ExecutiveLayout />}>
+          <Route index element={<Navigate to="/executive/dashboard" replace />} />
+          <Route path="dashboard" element={<ExecutiveDashboard />} />
+          <Route path="leads" element={<LeadsManagementPage />} />
+          <Route path="profile" element={<ExecutiveProfile />} />
+        </Route>
+      </Route>
 
       <Route element={<AdminProtectedRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
@@ -196,6 +228,12 @@ export function AppRoutes() {
           <Route path="leads" element={<LeadsManagementPage />} />
 
           <Route path="brokers" element={<AdminBrokers />} />
+
+          <Route path="executives" element={<AdminExecutives />} />
+
+          <Route path="executives/add" element={<AdminExecutiveFormPage />} />
+
+          <Route path="executives/:executiveId" element={<AdminExecutiveFormPage />} />
         </Route>
       </Route>
 

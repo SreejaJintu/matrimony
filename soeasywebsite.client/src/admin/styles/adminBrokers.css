@@ -242,6 +242,25 @@
   cursor: not-allowed;
 }
 
+.brokers-candidate-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 9px;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  background: #fff;
+  color: #444;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.brokers-candidate-count:hover { background: #f7f7f7; }
+.brokers-candidates-modal { width: min(920px, calc(100vw - 32px)); }
+.brokers-candidates-table-wrap { max-height: min(60vh, 560px); overflow: auto; }
+.brokers-candidates-table-wrap .brokers-table { white-space: normal; }
+
 .broker-status {
   display: inline-flex;
   align-items: center;

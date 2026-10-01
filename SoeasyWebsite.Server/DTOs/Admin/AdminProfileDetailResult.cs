@@ -4,6 +4,12 @@ namespace SoeasyWebsite.Server.DTOs.Admin;
 
 public class AdminProfileDetailResult : UserProfileDto
 {
+    public string RegistrationType { get; set; } = "Self Registered";
+
+    public string? BrokerName { get; set; }
+
+    public string? BrokerCompanyName { get; set; }
+
     public string? GenderName { get; set; }
 
     public byte ProfileStatusId { get; set; }

@@ -54,6 +54,33 @@ public class AdminBrokerRepository : IAdminBrokerRepository
             commandType: CommandType.StoredProcedure);
     }
 
+    public async Task<IEnumerable<AdminBrokerCandidateDto>> GetCandidatesAsync(int brokerId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        const string sql = """
+            SELECT
+                UA.UserId,
+                UA.ProfileCode,
+                UA.FullName,
+                UA.GenderId,
+                G.GenderName,
+                UA.MobileNumber,
+                UA.Email,
+                UA.ProfileStatusId,
+                PS.StatusName,
+                UA.IsProfileCompleted,
+                UA.IsPremium,
+                UA.CreatedAt
+            FROM dbo.UserAccount UA
+            LEFT JOIN dbo.GenderMaster G ON G.GenderId = UA.GenderId
+            LEFT JOIN dbo.ProfileStatusMaster PS ON PS.ProfileStatusId = UA.ProfileStatusId
+            WHERE UA.BrokerId = @BrokerId
+            ORDER BY UA.CreatedAt DESC, UA.UserId DESC;
+            """;
+
+        return await connection.QueryAsync<AdminBrokerCandidateDto>(sql, new { BrokerId = brokerId });
+    }
+
     public async Task<bool> UpdateAsync(int brokerId, UpdateBrokerRequestDto request)
     {
         using var connection = _connectionFactory.CreateConnection();

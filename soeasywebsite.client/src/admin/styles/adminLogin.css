@@ -92,3 +92,15 @@
   color: #c62828;
   font-size: 14px;
 }
+
+.admin-login-switch {
+  margin: 18px 0 0;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.admin-login-switch a {
+  color: #79001f;
+  font-weight: 600;
+}
