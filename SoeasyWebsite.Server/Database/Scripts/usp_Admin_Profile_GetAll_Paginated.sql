@@ -64,10 +64,10 @@ BEGIN
         SELECT TOP 1 UPH.PhotoUrl
         FROM dbo.UserPhoto UPH
         WHERE UPH.UserId = UA.UserId
-          AND UPH.IsProfilePhoto = 1
           AND UPH.IsApproved = 1
           AND UPH.IsActive = 1
-        ORDER BY UPH.CreatedAt DESC
+          AND NULLIF(LTRIM(RTRIM(UPH.PhotoUrl)), '') IS NOT NULL
+        ORDER BY UPH.IsProfilePhoto DESC, UPH.CreatedAt DESC, UPH.PhotoId DESC
     ) P
     WHERE
         (@Search IS NULL OR @Search = ''
@@ -82,7 +82,6 @@ BEGIN
             SELECT 1
             FROM dbo.UserPhoto ImagePhoto
             WHERE ImagePhoto.UserId = UA.UserId
-              AND ImagePhoto.IsProfilePhoto = 1
               AND ImagePhoto.IsApproved = 1
               AND ImagePhoto.IsActive = 1
               AND NULLIF(LTRIM(RTRIM(ImagePhoto.PhotoUrl)), '') IS NOT NULL
@@ -106,7 +105,6 @@ BEGIN
             SELECT 1
             FROM dbo.UserPhoto ImagePhoto
             WHERE ImagePhoto.UserId = UA.UserId
-              AND ImagePhoto.IsProfilePhoto = 1
               AND ImagePhoto.IsApproved = 1
               AND ImagePhoto.IsActive = 1
               AND NULLIF(LTRIM(RTRIM(ImagePhoto.PhotoUrl)), '') IS NOT NULL

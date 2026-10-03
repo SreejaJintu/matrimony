@@ -11,6 +11,30 @@ const adminAuthService = {
 
     return response.data;
   },
+
+  updateCredentials: async (credentials) => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.put(`${API_BASE_URL}/credentials`, credentials, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return response.data;
+  },
+
+  getAdmins: async () => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.get(`${API_BASE_URL}/admins`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return response.data;
+  },
+
+  resetAdminPassword: async (adminId, newPassword) => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.put(`${API_BASE_URL}/admins/${adminId}/password`, { newPassword }, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return response.data;
+  },
 };
 
 export default adminAuthService;

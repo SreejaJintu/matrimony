@@ -103,6 +103,14 @@ export const api = {
   shortlistRemove: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'DELETE' }),
   shortlistCheck: (targetUserId) => request(`/api/shortlist/check/${targetUserId}`),
 
+  // Member notifications and privately shared profile suggestions
+  getMyNotifications: () => request('/api/notifications/my'),
+  markNotificationRead: (notificationId) =>
+    request(`/api/notifications/${notificationId}/read`, { method: 'PUT' }),
+  getUnreadNotificationCount: () => request('/api/notifications/unread-count'),
+  getMySharedProfiles: () => request('/api/profile-shares/my'),
+  getSharedProfile: (shareId) => request(`/api/profile-shares/${shareId}`),
+
   // Broker candidates
   getBrokerCandidates: () => request('/api/broker/candidates'),
   getBrokerCandidate: (userId) => request(`/api/broker/candidates/${userId}`),

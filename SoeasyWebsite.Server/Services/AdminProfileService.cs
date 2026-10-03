@@ -24,6 +24,16 @@ public async Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId)
     return await _repository.GetPhotos(userId);
 }
 
+public async Task<bool> DeletePhoto(int userId, int photoId)
+{
+    return await _repository.DeletePhoto(userId, photoId);
+}
+
+public async Task<bool> SetProfilePhoto(int userId, int photoId)
+{
+    return await _repository.SetProfilePhoto(userId, photoId);
+}
+
 public async Task<bool> DeleteProfile(int userId)
 {
     return await _repository.DeleteProfile(userId);

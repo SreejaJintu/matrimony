@@ -175,6 +175,87 @@ public async Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId)
     );
 }
 
+public async Task<bool> DeletePhoto(int userId, int photoId)
+{
+    using var connection = _connectionFactory.CreateConnection();
+    if (connection.State != ConnectionState.Open)
+    {
+        connection.Open();
+    }
+
+    using var transaction = connection.BeginTransaction();
+    var wasProfilePhoto = await connection.ExecuteScalarAsync<bool?>(
+        "SELECT IsProfilePhoto FROM dbo.UserPhoto WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1",
+        new { UserId = userId, PhotoId = photoId },
+        transaction);
+
+    if (wasProfilePhoto is null)
+    {
+        transaction.Rollback();
+        return false;
+    }
+
+    await connection.ExecuteAsync(
+        "UPDATE dbo.UserPhoto SET IsActive = 0, IsProfilePhoto = 0 WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1",
+        new { UserId = userId, PhotoId = photoId },
+        transaction);
+
+    if (wasProfilePhoto.Value)
+    {
+        await connection.ExecuteAsync(
+            """
+            ;WITH NextPhoto AS
+            (
+                SELECT TOP (1) PhotoId
+                FROM dbo.UserPhoto
+                WHERE UserId = @UserId AND IsActive = 1
+                ORDER BY DisplayOrder, PhotoId
+            )
+            UPDATE dbo.UserPhoto
+            SET IsProfilePhoto = 1
+            WHERE PhotoId = (SELECT PhotoId FROM NextPhoto);
+            """,
+            new { UserId = userId },
+            transaction);
+    }
+
+    transaction.Commit();
+    return true;
+}
+
+public async Task<bool> SetProfilePhoto(int userId, int photoId)
+{
+    using var connection = _connectionFactory.CreateConnection();
+    if (connection.State != ConnectionState.Open)
+    {
+        connection.Open();
+    }
+
+    using var transaction = connection.BeginTransaction();
+    var eligiblePhotoExists = await connection.ExecuteScalarAsync<bool>(
+        "SELECT CASE WHEN EXISTS (SELECT 1 FROM dbo.UserPhoto WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1 AND IsApproved = 1 AND NULLIF(LTRIM(RTRIM(PhotoUrl)), '') IS NOT NULL) THEN 1 ELSE 0 END",
+        new { UserId = userId, PhotoId = photoId },
+        transaction);
+
+    if (!eligiblePhotoExists)
+    {
+        transaction.Rollback();
+        return false;
+    }
+
+    await connection.ExecuteAsync(
+        "UPDATE dbo.UserPhoto SET IsProfilePhoto = 0 WHERE UserId = @UserId AND IsProfilePhoto = 1",
+        new { UserId = userId },
+        transaction);
+    await connection.ExecuteAsync(
+        "UPDATE dbo.UserPhoto SET IsProfilePhoto = 1 WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1 AND IsApproved = 1",
+        new { UserId = userId, PhotoId = photoId },
+        transaction);
+
+    transaction.Commit();
+    return true;
+}
+
 public async Task<bool> DeleteProfile(int userId)
 {
     using var connection = _connectionFactory.CreateConnection();

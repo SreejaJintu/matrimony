@@ -4,6 +4,7 @@ import { profiles } from '../services/homepageService'
 import { api, session } from '../services/api'
 import { calculateProfileCompletion } from '../services/profileCompletion'
 import { AccountSidebar } from '../components/Layout/AccountSidebar'
+import { Header } from '../components/Layout/Header'
 import {
   Menu,
   ShieldCheck,
@@ -180,6 +181,8 @@ export function ProfilePage() {
 
 
   return (
+    <>
+    <Header />
     <main className="page profile-page account-profile-page owner-profile-dashboard-page">
       <div className="account-layout">
         <AccountSidebar
@@ -393,5 +396,6 @@ export function ProfilePage() {
         </section>
       </div>
     </main>
+    </>
   )
 }

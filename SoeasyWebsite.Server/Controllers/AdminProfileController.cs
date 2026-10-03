@@ -96,6 +96,42 @@ public async Task<IActionResult> GetPhotos(int userId)
     });
 }
 
+[HttpDelete("{userId:int}/photos/{photoId:int}")]
+[Authorize(Policy = "AdminOnly")]
+public async Task<IActionResult> DeletePhoto(int userId, int photoId)
+{
+    if (userId <= 0 || photoId <= 0)
+    {
+        return BadRequest(new { success = false, message = "A valid user ID and photo ID are required." });
+    }
+
+    var deleted = await _service.DeletePhoto(userId, photoId);
+    if (!deleted)
+    {
+        return NotFound(new { success = false, message = "Active profile photo not found." });
+    }
+
+    return Ok(new { success = true, message = "Profile photo removed successfully." });
+}
+
+[HttpPut("{userId:int}/photos/{photoId:int}/profile")]
+[Authorize(Policy = "AdminOnly")]
+public async Task<IActionResult> SetProfilePhoto(int userId, int photoId)
+{
+    if (userId <= 0 || photoId <= 0)
+    {
+        return BadRequest(new { success = false, message = "A valid user ID and photo ID are required." });
+    }
+
+    var updated = await _service.SetProfilePhoto(userId, photoId);
+    if (!updated)
+    {
+        return NotFound(new { success = false, message = "Eligible active profile photo not found." });
+    }
+
+    return Ok(new { success = true, message = "Profile photo updated successfully." });
+}
+
 [HttpDelete("{userId:int}")]
 public async Task<IActionResult> DeleteProfile(int userId)
 {

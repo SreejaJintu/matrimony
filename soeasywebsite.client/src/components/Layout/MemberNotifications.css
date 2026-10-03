@@ -1,0 +1,23 @@
+.member-notification-menu { position: relative; display: inline-flex; }
+.member-notification-trigger { position: relative; display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid #e0bfbf; border-radius: 50%; background: #fff; color: #800020; cursor: pointer; }
+.member-notification-trigger:hover { background: #fff7f8; }
+.member-notification-count { position: absolute; top: -5px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: #b4233c; color: #fff; font: 700 10px/1 Arial, sans-serif; }
+.member-notification-panel { position: absolute; z-index: 50; top: calc(100% + 10px); right: 0; width: min(360px, calc(100vw - 28px)); max-height: min(520px, 78vh); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e9e1dc; border-radius: 14px; background: #fff; box-shadow: 0 18px 48px rgba(40, 20, 20, .18); color: #2c2422; }
+.member-notification-panel > header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #eee8e5; }
+.member-notification-panel > header div { display: flex; align-items: center; gap: 9px; }
+.member-notification-panel > header strong { font-size: 15px; }
+.member-notification-panel > header span { color: #800020; font-size: 11px; }
+.member-notification-panel > header button { width: 28px; height: 28px; border: 0; border-radius: 6px; background: transparent; color: #6d5d58; cursor: pointer; font-size: 22px; }
+.member-notification-list { overflow-y: auto; }
+.member-notification-item { display: flex; width: 100%; gap: 10px; padding: 12px 14px; border: 0; border-bottom: 1px solid #f1eeec; background: #fff; color: inherit; cursor: pointer; text-align: left; }
+.member-notification-item:hover { background: #fcf8f5; }
+.member-notification-item.unread { background: #fffaf0; }
+.member-notification-item-icon { display: inline-flex; width: 30px; height: 30px; flex: 0 0 30px; align-items: center; justify-content: center; border-radius: 50%; background: #f6e9ec; color: #800020; }
+.member-notification-item-copy { display: grid; gap: 4px; min-width: 0; }
+.member-notification-item-copy strong { font-size: 12px; }
+.member-notification-item-copy > span { color: #655c58; font-size: 11px; line-height: 1.4; }
+.member-notification-item-copy small { color: #918783; font-size: 10px; }
+.member-notification-empty { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 88px; margin: 0; color: #827671; font-size: 12px; }
+.member-notification-error { margin: 10px 14px; color: #b32626; font-size: 12px; }
+.member-notification-all { padding: 12px; border: 0; border-top: 1px solid #eee8e5; background: #fff; color: #800020; cursor: pointer; font-size: 12px; font-weight: 700; }
+.member-notification-all:hover { background: #fcf8f5; }

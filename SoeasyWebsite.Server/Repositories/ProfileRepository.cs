@@ -288,15 +288,36 @@ public class ProfileRepository : IProfileRepository
     public async Task<bool> SavePhoto(SaveUserPhotoRequestDto dto)
     {
         using var connection = _connectionFactory.CreateConnection();
-
-        if (dto.IsProfilePhoto)
+        if (connection.State != ConnectionState.Open)
         {
-            await connection.ExecuteAsync(
-                "UPDATE UserPhoto SET IsProfilePhoto = 0 WHERE UserId = @UserId AND IsProfilePhoto = 1;",
-                new { dto.UserId });
+            connection.Open();
         }
 
+        using var transaction = connection.BeginTransaction(IsolationLevel.Serializable);
         const string sql = """
+            DECLARE @MakeProfilePhoto BIT = @IsProfilePhoto;
+
+            IF @MakeProfilePhoto = 0 AND NOT EXISTS
+            (
+                SELECT 1
+                FROM dbo.UserPhoto WITH (UPDLOCK, HOLDLOCK)
+                WHERE UserId = @UserId
+                  AND IsProfilePhoto = 1
+                  AND IsActive = 1
+                  AND IsApproved = 1
+                  AND NULLIF(LTRIM(RTRIM(PhotoUrl)), '') IS NOT NULL
+            )
+            BEGIN
+                SET @MakeProfilePhoto = 1;
+            END;
+
+            IF @MakeProfilePhoto = 1
+            BEGIN
+                UPDATE dbo.UserPhoto
+                SET IsProfilePhoto = 0
+                WHERE UserId = @UserId AND IsProfilePhoto = 1;
+            END;
+
             INSERT INTO UserPhoto
             (
                 UserId,
@@ -311,7 +332,7 @@ public class ProfileRepository : IProfileRepository
             (
                 @UserId,
                 @PhotoUrl,
-                @IsProfilePhoto,
+                @MakeProfilePhoto,
                 @DisplayOrder,
                 @IsApproved,
                 GETDATE(),
@@ -319,7 +340,17 @@ public class ProfileRepository : IProfileRepository
             );
             """;
 
-        return await connection.ExecuteAsync(sql, dto) > 0;
+        var affected = await connection.ExecuteAsync(sql, new
+        {
+            dto.UserId,
+            dto.PhotoUrl,
+            IsProfilePhoto = dto.IsProfilePhoto,
+            dto.DisplayOrder,
+            dto.IsApproved,
+            dto.IsActive
+        }, transaction);
+        transaction.Commit();
+        return affected > 0;
     }
 
     private sealed class ProfileUpsertDebugRow

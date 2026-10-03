@@ -15,6 +15,10 @@ public interface IAdminProfileService
 
     Task<IEnumerable<AdminProfilePhotoDto>> GetPhotos(int userId);
 
+    Task<bool> DeletePhoto(int userId, int photoId);
+
+    Task<bool> SetProfilePhoto(int userId, int photoId);
+
     Task<bool> DeleteProfile(int userId);
 
     Task<bool> UpdateMobileNumber(int userId, string? mobileNumber);

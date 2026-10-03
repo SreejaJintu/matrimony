@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   UserPlus,
   Users,
+  Inbox,
 } from 'lucide-react'
 import { AuthContext } from '../../contexts/AuthContext'
 import './AccountSidebar.css'
@@ -20,6 +21,7 @@ const memberMenuItems = [
   { label: 'My Profile', to: '/profile', icon: User },
   { label: 'Discover Matches', to: '/matches', icon: Search },
   { label: 'Shortlisted', to: '/shortlisted', icon: Heart },
+  { label: 'Shared Profiles', to: '/shared-profiles', icon: Inbox },
   { label: 'Edit Profile', to: '/profile/edit', icon: Settings },
   { label: 'Help & Support', to: '/help', icon: HelpCircle },
 ]

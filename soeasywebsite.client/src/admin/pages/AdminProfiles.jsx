@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { api } from "../../services/api";
 
 import adminProfileService from "../services/adminProfileService";
@@ -7,6 +8,7 @@ import { ImageCropModal } from "../../components/forms/ImageCropModal";
 
 import AdminProfileFilters from "../components/AdminProfileFilters";
 import AdminProfileTable from "../components/AdminProfileTable";
+import AdminProfileShareModal from "../components/AdminProfileShareModal";
 
 import "../styles/adminProfiles.css";
 
@@ -27,6 +29,7 @@ const AdminProfiles = () => {
   const [error, setError] = useState("");
   const [actionError, setActionError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [sharingProfiles, setSharingProfiles] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
   const [marriedUpdatingId, setMarriedUpdatingId] = useState(null);
   const [resettingProfile, setResettingProfile] = useState(null);
@@ -40,6 +43,8 @@ const AdminProfiles = () => {
   const [editMessage, setEditMessage] = useState("");
   const [photos, setPhotos] = useState([]);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [deletingPhotoId, setDeletingPhotoId] = useState(null);
+  const [settingProfilePhotoId, setSettingProfilePhotoId] = useState(null);
   const [photoCropFile, setPhotoCropFile] = useState(null);
   const [photoCropQueue, setPhotoCropQueue] = useState([]);
   const [masterData, setMasterData] = useState({
@@ -385,12 +390,15 @@ const AdminProfiles = () => {
       }
       const uploadedUrl = result?.data ?? result?.Data ?? "";
       if (!uploadedUrl) throw new Error("Photo upload did not return a URL.");
-      setPhotos((current) => [...current, {
-        id: `new-photo-${Date.now()}-${croppedFile.name}`,
-        url: uploadedUrl,
-        isProfilePhoto: false,
-        isNew: true,
-      }]);
+      setPhotos((current) => {
+        const hasProfilePhoto = current.some((photo) => photo.isProfilePhoto);
+        return [...current, {
+          id: `new-photo-${Date.now()}-${croppedFile.name}`,
+          url: uploadedUrl,
+          isProfilePhoto: !hasProfilePhoto,
+          isNew: true,
+        }];
+      });
       const [nextFile, ...remainingFiles] = photoCropQueue;
       setPhotoCropQueue(remainingFiles);
       setPhotoCropFile(nextFile || null);
@@ -407,11 +415,68 @@ const AdminProfiles = () => {
     setPhotoUploading(false);
   };
 
-  const handleSetProfilePhoto = (photoId) => {
-    setPhotos((current) => current.map((photo) => ({
-      ...photo,
-      isProfilePhoto: photo.id === photoId,
-    })));
+  const handleSetProfilePhoto = async (photo) => {
+    if (photo.isProfilePhoto) return;
+    if (photo.isNew) {
+      setPhotos((current) => current.map((item) => ({
+        ...item,
+        isProfilePhoto: item.id === photo.id,
+      })));
+      return;
+    }
+    if (!editingProfile || !photo.photoId) return;
+
+    setSettingProfilePhotoId(photo.id);
+    setEditError("");
+    try {
+      const result = await adminProfileService.setProfilePhoto(editingProfile.userId, photo.photoId);
+      if (result?.success === false) {
+        throw new Error(result?.message || "Unable to update profile photo.");
+      }
+      setPhotos((current) => current.map((item) => ({
+        ...item,
+        isProfilePhoto: item.id === photo.id,
+      })));
+    } catch (error) {
+      setEditError(error.response?.data?.message || error.message || "Unable to update profile photo.");
+    } finally {
+      setSettingProfilePhotoId(null);
+    }
+  };
+
+  const handleRemovePhoto = async (photo) => {
+    if (photo.isNew) {
+      setPhotos((current) => current.filter((item) => item.id !== photo.id));
+      return;
+    }
+    if (!photo.photoId || !editingProfile) {
+      setEditError("This photo cannot be removed. Reload the profile and try again.");
+      return;
+    }
+
+    setDeletingPhotoId(photo.id);
+    setEditError("");
+    try {
+      const result = await adminProfileService.deletePhoto(editingProfile.userId, photo.photoId);
+      if (result?.success === false) {
+        throw new Error(result?.message || "Unable to remove photo.");
+      }
+
+      const response = await adminProfileService.getPhotos(editingProfile.userId);
+      const refreshedRows = response?.data ?? response?.Data ?? response ?? [];
+      const savedPhotos = (Array.isArray(refreshedRows) ? refreshedRows : []).map((item) => ({
+        id: `photo-${item.photoId ?? item.PhotoId}`,
+        photoId: item.photoId ?? item.PhotoId,
+        url: item.photoUrl ?? item.PhotoUrl,
+        isProfilePhoto: item.isProfilePhoto ?? item.IsProfilePhoto ?? false,
+        isNew: false,
+      }));
+      setPhotos((current) => [...savedPhotos, ...current.filter((item) => item.isNew)]);
+    } catch (error) {
+      setEditError(error.response?.data?.message || error.message || "Unable to remove photo.");
+    } finally {
+      setDeletingPhotoId(null);
+    }
   };
 
   const handleEditChange = async (field, value) => {
@@ -576,8 +641,13 @@ const AdminProfiles = () => {
           </p>
         </div>
 
-        <div className="profile-count">
-          {totalCount} Profiles
+        <div className="admin-profile-heading-actions">
+          <button type="button" className="admin-send-profiles-button" onClick={() => setSharingProfiles(true)}>
+            Send Matching Profiles
+          </button>
+          <div className="profile-count">
+            {totalCount} Profiles
+          </div>
         </div>
 
       </div>
@@ -654,13 +724,25 @@ const AdminProfiles = () => {
                         <div className="admin-photo-item" key={photo.id}>
                           <img src={photo.url} alt="Profile preview" className="admin-photo-preview" />
                           {photo.isProfilePhoto && <span className="admin-photo-primary">Profile</span>}
-                          {photo.isNew && !photo.isProfilePhoto && (
+                          <button
+                            type="button"
+                            className="admin-photo-remove"
+                            onClick={() => handleRemovePhoto(photo)}
+                            disabled={saving || photoUploading || deletingPhotoId !== null || settingProfilePhotoId !== null}
+                            aria-label="Remove this profile photo"
+                            title="Remove photo"
+                          >
+                            <Trash2 size={14} aria-hidden="true" />
+                            <span>{deletingPhotoId === photo.id ? "Removing..." : "Remove"}</span>
+                          </button>
+                          {!photo.isProfilePhoto && (
                             <button
                               type="button"
                               className="admin-photo-set-primary"
-                              onClick={() => handleSetProfilePhoto(photo.id)}
+                              onClick={() => handleSetProfilePhoto(photo)}
+                              disabled={saving || photoUploading || deletingPhotoId !== null || settingProfilePhotoId !== null}
                             >
-                              Set as profile
+                              {settingProfilePhotoId === photo.id ? "Saving..." : "Set as profile"}
                             </button>
                           )}
                         </div>
@@ -776,6 +858,10 @@ const AdminProfiles = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {sharingProfiles && (
+        <AdminProfileShareModal onClose={() => setSharingProfiles(false)} />
       )}
 
     </div>

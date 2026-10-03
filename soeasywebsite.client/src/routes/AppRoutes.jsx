@@ -17,6 +17,7 @@ import { ProfileEditPage } from '../pages/ProfileEditPage'
 import { SubscriptionPage } from '../pages/SubscriptionPage'
 import { MatchesPage } from '../pages/MatchesPage'
 import { ShortlistedPage } from '../pages/ShortlistedPage'
+import { MySharedProfilesPage } from '../pages/MySharedProfilesPage'
 
 // Admin pages
 import AdminLogin from '../admin/pages/AdminLogin'
@@ -31,6 +32,7 @@ import AdminLocations from '../admin/pages/AdminLocations'
 import AdminBrokers from '../admin/pages/AdminBrokers'
 import AdminExecutives from '../admin/pages/AdminExecutives'
 import AdminExecutiveFormPage from '../admin/pages/AdminExecutiveFormPage'
+import AdminSettings from '../admin/pages/AdminSettings'
 import AdminProtectedRoute from '../admin/components/AdminProtectedRoute'
 import { BrokerProtectedRoute } from '../broker/components/BrokerProtectedRoute'
 import { BrokerLayout } from '../broker/components/BrokerLayout'
@@ -182,6 +184,9 @@ export function AppRoutes() {
         element={<ShortlistedPage />}
       />
 
+      <Route path="/shared-profiles" element={<MySharedProfilesPage />} />
+      <Route path="/shared-profiles/:shareId" element={<MySharedProfilesPage />} />
+
       <Route element={<BrokerProtectedRoute />}>
         <Route path="/broker" element={<BrokerLayout />}>
           <Route index element={<Navigate to="/broker/dashboard" replace />} />
@@ -234,6 +239,8 @@ export function AppRoutes() {
           <Route path="executives/add" element={<AdminExecutiveFormPage />} />
 
           <Route path="executives/:executiveId" element={<AdminExecutiveFormPage />} />
+
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Route>
 

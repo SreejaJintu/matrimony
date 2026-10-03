@@ -1,0 +1,61 @@
+.admin-profile-heading-actions { display: flex; align-items: center; gap: 10px; }
+.admin-send-profiles-button { padding: 9px 13px; border: 1px solid #222; border-radius: 8px; background: #222; color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
+.admin-send-profiles-button:hover { background: #000; }
+.admin-profile-share-modal {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(90vh, 900px);
+  overflow: auto;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .22);
+}
+
+.admin-profile-share-header,
+.admin-profile-share-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-profile-share-header h2 { margin: 0 0 5px; font-size: 20px; }
+.admin-profile-share-header p { margin: 0; color: #777; font-size: 13px; }
+.admin-profile-share-body { display: grid; gap: 22px; padding: 20px 22px; }
+.share-picker-section { display: grid; gap: 10px; }
+.share-picker-section h3 { display: flex; justify-content: space-between; margin: 0; font-size: 15px; }
+.share-picker-section h3 span { color: #777; font-size: 13px; font-weight: 500; }
+.share-search { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid #d6d6d6; border-radius: 8px; font: inherit; }
+.share-picker-results { max-height: 210px; overflow-y: auto; border: 1px solid #eee; border-radius: 9px; }
+.share-result-row { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 52px; padding: 8px 11px; border: 0; border-bottom: 1px solid #f0f0f0; background: #fff; color: #333; text-align: left; }
+button.share-result-row { cursor: pointer; }
+button.share-result-row:hover, .share-profile-row.is-selected { background: #fbf7ec; }
+.share-result-row:last-child { border-bottom: 0; }
+.share-result-row > span:first-of-type { display: grid; gap: 3px; min-width: 0; }
+.share-result-row strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.share-result-row small { color: #777; font-size: 11px; }
+.share-plan-badge, .share-approved-badge { margin-left: auto; color: #6d36a5; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.share-approved-badge { color: #19713a; }
+.share-profile-row { cursor: pointer; }
+.share-profile-row input { flex: 0 0 auto; accent-color: #19713a; }
+.share-profile-row img { width: 36px; height: 42px; flex: 0 0 36px; border-radius: 5px; object-fit: cover; }
+.share-empty, .share-loading { margin: 0; padding: 14px; color: #777; font-size: 13px; }
+.share-pagination { display: flex; align-items: center; justify-content: space-between; color: #777; font-size: 12px; }
+.share-pagination > div { display: flex; gap: 7px; }
+.share-pagination button, .share-selected-recipient button, .share-selected-list button, .admin-profile-share-footer button { padding: 7px 10px; border: 1px solid #d7d7d7; border-radius: 7px; background: #fff; color: #444; cursor: pointer; font: inherit; font-size: 12px; }
+.share-pagination button:disabled, .admin-profile-share-footer button:disabled { cursor: not-allowed; opacity: .5; }
+.share-selected-recipient { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid #ded2ab; border-radius: 9px; background: #fffcf2; }
+.share-selected-recipient > div { display: grid; gap: 4px; }
+.share-selected-recipient strong { font-size: 14px; }
+.share-selected-recipient span { color: #777; font-size: 12px; }
+.share-selected-list { display: flex; flex-wrap: wrap; gap: 7px; }
+.share-selected-list button { display: inline-flex; gap: 8px; }
+.share-selected-list button span { color: #9f2a2a; }
+.admin-profile-share-footer { justify-content: flex-end; border-top: 1px solid #eee; border-bottom: 0; }
+.admin-profile-share-footer button:last-child { border-color: #222; background: #222; color: #fff; }
+@media (max-width: 600px) {
+  .admin-profile-heading-actions { align-items: flex-end; flex-direction: column; }
+  .admin-profile-share-header, .admin-profile-share-body, .admin-profile-share-footer { padding-left: 15px; padding-right: 15px; }
+  .share-approved-badge { display: none; }
+}

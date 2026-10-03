@@ -34,6 +34,22 @@ const adminProfileService = {
     return response.data;
   },
 
+  deletePhoto: async (userId, photoId) => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.delete(`/api/admin/profiles/${userId}/photos/${photoId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return response.data;
+  },
+
+  setProfilePhoto: async (userId, photoId) => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.put(`/api/admin/profiles/${userId}/photos/${photoId}/profile`, {}, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return response.data;
+  },
+
   deleteProfile: async (userId) => {
     const response = await axios.delete(`/api/admin/profiles/${userId}`);
     return response.data;

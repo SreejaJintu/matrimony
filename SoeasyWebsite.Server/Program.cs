@@ -46,6 +46,10 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser()
               .RequireClaim("userType", "Admin"));
 
+    options.AddPolicy("MemberOnly", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireClaim("userType", "Member"));
+
     options.AddPolicy("LeadAccess", policy =>
         policy.RequireAuthenticatedUser()
               .RequireAssertion(context =>
@@ -139,6 +143,10 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<IShortlistRepository, ShortlistRepository>();
 builder.Services.AddScoped<ShortlistService>();
+builder.Services.AddScoped<IProfileShareRepository, ProfileShareRepository>();
+builder.Services.AddScoped<IProfileShareService, ProfileShareService>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddHttpClient<ISmsBitsService, SmsBitsService>();
 //---------------------------------------------------------

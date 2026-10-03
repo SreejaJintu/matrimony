@@ -1,0 +1,17 @@
+.admin-settings-page { display: grid; gap: 22px; max-width: 900px; margin: 0 auto; }
+.admin-settings-heading h2 { margin: 0 0 6px; color: #222; }
+.admin-settings-heading p, .admin-settings-card-heading p { margin: 0; color: #6b7280; }
+.admin-settings-card { padding: 22px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 16px rgb(15 23 42 / 5%); }
+.admin-settings-card-heading { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 20px; color: #790020; }
+.admin-settings-card-heading h3 { margin: 0 0 5px; color: #222; }
+.admin-settings-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.admin-settings-form label { display: grid; gap: 7px; color: #374151; font-size: 14px; font-weight: 600; }
+.admin-settings-form label small { color: #6b7280; font-weight: 400; }
+.admin-settings-form input, .admin-settings-form select { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; color: #111827; font: inherit; }
+.admin-settings-form button { min-height: 42px; justify-self: start; padding: 9px 16px; border: 0; border-radius: 7px; background: #800020; color: #fff; font-weight: 600; cursor: pointer; }
+.admin-settings-form button:disabled { opacity: .6; cursor: wait; }
+.admin-settings-error, .admin-settings-success, .admin-settings-note { grid-column: 1 / -1; margin: 0; }
+.admin-settings-error { color: #b42318; }
+.admin-settings-success { color: #18713a; }
+.admin-settings-note { color: #6b7280; }
+@media (max-width: 640px) { .admin-settings-form { grid-template-columns: 1fr; } .admin-settings-card { padding: 16px; } }

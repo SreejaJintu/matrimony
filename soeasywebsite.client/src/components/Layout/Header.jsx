@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../../contexts/AuthContext'
 import { MembershipLeadModal } from '../forms/MembershipLeadModal'
 import { BrandLogoImage } from '../BrandLogoImage'
+import { MemberNotifications } from './MemberNotifications'
 
 export function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
@@ -78,6 +79,8 @@ export function Header() {
 
         <div className="nav-actions" aria-label="Utility actions">
           {isAuthenticated ? (
+            <>
+            {!user?.isBroker && <MemberNotifications />}
             <div className="user-menu">
               <button
                 type="button"
@@ -104,6 +107,11 @@ export function Header() {
                   <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/profile'); }}>
                     My Profile
                   </button>
+                  {!user?.isBroker && (
+                    <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/shared-profiles'); }}>
+                      Shared Profiles
+                    </button>
+                  )}
                   <button type="button" className="user-menu-item" onClick={() => { setIsUserMenuOpen(false); navigate('/subscription'); }}>
                     Subscription
                   </button>
@@ -113,6 +121,7 @@ export function Header() {
                 </div>
               )}
             </div>
+            </>
           ) : (
             <>
               <button type="button" className="button button-outline" onClick={() => navigate('/login')}>Login</button>

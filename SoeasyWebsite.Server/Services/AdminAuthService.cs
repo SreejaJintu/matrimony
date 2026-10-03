@@ -58,6 +58,38 @@ public class AdminAuthService : IAdminAuthService
         };
     }
 
+    public async Task<(bool Success, string Message)> UpdateCredentials(int adminId, string currentPassword, string userName, string? email, string? newPassword)
+    {
+        var admin = await _adminAuthRepository.GetById(adminId);
+        if (admin is null || !admin.IsActive || !PasswordHelper.Verify(currentPassword, admin.PasswordHash))
+            return (false, "Current password is incorrect.");
+
+        var result = await _adminAuthRepository.UpdateCredentials(
+            adminId,
+            userName.Trim(),
+            string.IsNullOrWhiteSpace(email) ? null : email.Trim(),
+            string.IsNullOrWhiteSpace(newPassword) ? null : PasswordHelper.Hash(newPassword));
+
+        return result switch
+        {
+            1 => (true, "Admin credentials updated successfully."),
+            2 => (false, "That username is already in use."),
+            _ => (false, "Active Admin account not found.")
+        };
+    }
+
+    public async Task<IReadOnlyList<AdminAccountSummary>?> GetActiveAdminsForSuperAdmin(int actorAdminId)
+    {
+        if (!await _adminAuthRepository.IsActiveSuperAdmin(actorAdminId)) return null;
+        return await _adminAuthRepository.GetActiveAdmins();
+    }
+
+    public async Task<bool> ResetAdminPassword(int actorAdminId, int targetAdminId, string newPassword)
+    {
+        if (actorAdminId == targetAdminId || !await _adminAuthRepository.IsActiveSuperAdmin(actorAdminId)) return false;
+        return await _adminAuthRepository.ResetPassword(targetAdminId, PasswordHelper.Hash(newPassword));
+    }
+
     private string GenerateToken(AdminUserLoginModel admin)
     {
         var claims = new[]

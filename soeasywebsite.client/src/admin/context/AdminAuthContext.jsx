@@ -59,6 +59,15 @@ export const AdminAuthProvider = ({ children }) => {
     setAdmin(null);
   };
 
+  const updateAdmin = (updates) => {
+    setAdmin((current) => {
+      if (!current) return current;
+      const updated = { ...current, ...updates };
+      localStorage.setItem("soesyAdmin", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const token = localStorage.getItem("soesyAdminToken");
   const isAuthenticated = isValidAdminToken(token);
 
@@ -90,6 +99,7 @@ export const AdminAuthProvider = ({ children }) => {
         admin,
         login,
         logout,
+        updateAdmin,
         isAuthenticated,
       }}
     >

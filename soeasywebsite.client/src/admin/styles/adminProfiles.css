@@ -556,6 +556,25 @@
   font-size: 12px;
 }
 
+.admin-photo-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border: 1px solid #d7a4aa;
+  border-radius: 6px;
+  background: #fff7f8;
+  color: #a1162e;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.admin-photo-remove:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .admin-photo-upload input {
   position: absolute;
   width: 1px;
