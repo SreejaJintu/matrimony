@@ -16,31 +16,36 @@ public class AdminProfileRepository : IAdminProfileRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<IEnumerable<AdminProfileDto>> GetAll(
+    public async Task<AdminProfilePageDto> GetAll(
         string? search,
         byte? genderId,
-        byte? profileStatusId)
+        byte? profileStatusId,
+        int page,
+        int pageSize)
     {
         using var connection =
             _connectionFactory.CreateConnection();
 
-        var result =
-            await connection.QueryAsync<AdminProfileDto>(
+        using var result =
+            await connection.QueryMultipleAsync(
                 "usp_Admin_Profile_GetAll",
                 new
                 {
                     Search = search,
                     GenderId = genderId,
-                    ProfileStatusId = profileStatusId
+                    ProfileStatusId = profileStatusId,
+                    Page = page,
+                    PageSize = pageSize
                 },
                 commandType: CommandType.StoredProcedure,
                 commandTimeout: 60
             );
 
-        var profiles = result.ToList();
+        var profiles = (await result.ReadAsync<AdminProfileDto>()).ToList();
+        var totalCount = await result.ReadSingleAsync<int>();
         if (profiles.Count == 0)
         {
-            return profiles;
+            return new AdminProfilePageDto { Items = profiles, TotalCount = totalCount, Page = page, PageSize = pageSize };
         }
 
         var maritalStatuses = await connection.QueryAsync<ProfileMaritalStatusRow>(
@@ -96,7 +101,7 @@ public class AdminProfileRepository : IAdminProfileRepository
 
         await ApplyBrokerAttribution(connection, profiles);
 
-        return profiles;
+        return new AdminProfilePageDto { Items = profiles, TotalCount = totalCount, Page = page, PageSize = pageSize };
     }
    public async Task<AdminProfileDetailResult?> GetById(int userId)
 {
@@ -198,6 +203,13 @@ public async Task<bool> UpdateMobileNumber(int userId, string? mobileNumber)
         """;
 
     return await connection.ExecuteAsync(sql, new { UserId = userId, MobileNumber = mobileNumber }) > 0;
+}
+
+public async Task<bool> ResetPassword(int userId, string passwordHash)
+{
+    using var connection = _connectionFactory.CreateConnection();
+    const string sql = "UPDATE dbo.UserAccount SET PasswordHash = @PasswordHash, UpdatedAt = GETDATE() WHERE UserId = @UserId AND IsActive = 1;";
+    return await connection.ExecuteAsync(sql, new { UserId = userId, PasswordHash = passwordHash }) > 0;
 }
 
 public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(

@@ -1,1 +1,19 @@
 uploads/uploads.zip
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Node
+**/node_modules/
+
+# Environment
+.env
+.env.*
+
+# Uploads
+**/uploads/

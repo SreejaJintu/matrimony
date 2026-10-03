@@ -17,4 +17,5 @@ public class MatchSearchRequestDto
     public int? DistrictId { get; set; }
     public bool? OnlyVerified { get; set; }
     public string? SearchText { get; set; }
+    public int? Limit { get; set; }
 }

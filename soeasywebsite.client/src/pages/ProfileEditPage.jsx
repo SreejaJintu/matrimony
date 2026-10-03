@@ -230,7 +230,9 @@ export function ProfileEditPage() {
             preferredMaritalStatusId: profile.preferredMaritalStatusId || '',
             locationPreference: profile.preferredLocation || '',
             photos: profile.photos || [],
-            profilePhotoIndex: profile.profilePhotoIndex || 0,
+            profilePhotoIndex: Number.isInteger(profile.profilePhotoIndex)
+              ? profile.profilePhotoIndex
+              : Math.max((profile.photos || []).findIndex((photo) => photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary), 0),
           };
           setFormData(hydratedDraft);
           if (profile.religionId) {
@@ -346,10 +348,28 @@ export function ProfileEditPage() {
           });
           break;
         case 'photos':
-          // Photos are uploaded individually, this step just finalizes
-          // For now, assume photos are already handled by UploadPhotosStep's internal logic
-          // or a separate API call for saving photo metadata if needed.
-          apiCall = Promise.resolve({ success: true }); // Placeholder
+          apiCall = (async () => {
+            const newPhotos = (mergedData.photos || []).filter((photo) => photo.isNew);
+            for (const [index, photo] of newPhotos.entries()) {
+              const photoIndex = mergedData.photos.indexOf(photo);
+              const response = await api.savePhoto({
+                userId,
+                photoUrl: photo.url,
+                isProfilePhoto: photoIndex === (mergedData.profilePhotoIndex ?? 0),
+                displayOrder: photoIndex + 1,
+                isApproved: true,
+                isActive: true,
+              });
+              if (response?.success === false || response?.Success === false) {
+                throw new Error(response.message || response.Message || `Unable to save photo ${index + 1}.`);
+              }
+              setFormData((current) => ({
+                ...current,
+                photos: (current.photos || []).map((item) => item.id === photo.id ? { ...item, isNew: false } : item),
+              }));
+            }
+            return { success: true };
+          })();
           break;
         default:
           apiCall = Promise.resolve({ success: true });

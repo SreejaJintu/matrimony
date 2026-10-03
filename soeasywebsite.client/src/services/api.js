@@ -97,6 +97,7 @@ export const api = {
   savePreference: (payload) => request('/api/profile/preference', { method: 'PUT', data: payload }),
   savePhoto: (payload) => request('/api/profile/photo', { method: 'POST', data: payload }),
   searchMatches: (payload) => request('/api/match/search', { method: 'POST', data: payload }),
+  getFeaturedProfiles: () => request('/api/match/featured'),
   shortlistGet: () => request('/api/shortlist'),
   shortlistAdd: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'POST' }),
   shortlistRemove: (targetUserId) => request(`/api/shortlist/${targetUserId}`, { method: 'DELETE' }),

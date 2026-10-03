@@ -15,6 +15,11 @@
   gap: 20px;
 }
 
+/* Keep guest result cards the same width as cards beside the signed-in sidebar. */
+.account-layout.guest-view {
+  width: min(1500px, calc(100% - 32px));
+}
+
 .matches-page {
   min-width: 0;
   flex: 1;
@@ -270,10 +275,10 @@
 
 /* Cards */
 
-.matches-grid {
+.matches-page .matches-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .match-card {
@@ -297,11 +302,11 @@
   box-shadow: 0 10px 24px rgba(91, 35, 20, 0.09);
 }
 
-.match-card-image {
+.matches-page .match-card-image {
   grid-area: image;
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
   height: auto;
   overflow: hidden;
   background: #eee5dc;
@@ -808,8 +813,14 @@
 /* Tablet */
 
 @media (max-width: 1150px) {
-  .matches-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .matches-page .matches-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1150px) {
+  .account-layout.guest-view .matches-page .matches-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -820,6 +831,10 @@
     width: min(100% - 20px, 760px);
   }
 
+  .account-layout.guest-view {
+    width: min(100% - 20px, 760px);
+  }
+
   .mobile-sidebar-trigger {
     display: inline-flex;
   }
@@ -827,6 +842,10 @@
   .matches-filter-row {
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
+  }
+
+  .matches-page .matches-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .matches-filter-panel.open {
@@ -891,12 +910,13 @@
     flex: 1;
   }
 
-  .matches-grid {
+  .matches-page .matches-grid {
     grid-template-columns: 1fr;
   }
 
-  .match-card-image {
-    height: 240px;
+  .matches-page .match-card-image {
+    aspect-ratio: 16 / 9;
+    height: auto;
   }
 
   .match-card-image img {

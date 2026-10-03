@@ -4,10 +4,12 @@ namespace SoeasyWebsite.Server.Interfaces;
 
 public interface IAdminProfileService
 {
-    Task<IEnumerable<AdminProfileDto>> GetAll(
+    Task<AdminProfilePageDto> GetAll(
         string? search,
         byte? genderId,
-        byte? profileStatusId);
+        byte? profileStatusId,
+        int page,
+        int pageSize);
 
     Task<AdminProfileDetailResult?> GetById(int userId);
 
@@ -16,6 +18,8 @@ public interface IAdminProfileService
     Task<bool> DeleteProfile(int userId);
 
     Task<bool> UpdateMobileNumber(int userId, string? mobileNumber);
+
+    Task<bool> ResetPassword(int userId, string newPassword);
 
     Task<AdminProfileStatusUpdateResult?> UpdateStatus(
     int userId,

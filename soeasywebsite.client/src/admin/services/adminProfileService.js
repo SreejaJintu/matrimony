@@ -5,12 +5,16 @@ const adminProfileService = {
     search = "",
     genderId = "",
     profileStatusId = "",
+    page = 1,
+    pageSize = 25,
   } = {}) => {
     const response = await axios.get("/api/admin/profiles", {
       params: {
         search: search || undefined,
         genderId: genderId || undefined,
         profileStatusId: profileStatusId || undefined,
+        page,
+        pageSize,
       },
     });
 
@@ -38,6 +42,14 @@ const adminProfileService = {
   updateMobileNumber: async (userId, mobileNumber) => {
     const response = await axios.put(`/api/admin/profiles/${userId}/mobile`, {
       mobileNumber,
+    });
+    return response.data;
+  },
+
+  resetPassword: async (userId, newPassword) => {
+    const token = localStorage.getItem("soesyAdminToken");
+    const response = await axios.put(`/api/admin/profiles/${userId}/password`, { newPassword }, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
     return response.data;
   },

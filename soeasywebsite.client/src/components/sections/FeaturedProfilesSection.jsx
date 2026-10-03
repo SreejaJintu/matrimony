@@ -12,7 +12,7 @@ export function FeaturedProfilesSection({ onViewProfile }) {
     async function fetchProfiles() {
       try {
         setLoading(true)
-        const response = await api.searchMatches({})
+        const response = await api.getFeaturedProfiles()
         if (isMounted) {
           // Response data is the list of matches
           setProfiles(response.data ?? [])
@@ -48,7 +48,7 @@ export function FeaturedProfilesSection({ onViewProfile }) {
         ) : profiles.length === 0 ? (
           <p>No featured profiles available.</p>
         ) : (
-          profiles.slice(0, 6).map((profile) => {
+          profiles.slice(0, 8).map((profile) => {
             const isVerified = Boolean(profile.isVerified || profile.verified || profile.verifiedProfile);
             const image = profile.imageUrl || profile.image || '/images/default-profile.png';
             const locationText = [profile.district, profile.state].filter(Boolean).join(', ') || profile.location || 'N/A';

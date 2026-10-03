@@ -1,4 +1,4 @@
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, KeyRound } from "lucide-react";
 
 const calculateAge = (dateOfBirth) => {
   if (!dateOfBirth) {
@@ -42,7 +42,7 @@ const getImageCandidates = (url) => {
   return candidates;
 };
 
-const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange, onMarriedChange, statusUpdatingId, marriedUpdatingId }) => {
+const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onResetPassword, onStatusChange, onMarriedChange, statusUpdatingId, marriedUpdatingId }) => {
   if (!profiles.length) {
     return (
       <div className="profile-empty">
@@ -219,6 +219,15 @@ const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onStatusChange,
                     title="Delete profile"
                   >
                     <Trash2 size={16} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="reset-password-btn"
+                    onClick={() => onResetPassword(profile)}
+                    aria-label={`Reset password for ${profile.fullName}`}
+                    title="Reset password"
+                  >
+                    <KeyRound size={16} aria-hidden="true" />
                   </button>
                 </div>
               </td>

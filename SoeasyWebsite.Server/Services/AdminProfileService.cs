@@ -1,6 +1,7 @@
 using SoeasyWebsite.Server.DTOs.Admin;
 using SoeasyWebsite.Server.Interfaces;
 using SoeasyWebsite.Server.RepositoryInterfaces;
+using SoeasyWebsite.Server.Helpers;
 
 namespace SoeasyWebsite.Server.Services;
 
@@ -33,15 +34,24 @@ public async Task<bool> UpdateMobileNumber(int userId, string? mobileNumber)
     return await _repository.UpdateMobileNumber(userId, mobileNumber);
 }
 
-    public async Task<IEnumerable<AdminProfileDto>> GetAll(
+public async Task<bool> ResetPassword(int userId, string newPassword)
+{
+    return await _repository.ResetPassword(userId, PasswordHelper.Hash(newPassword));
+}
+
+    public async Task<AdminProfilePageDto> GetAll(
         string? search,
         byte? genderId,
-        byte? profileStatusId)
+        byte? profileStatusId,
+        int page,
+        int pageSize)
     {
         return await _repository.GetAll(
             search,
             genderId,
-            profileStatusId);
+            profileStatusId,
+            page,
+            pageSize);
     }
 
     public async Task<AdminProfileStatusUpdateResult?> UpdateStatus(

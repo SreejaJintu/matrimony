@@ -433,7 +433,7 @@ export function MatchesPage() {
     <div className="account-page-shell">
       <Header />
 
-      <div className="account-layout">
+      <div className={`account-layout ${isAuthenticated ? 'member-view' : 'guest-view'}`}>
         {isAuthenticated && (
           <AccountSidebar
             isOpen={sidebarOpen}

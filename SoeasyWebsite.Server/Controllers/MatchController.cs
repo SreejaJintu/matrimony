@@ -21,4 +21,11 @@ public class MatchController : ControllerBase
         var response = await _matchService.SearchMatches(dto);
         return Ok(response);
     }
+
+    [HttpGet("featured")]
+    public async Task<IActionResult> GetFeaturedProfiles()
+    {
+        var response = await _matchService.SearchMatches(new MatchSearchRequestDto { Limit = 8 });
+        return Ok(response);
+    }
 }

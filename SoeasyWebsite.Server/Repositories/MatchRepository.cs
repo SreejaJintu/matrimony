@@ -29,7 +29,7 @@ public class MatchRepository : IMatchRepository
                 WHERE UserId = @UserId;
             END
 
-            SELECT
+            SELECT TOP (@Limit)
                 UA.UserId,
                 UA.ProfileCode,
                 UA.FullName,
@@ -115,7 +115,8 @@ public class MatchRepository : IMatchRepository
             dto.StateId,
             dto.DistrictId,
             dto.SearchText,
-            dto.OnlyVerified
+            dto.OnlyVerified,
+            Limit = Math.Clamp(dto.Limit ?? int.MaxValue, 1, 100)
         });
     }
 }

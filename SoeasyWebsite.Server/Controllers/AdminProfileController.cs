@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoeasyWebsite.Server.DTOs.Admin;
 using SoeasyWebsite.Server.Interfaces;
@@ -15,21 +16,46 @@ public class AdminProfileController : ControllerBase
         _service = service;
     }
 
+    [HttpPut("{userId:int}/password")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> ResetPassword(int userId, [FromBody] AdminProfilePasswordResetDto request)
+    {
+        if (userId <= 0 || string.IsNullOrWhiteSpace(request.NewPassword) || request.NewPassword.Length < 8)
+        {
+            return BadRequest(new { success = false, message = "A valid user ID and a password of at least 8 characters are required." });
+        }
+
+        var reset = await _service.ResetPassword(userId, request.NewPassword);
+        if (!reset)
+        {
+            return NotFound(new { success = false, message = "Active user account not found." });
+        }
+
+        return Ok(new { success = true, message = "User password reset successfully." });
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search = null,
         [FromQuery] byte? genderId = null,
-        [FromQuery] byte? profileStatusId = null)
+        [FromQuery] byte? profileStatusId = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 25)
     {
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 100);
         var profiles = await _service.GetAll(
             search,
             genderId,
-            profileStatusId);
+            profileStatusId,
+            page,
+            pageSize);
 
         return Ok(new
         {
             success = true,
-            data = profiles
+            data = profiles.Items,
+            pagination = new { profiles.TotalCount, profiles.Page, profiles.PageSize, TotalPages = (int)Math.Ceiling(profiles.TotalCount / (double)profiles.PageSize) }
         });
     }
     [HttpGet("{userId:int}")]
@@ -51,6 +77,11 @@ public async Task<IActionResult> GetById(int userId)
         success = true,
         data = profile
     });
+}
+
+public class AdminProfilePasswordResetDto
+{
+    public string NewPassword { get; set; } = string.Empty;
 }
 
 [HttpGet("{userId:int}/photos")]

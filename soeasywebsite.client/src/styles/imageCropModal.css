@@ -1,0 +1,42 @@
+.image-crop-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 12, 13, 0.72);
+}
+
+.image-crop-dialog {
+  width: min(480px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.3);
+}
+
+.image-crop-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.image-crop-header h2 { margin: 0; color: #292222; font-size: 19px; }
+.image-crop-header p { margin: 5px 0 0; color: #71686b; font-size: 13px; }
+.image-crop-close { display: grid; place-items: center; padding: 4px; border: 0; background: transparent; color: #61585a; cursor: pointer; }
+.image-crop-frame { position: relative; margin: 0 auto; overflow: hidden; background: #171414; touch-action: none; cursor: grab; user-select: none; }
+.image-crop-frame:active { cursor: grabbing; }
+.image-crop-source { position: absolute; top: 50%; left: 50%; max-width: none; max-height: none; transform-origin: center; pointer-events: none; }
+.image-crop-guides { position: absolute; inset: 0; pointer-events: none; border: 1px solid rgba(255,255,255,.85); box-shadow: inset 0 0 0 1px rgba(0,0,0,.2); background: linear-gradient(to right, transparent 33.2%, rgba(255,255,255,.38) 33.3%, transparent 33.6%, transparent 66.5%, rgba(255,255,255,.38) 66.6%, transparent 67%), linear-gradient(to bottom, transparent 33.2%, rgba(255,255,255,.38) 33.3%, transparent 33.6%, transparent 66.5%, rgba(255,255,255,.38) 66.6%, transparent 67%); }
+.image-crop-zoom { display: flex; align-items: center; gap: 12px; margin: 17px 0; color: #41393b; font-size: 13px; font-weight: 600; }
+.image-crop-zoom input { flex: 1; accent-color: #79001f; }
+.image-crop-error { margin: 0 0 12px; color: #b42318; font-size: 13px; }
+.image-crop-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.image-crop-actions button { padding: 9px 14px; border: 1px solid #d8d2d3; border-radius: 7px; font-size: 13px; font-weight: 650; cursor: pointer; }
+.image-crop-actions button:disabled { opacity: .6; cursor: wait; }
+.image-crop-cancel { background: #fff; color: #40383a; }
+.image-crop-save { border-color: #79001f !important; background: #79001f; color: #fff; }
+
+@media (max-width: 420px) {
+  .image-crop-dialog { padding: 15px; }
+  .image-crop-header h2 { font-size: 17px; }
+}
