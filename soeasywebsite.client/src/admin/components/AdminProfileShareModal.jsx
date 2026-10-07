@@ -7,6 +7,25 @@ const PAGE_SIZE = 10;
 
 const getField = (item, camel, pascal) => item?.[camel] ?? item?.[pascal];
 
+const getAge = (dateOfBirth) => {
+  if (!dateOfBirth) return "";
+  const [year, month, day] = String(dateOfBirth).slice(0, 10).split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  if (
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    !Number.isInteger(day) ||
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== month - 1 ||
+    parsed.getDate() !== day
+  ) return "";
+
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age -= 1;
+  return age >= 0 ? `${age} years` : "";
+};
+
 const getPaidPlan = (profile) => {
   const planName = getField(profile, "membershipPlanName", "MembershipPlanName");
   const isPremium = getField(profile, "isPremium", "IsPremium") === true;
@@ -31,6 +50,7 @@ const AdminProfileShareModal = ({ onClose }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [sending, setSending] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -144,6 +164,88 @@ const AdminProfileShareModal = ({ onClose }) => {
     }
   };
 
+  const downloadSelectedProfiles = async () => {
+    if (!selectedProfileList.length) return;
+
+    setDownloadingPdf(true);
+    setError("");
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 18;
+      const cardWidth = pageWidth - margin * 2;
+      let y = 20;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(65, 19, 35);
+      doc.text("Matching Profiles", margin, y);
+      y += 8;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(110, 110, 110);
+      doc.text(`Prepared ${new Date().toLocaleDateString()}`, margin, y);
+      y += 12;
+
+      selectedProfileList.forEach((profile, index) => {
+        const location = [
+          getField(profile, "city", "City"),
+          getField(profile, "districtName", "DistrictName"),
+          getField(profile, "stateName", "StateName"),
+        ].filter(Boolean).join(", ");
+        const rawDetails = [
+          ["Profile Code", profileCode(profile)],
+          ["Age", getAge(getField(profile, "dateOfBirth", "DateOfBirth"))],
+          ["Gender", getField(profile, "genderName", "GenderName")],
+          ["Location", location],
+          ["Education", getField(profile, "educationName", "EducationName")],
+          ["Occupation", getField(profile, "occupationName", "OccupationName")],
+        ].filter(([, value]) => value);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        const detailLines = rawDetails.map(([label, value]) => ({
+          label,
+          lines: doc.splitTextToSize(String(value), cardWidth - 44),
+        }));
+        const contentHeight = 20 + detailLines.reduce((height, detail) => height + detail.lines.length * 5 + 3, 0);
+
+        if (y + contentHeight > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+
+        doc.setDrawColor(225, 225, 225);
+        doc.setFillColor(250, 248, 246);
+        doc.roundedRect(margin, y, cardWidth, contentHeight, 2, 2, "FD");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(40, 40, 40);
+        doc.text(doc.splitTextToSize(userName(profile), cardWidth - 12), margin + 6, y + 9);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        let detailY = y + 19;
+        detailLines.forEach(({ label, lines }) => {
+          doc.setTextColor(110, 110, 110);
+          doc.text(`${label}:`, margin + 6, detailY);
+          doc.setTextColor(50, 50, 50);
+          doc.text(lines, margin + 38, detailY, { maxWidth: cardWidth - 44 });
+          detailY += lines.length * 5 + 3;
+        });
+        y += contentHeight + (index < selectedProfileList.length - 1 ? 8 : 0);
+      });
+
+      doc.save(`matching-profiles-${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (downloadError) {
+      console.error("Unable to generate matching profiles PDF:", downloadError);
+      setError(downloadError.message || "Unable to generate the PDF. Please try again.");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
   const totalPages = (count) => Math.max(1, Math.ceil(count / PAGE_SIZE));
   const userName = (profile) => getField(profile, "fullName", "FullName") || "Unnamed profile";
   const profileCode = (profile) => getField(profile, "profileCode", "ProfileCode") || "";
@@ -253,6 +355,9 @@ const AdminProfileShareModal = ({ onClose }) => {
 
         <footer className="admin-profile-share-footer">
           <button type="button" onClick={onClose} disabled={sending}>Cancel</button>
+          <button type="button" onClick={downloadSelectedProfiles} disabled={sending || downloadingPdf || selectedProfileList.length === 0}>
+            {downloadingPdf ? "Preparing PDF…" : "Download PDF"}
+          </button>
           <button type="button" onClick={sendProfiles} disabled={sending || !selectedRecipient || selectedProfileList.length === 0}>
             {sending ? "Sending…" : "Send Profiles"}
           </button>

@@ -77,15 +77,6 @@ BEGIN
         AND (@GenderId IS NULL OR UA.GenderId = @GenderId)
         AND (@ProfileStatusId IS NULL OR UA.ProfileStatusId = @ProfileStatusId)
         AND UA.IsActive = 1
-        AND EXISTS
-        (
-            SELECT 1
-            FROM dbo.UserPhoto ImagePhoto
-            WHERE ImagePhoto.UserId = UA.UserId
-              AND ImagePhoto.IsApproved = 1
-              AND ImagePhoto.IsActive = 1
-              AND NULLIF(LTRIM(RTRIM(ImagePhoto.PhotoUrl)), '') IS NOT NULL
-        )
     ORDER BY UA.CreatedAt DESC, UA.UserId DESC
     OFFSET (@Page - 1) * @PageSize ROWS
     FETCH NEXT @PageSize ROWS ONLY;
@@ -99,15 +90,6 @@ BEGIN
          OR UA.MobileNumber LIKE '%' + @Search + '%')
         AND (@GenderId IS NULL OR UA.GenderId = @GenderId)
         AND (@ProfileStatusId IS NULL OR UA.ProfileStatusId = @ProfileStatusId)
-        AND UA.IsActive = 1
-        AND EXISTS
-        (
-            SELECT 1
-            FROM dbo.UserPhoto ImagePhoto
-            WHERE ImagePhoto.UserId = UA.UserId
-              AND ImagePhoto.IsApproved = 1
-              AND ImagePhoto.IsActive = 1
-              AND NULLIF(LTRIM(RTRIM(ImagePhoto.PhotoUrl)), '') IS NOT NULL
-        );
+        AND UA.IsActive = 1;
 END;
 GO

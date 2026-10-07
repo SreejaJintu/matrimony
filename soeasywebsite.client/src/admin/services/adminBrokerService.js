@@ -55,6 +55,15 @@ const adminBrokerService = {
     ));
     return response.data;
   },
+
+  resetPassword: async (userId, newPassword) => {
+    const response = await request(() => axios.put(
+      `/api/admin/profiles/${userId}/password`,
+      { newPassword },
+      requestConfig()
+    ));
+    return response.data;
+  },
 };
 
 export default adminBrokerService;

@@ -12,6 +12,54 @@ import AdminProfileShareModal from "../components/AdminProfileShareModal";
 
 import "../styles/adminProfiles.css";
 
+const getAgeFromDateOfBirth = (dateOfBirth) => {
+  if (!dateOfBirth) return "";
+
+  const [year, month, day] = String(dateOfBirth).slice(0, 10).split("-").map(Number);
+  const birthDate = new Date(year, month - 1, day);
+  if (
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    !Number.isInteger(day) ||
+    birthDate.getFullYear() !== year ||
+    birthDate.getMonth() !== month - 1 ||
+    birthDate.getDate() !== day
+  ) {
+    return "";
+  }
+
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  if (
+    today.getMonth() < month - 1 ||
+    (today.getMonth() === month - 1 && today.getDate() < day)
+  ) {
+    age -= 1;
+  }
+
+  return age >= 0 ? age : "";
+};
+
+const getDateOfBirthFromAge = (ageValue, currentDateOfBirth) => {
+  if (ageValue === "") return "";
+
+  const age = Number(ageValue);
+  if (!Number.isInteger(age) || age < 0 || age > 120) return currentDateOfBirth;
+
+  const existingDate = currentDateOfBirth
+    ? String(currentDateOfBirth).slice(0, 10).split("-").map(Number)
+    : [];
+  const validExistingDate = existingDate.length === 3 && existingDate.every(Number.isInteger);
+  const today = new Date();
+  const month = validExistingDate ? existingDate[1] : today.getMonth() + 1;
+  const day = validExistingDate ? existingDate[2] : today.getDate();
+  const year = today.getFullYear() - age;
+  const lastDayOfMonth = new Date(year, month, 0).getDate();
+  const clampedDay = Math.min(day, lastDayOfMonth);
+
+  return `${year}-${String(month).padStart(2, "0")}-${String(clampedDay).padStart(2, "0")}`;
+};
+
 const AdminProfiles = () => {
   const navigate = useNavigate();
 
@@ -294,7 +342,9 @@ const AdminProfiles = () => {
         userId: profileData.userId ?? profile.userId,
         fullName: profileData.fullName ?? "",
         mobileNumber: profileData.mobileNumber ?? profileData.MobileNumber ?? profile.mobileNumber ?? profile.MobileNumber ?? "",
-        dateOfBirth: profileData.dateOfBirth ? String(profileData.dateOfBirth).slice(0, 10) : "",
+        dateOfBirth: (profileData.dateOfBirth ?? profileData.DateOfBirth)
+          ? String(profileData.dateOfBirth ?? profileData.DateOfBirth).slice(0, 10)
+          : "",
         heightId: profileData.heightId ?? "",
         heightName: profileData.height ?? "",
         weight: profileData.weight ?? "",
@@ -777,8 +827,18 @@ const AdminProfiles = () => {
                   />
                 </label>
                 <label>
-                  <span>Date of Birth</span>
-                  <input type="date" value={editingProfile.dateOfBirth} onChange={(e) => handleEditChange("dateOfBirth", e.target.value)} />
+                  <span>Age</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="120"
+                    step="1"
+                    value={getAgeFromDateOfBirth(editingProfile.dateOfBirth)}
+                    onChange={(event) => handleEditChange(
+                      "dateOfBirth",
+                      getDateOfBirthFromAge(event.target.value, editingProfile.dateOfBirth),
+                    )}
+                  />
                 </label>
                 {renderMasterSelect("Height", "heightId", masterData.heights, editingProfile.heightId, editingProfile.heightName)}
                 <label>

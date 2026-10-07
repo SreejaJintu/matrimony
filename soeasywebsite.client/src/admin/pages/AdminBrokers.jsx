@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pencil, Trash2, Users } from "lucide-react";
+import { KeyRound, Pencil, Trash2, Users } from "lucide-react";
 import adminBrokerService from "../services/adminBrokerService";
 import "../styles/adminBrokers.css";
 
@@ -31,6 +31,11 @@ const AdminBrokers = () => {
   const [candidateBroker, setCandidateBroker] = useState(null);
   const [brokerCandidates, setBrokerCandidates] = useState([]);
   const [candidateLoading, setCandidateLoading] = useState(false);
+  const [resettingBroker, setResettingBroker] = useState(null);
+  const [resetPassword, setResetPassword] = useState("");
+  const [confirmResetPassword, setConfirmResetPassword] = useState("");
+  const [resetPasswordError, setResetPasswordError] = useState("");
+  const [resettingPassword, setResettingPassword] = useState(false);
 
   const loadBrokers = async () => {
     try {
@@ -227,6 +232,52 @@ const AdminBrokers = () => {
     }
   };
 
+  const openPasswordReset = (broker) => {
+    setResettingBroker(broker);
+    setResetPassword("");
+    setConfirmResetPassword("");
+    setResetPasswordError("");
+  };
+
+  const closePasswordReset = () => {
+    if (resettingPassword) return;
+    setResettingBroker(null);
+    setResetPasswordError("");
+  };
+
+  const handlePasswordReset = async (event) => {
+    event.preventDefault();
+    setResetPasswordError("");
+    if (resetPassword.length < 8) {
+      setResetPasswordError("Password must be at least 8 characters.");
+      return;
+    }
+    if (resetPassword !== confirmResetPassword) {
+      setResetPasswordError("Passwords do not match.");
+      return;
+    }
+    if (!Number.isInteger(Number(resettingBroker?.userId)) || Number(resettingBroker.userId) <= 0) {
+      setResetPasswordError("Broker login user ID is unavailable.");
+      return;
+    }
+
+    setResettingPassword(true);
+    try {
+      const result = await adminBrokerService.resetPassword(resettingBroker.userId, resetPassword);
+      if (result?.success === false || result?.Success === false) {
+        throw new Error(result.message || result.Message || "Unable to reset password.");
+      }
+      setSuccessMessage(result?.message || result?.Message || "Broker password reset successfully.");
+      setResettingBroker(null);
+      setResetPassword("");
+      setConfirmResetPassword("");
+    } catch (error) {
+      setResetPasswordError(responseMessage(error, "Unable to reset broker password."));
+    } finally {
+      setResettingPassword(false);
+    }
+  };
+
   return (
     <div className="admin-brokers-page">
       <header className="admin-brokers-header">
@@ -311,8 +362,13 @@ const AdminBrokers = () => {
                         </span>
                       </div>
                     </td>
-                    <td>{broker.createdAt ? new Date(broker.createdAt).toLocaleDateString() : "-"}</td>
                     <td>
+                      <span className={`broker-active-status${broker.isActive ? " is-active" : ""}`}>
+                        {broker.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td>{broker.createdAt ? new Date(broker.createdAt).toLocaleDateString() : "-"}</td>
+                    <td className="brokers-actions-cell">
                       <div className="brokers-row-actions">
                         <button
                           type="button"
@@ -322,6 +378,15 @@ const AdminBrokers = () => {
                           title="Edit Broker"
                         >
                           <Pencil size={15} aria-hidden="true" />
+                        </button>
+                        <button
+                          type="button"
+                          className="brokers-icon-action is-reset"
+                          onClick={() => openPasswordReset(broker)}
+                          aria-label={`Reset password for ${broker.userFullName}`}
+                          title="Reset password"
+                        >
+                          <KeyRound size={15} aria-hidden="true" />
                         </button>
                         <button
                           type="button"
@@ -461,6 +526,40 @@ const AdminBrokers = () => {
                 <button type="button" className="brokers-secondary-button" onClick={closeEditBroker} disabled={editSaving}>Cancel</button>
                 <button type="submit" className="brokers-primary-button" disabled={editSaving}>
                   {editSaving ? "Saving..." : "Save Changes"}
+                </button>
+              </footer>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {resettingBroker && (
+        <div className="brokers-modal-backdrop" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) closePasswordReset();
+        }}>
+          <section className="brokers-modal brokers-password-reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-broker-password-title">
+            <header className="brokers-modal-header">
+              <div>
+                <h2 id="reset-broker-password-title">Reset Broker Password</h2>
+                <p>{resettingBroker.userFullName} · User ID: {resettingBroker.userId}</p>
+              </div>
+              <button type="button" className="brokers-close-button" aria-label="Close" onClick={closePasswordReset} disabled={resettingPassword}>×</button>
+            </header>
+
+            <form onSubmit={handlePasswordReset}>
+              <label className="brokers-field">
+                <span>New password</span>
+                <input type="password" autoComplete="new-password" minLength={8} maxLength={100} value={resetPassword} onChange={(event) => setResetPassword(event.target.value)} required />
+              </label>
+              <label className="brokers-field">
+                <span>Confirm new password</span>
+                <input type="password" autoComplete="new-password" minLength={8} maxLength={100} value={confirmResetPassword} onChange={(event) => setConfirmResetPassword(event.target.value)} required />
+              </label>
+              {resetPasswordError && <div className="brokers-notice brokers-notice-error" role="alert">{resetPasswordError}</div>}
+              <footer className="brokers-form-actions">
+                <button type="button" className="brokers-secondary-button" onClick={closePasswordReset} disabled={resettingPassword}>Cancel</button>
+                <button type="submit" className="brokers-primary-button" disabled={resettingPassword}>
+                  {resettingPassword ? "Resetting..." : "Reset Password"}
                 </button>
               </footer>
             </form>
