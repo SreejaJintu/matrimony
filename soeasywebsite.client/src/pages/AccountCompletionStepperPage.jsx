@@ -66,12 +66,12 @@ export function AccountCompletionStepperPage() {
         const [
           heightsRes, religionsRes, countriesRes, educationsRes,
           maritalStatusesRes, motherTonguesRes, occupationsRes,
-          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes
+          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes, birthStarsRes
         ] = await Promise.allSettled([
           api.getMasterHeight(), api.getMasterReligion(), api.getMasterCountry(),
           api.getMasterEducation(), api.getMasterMaritalStatus(), api.getMasterMotherTongue(),
           api.getMasterOccupation(), api.getMasterFamilyType(), api.getMasterFamilyStatus(),
-          api.getMasterFamilyValue(), api.getMasterIncome(),
+          api.getMasterFamilyValue(), api.getMasterIncome(), api.getMasterBirthStar(),
         ]);
 
         const extractData = (res) => res.status === 'fulfilled' ? (res.value?.data ?? res.value?.Data ?? []) : [];
@@ -88,6 +88,7 @@ export function AccountCompletionStepperPage() {
           familyStatuses: extractData(familyStatusesRes),
           familyValues: extractData(familyValuesRes),
           incomes: extractData(incomesRes),
+          birthStars: extractData(birthStarsRes),
         });
       } catch (err) {
         console.error("Error loading master data:", err);
@@ -120,6 +121,7 @@ export function AccountCompletionStepperPage() {
             religionId: profile.religionId || '',
             motherTongueId: profile.motherTongueId || '',
             communityId: profile.communityId || '',
+            birthStarId: profile.birthStarId || '',
             countryId: profile.countryId || '',
             stateId: profile.stateId || '',
             districtId: profile.districtId || '',

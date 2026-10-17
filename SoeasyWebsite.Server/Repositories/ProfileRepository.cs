@@ -60,6 +60,8 @@ public class ProfileRepository : IProfileRepository
                 up.Weight,
                 up.MaritalStatusId,
                 ms.MaritalStatusName AS MaritalStatus,
+                up.BirthStarId,
+                bsm.BirthStarName,
                 up.MotherTongueId,
                 mt.MotherTongueName AS MotherTongue,
                 up.ReligionId,
@@ -112,6 +114,7 @@ public class ProfileRepository : IProfileRepository
             LEFT JOIN UserPhoto photo ON photo.UserId = ua.UserId AND photo.IsProfilePhoto = 1 AND photo.IsActive = 1
             LEFT JOIN HeightMaster hm ON hm.HeightId = up.HeightId
             LEFT JOIN MaritalStatusMaster ms ON ms.MaritalStatusId = up.MaritalStatusId
+            LEFT JOIN BirthStarMaster bsm ON bsm.BirthStarId = up.BirthStarId
             LEFT JOIN MotherTongueMaster mt ON mt.MotherTongueId = up.MotherTongueId
             LEFT JOIN ReligionMaster rm ON rm.ReligionId = up.ReligionId
             LEFT JOIN CommunityMaster cm ON cm.CommunityId = up.CommunityId

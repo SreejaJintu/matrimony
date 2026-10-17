@@ -3,14 +3,26 @@ import { RegistrationStepper } from './RegistrationStepper'
 import { RegistrationBenefits } from './RegistrationBenefits'
 import { TrustStrip } from '../../pages/TrustStrip'
 
-export function RegistrationShell({ currentStep, title, subtitle, steps, children, error, onStepChange, mode = 'create' }) {
+export function RegistrationShell({ 
+  currentStep, 
+  title, 
+  subtitle, 
+  steps, 
+  children, 
+  error, 
+  onStepChange, 
+  mode = 'create',
+  hideHeader = false,
+  hideTrustStrip = false,
+  eyebrow = 'START YOUR JOURNEY'
+}) {
   return (
-    <div className="page reg-page">
-      <Header />
+    <div className={`page reg-page ${mode === 'admin-edit' ? 'admin-edit-mode' : ''}`}>
+      {!hideHeader && <Header />}
 
       <section className="reg-hero">
         <div className="container">
-          <p className="reg-eyebrow">START YOUR JOURNEY</p>
+          {eyebrow && <p className="reg-eyebrow">{eyebrow}</p>}
           <h1 className="reg-title">{title}</h1>
           {subtitle ? <p className="reg-subtitle">{subtitle}</p> : null}
         </div>
@@ -28,7 +40,7 @@ export function RegistrationShell({ currentStep, title, subtitle, steps, childre
         </div>
       </section>
 
-      <TrustStrip />
+      {!hideTrustStrip && <TrustStrip />}
     </div>
   )
 }

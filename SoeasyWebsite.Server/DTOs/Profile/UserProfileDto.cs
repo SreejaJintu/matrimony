@@ -24,6 +24,10 @@ public class UserProfileDto
 
     public byte? MaritalStatusId { get; set; }
 
+    public short? BirthStarId { get; set; }
+
+    public string? BirthStarName { get; set; }
+
     public string? MaritalStatus { get; set; }
 
     public short? MotherTongueId { get; set; }

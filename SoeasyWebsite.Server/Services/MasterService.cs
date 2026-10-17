@@ -36,6 +36,17 @@ public class MasterService : IMasterService
         };
     }
 
+    public async Task<ApiResponse<IEnumerable<MasterDto>>> GetBirthStar()
+    {
+        var data = await _masterRepository.GetBirthStar();
+        return new ApiResponse<IEnumerable<MasterDto>>
+        {
+            Success = true,
+            Message = "Birth star master fetched successfully.",
+            Data = data
+        };
+    }
+
     public async Task<ApiResponse<IEnumerable<MasterDto>>> GetCommunity(int religionId)
     {
         var data = await _masterRepository.GetCommunity(religionId);

@@ -11,7 +11,7 @@ import {
   saveRegistrationDraft,
 } from '../../services/registrationDraft'
 
-const EMPTY_MASTER_DATA = { heights: [], educations: [], maritalStatuses: [] }
+const EMPTY_MASTER_DATA = { heights: [], educations: [], maritalStatuses: [], religions: [], birthStars: [] }
 
 const STEPS = [
   { id: 'basic', label: 'Basic Details', icon: Heart },
@@ -21,7 +21,7 @@ const STEPS = [
   { id: 'photos', label: 'Upload Photos', icon: Heart },
 ]
 
-const SUPPORTED_FIELDS = ['heightId', 'weight', 'maritalStatusId', 'occupation', 'occupationId', 'company', 'educationId', 'city', 'dob', 'religionId', 'motherTongueId', 'communityId', 'countryId', 'stateId', 'districtId']
+const SUPPORTED_FIELDS = ['heightId', 'weight', 'maritalStatusId', 'occupation', 'occupationId', 'company', 'educationId', 'city', 'dob', 'religionId', 'communityId', 'birthStarId', 'motherTongueId', 'countryId', 'stateId', 'districtId']
 
 const sanitizeAboutDraft = (draft = {}) => {
   const cleaned = {}
@@ -44,6 +44,7 @@ const buildProfilePayload = (draft, userId) => {
     religionId: draft.religionId !== undefined && draft.religionId !== null && draft.religionId !== '' ? Number(draft.religionId) : null,
     communityId: draft.communityId !== undefined && draft.communityId !== null && draft.communityId !== '' ? Number(draft.communityId) : null,
     educationId: draft.educationId !== undefined && draft.educationId !== null && draft.educationId !== '' ? Number(draft.educationId) : null,
+    birthStarId: draft.birthStarId !== undefined && draft.birthStarId !== null && draft.birthStarId !== '' ? Number(draft.birthStarId) : null,
     occupationId: draft.occupationId !== undefined && draft.occupationId !== null && draft.occupationId !== '' ? Number(draft.occupationId) : null,
     companyName: draft.company || null,
     designation: draft.occupation || null,
@@ -71,23 +72,31 @@ export function RegistrationAboutPage() {
     const loadMasters = async () => {
       try {
         console.log('Loading master data...')
-        const [heights, educations, maritalStatuses, occupations] = await Promise.all([
+        const [heights, educations, maritalStatuses, occupations, religions, birthStars] = await Promise.allSettled([
           api.getMasterHeight(),
           api.getMasterEducation(),
           api.getMasterMaritalStatus(),
           api.getMasterOccupation(),
+          api.getMasterReligion(),
+          api.getMasterBirthStar(),
         ])
 
-        console.log('Heights response:', heights)
-        console.log('Educations response:', educations)
-        console.log('Marital Statuses response:', maritalStatuses)
-        console.log('Occupations response:', occupations)
+        const extractData = (result) => result.status === 'fulfilled'
+          ? result.value?.data ?? result.value?.Data ?? result.value ?? []
+          : []
+        for (const result of [heights, educations, maritalStatuses, occupations, religions, birthStars]) {
+          if (result.status === 'rejected') {
+            console.error('Failed to load About page master data:', result.reason)
+          }
+        }
 
         const masterDataObj = {
-          heights: heights?.data ?? heights ?? [],
-          educations: educations?.data ?? educations ?? [],
-          maritalStatuses: maritalStatuses?.data ?? maritalStatuses ?? [],
-          occupations: occupations?.data ?? occupations ?? [],
+          heights: extractData(heights),
+          educations: extractData(educations),
+          maritalStatuses: extractData(maritalStatuses),
+          occupations: extractData(occupations),
+          religions: extractData(religions),
+          birthStars: extractData(birthStars),
         }
 
         console.log('Master data object:', masterDataObj)

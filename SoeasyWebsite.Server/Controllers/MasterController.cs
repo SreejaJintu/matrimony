@@ -18,6 +18,10 @@ public class MasterController : ControllerBase
     public async Task<IActionResult> GetHeight()
         => Ok(await _masterService.GetHeight());
 
+    [HttpGet("birth-star")]
+    public async Task<IActionResult> GetBirthStar()
+        => Ok(await _masterService.GetBirthStar());
+
     [HttpGet("religion")]
     public async Task<IActionResult> GetReligion()
         => Ok(await _masterService.GetReligion());

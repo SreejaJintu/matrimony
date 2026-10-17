@@ -12,6 +12,8 @@ public class UpsertProfileRequestDto
 
     public byte? MaritalStatusId { get; set; }
 
+    public short? BirthStarId { get; set; }
+
     public short? MotherTongueId { get; set; }
 
     public short? ReligionId { get; set; }

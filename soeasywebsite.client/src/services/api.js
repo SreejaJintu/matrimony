@@ -7,6 +7,36 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+function getApiErrorMessage(error) {
+  const responseData = error?.response?.data
+  const apiMessage = responseData?.message || responseData?.Message
+  if (apiMessage) return apiMessage
+
+  const status = error?.response?.status
+  if (status === 400) {
+    const validationFields = Object.keys(responseData?.errors || {})
+      .map((key) => key.match(/([A-Za-z][A-Za-z0-9]*)$/)?.[1])
+      .filter(Boolean)
+      .map((key) => {
+        const label = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        return label.charAt(0).toUpperCase() + label.slice(1)
+      })
+
+    if (validationFields.length) {
+      return `Please check these details and try again: ${[...new Set(validationFields)].join(', ')}.`
+    }
+
+    return 'Some details could not be saved. Please check the information and try again.'
+  }
+  if (status === 401) return 'Your session has expired. Please sign in again.'
+  if (status === 403) return 'You do not have permission to make this change.'
+  if (status === 404) return 'The requested profile or information could not be found.'
+  if (status >= 500) return 'Something went wrong while saving. Please try again.'
+  if (!error?.response) return 'Unable to connect. Check your internet connection and try again.'
+
+  return 'The request could not be completed. Please try again.'
+}
+
 // Request interceptor automatically attaches the Auth token to every request
 apiClient.interceptors.request.use((config) => {
   const token =
@@ -31,13 +61,7 @@ async function request(path, options = {}) {
     return response.data
   } catch (err) {
     console.error('API REQUEST ERROR:', err)
-    const responseData = err?.response?.data
-    const message =
-      responseData?.message ||
-      responseData?.Message ||
-      err?.message ||
-      'Request failed.'
-    throw new Error(message)
+    throw new Error(getApiErrorMessage(err), { cause: err })
   }
 }
 
@@ -56,6 +80,7 @@ export const api = {
 
   // Masters
   getMasterHeight: () => request('/api/master/height'),
+  getMasterBirthStar: () => request('/api/master/birth-star'),
   getMasterReligion: () => request('/api/master/religion'),
   getMasterCommunity: (religionId) => request(`/api/master/community/${religionId}`),
   getMasterCountry: () => request('/api/master/country'),

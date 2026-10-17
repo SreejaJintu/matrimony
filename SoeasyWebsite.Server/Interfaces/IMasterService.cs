@@ -6,6 +6,7 @@ namespace SoeasyWebsite.Server.Interfaces;
 public interface IMasterService
 {
     Task<ApiResponse<IEnumerable<MasterDto>>> GetHeight();
+    Task<ApiResponse<IEnumerable<MasterDto>>> GetBirthStar();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetReligion();
     Task<ApiResponse<IEnumerable<MasterDto>>> GetCommunity(int religionId);
     Task<ApiResponse<IEnumerable<MasterDto>>> GetCountry();

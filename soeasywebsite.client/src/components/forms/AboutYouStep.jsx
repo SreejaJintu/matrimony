@@ -1,24 +1,74 @@
 import { useState, useEffect } from 'react';
-import { Briefcase, GraduationCap, MapPin, Ruler, Weight, Calendar } from 'lucide-react';
+import { Briefcase, GraduationCap, Landmark, MapPin, Users, Ruler, Weight, Calendar, Star } from 'lucide-react';
+import { api } from '../../services/api';
 
 export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, mode = 'create' }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [communityOptions, setCommunityOptions] = useState(masterData.communities || []);
+  const [districts, setDistricts] = useState(masterData.districts || []);
 
   useEffect(() => {
     setFormData(initialData || {});
   }, [initialData]);
 
   useEffect(() => {
-    console.log('masterData in AboutYouStep:', masterData)
-    console.log('heights:', masterData.heights)
-    console.log('educations:', masterData.educations)
-    console.log('maritalStatuses:', masterData.maritalStatuses)
     setIsLoaded(Boolean(masterData.heights?.length || masterData.educations?.length || masterData.maritalStatuses?.length));
   }, [masterData]);
 
+  useEffect(() => {
+    if (masterData.districts?.length) {
+      setDistricts(masterData.districts);
+      return;
+    }
+
+    let active = true;
+    api.getMasterDistricts()
+      .then((response) => {
+        const data = response?.data ?? response?.Data ?? response ?? [];
+        if (active) setDistricts(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error('Failed to load districts:', error);
+        if (active) setDistricts([]);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [masterData.districts]);
+
+  useEffect(() => {
+    let active = true;
+    const fetchCommunities = async () => {
+      if (!formData.religionId) {
+        setCommunityOptions([]);
+        return;
+      }
+
+      try {
+        const response = await api.getMasterCommunity(formData.religionId);
+        const communities = response?.data ?? response?.Data ?? [];
+        if (active) setCommunityOptions(communities);
+      } catch (error) {
+        console.error('Failed to load communities:', error);
+        if (active) setCommunityOptions([]);
+      }
+    };
+
+    fetchCommunities();
+    return () => {
+      active = false;
+    };
+  }, [formData.religionId]);
+
   const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      if (field === 'religionId') {
+        return { ...prev, religionId: value, communityId: '' };
+      }
+      return { ...prev, [field]: value };
+    });
   };
 
   const handleSubmit = (e) => {
@@ -65,9 +115,7 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
             <input type="number" value={formData.weight || ''} onChange={(e) => handleChange('weight', e.target.value)}
               placeholder="e.g. 65" className="reg-input" />
           ))}
-      </div>
 
-      <div className="reg-grid">
         {field('Marital Status',
           <div className="reg-input-wrap">
             <select value={formData.maritalStatusId || ''} onChange={(e) => handleChange('maritalStatusId', Number(e.target.value) || '')} className="reg-input reg-select" disabled={!isLoaded}>
@@ -75,12 +123,77 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
               {masterData.maritalStatuses?.map((m, i) => <option key={`marital-${m.id}-${i}`} value={m.id}>{m.name}</option>)}
             </select>
           </div>)}
+      </div>
 
-        {field('Current City',
-          iconInput(<MapPin size={18} className="reg-input-icon" />,
-            <input type="text" value={formData.city || ''} onChange={(e) => handleChange('city', e.target.value)}
-              placeholder="e.g. Mumbai, New York" className="reg-input" />
-          ))}
+      <div className="reg-grid">
+        {field('Birth Star',
+          <div className="reg-input-wrap">
+            <Star size={18} className="reg-input-icon" />
+            <select
+              value={formData.birthStarId || ''}
+              onChange={(e) => handleChange('birthStarId', Number(e.target.value) || '')}
+              className="reg-input reg-select"
+            >
+              <option value="">Select birth star</option>
+              {masterData.birthStars?.map((star, index) => {
+                const id = star.id ?? star.Id;
+                const name = star.name ?? star.Name;
+                return <option key={`birth-star-${id ?? index}`} value={id}>{name}</option>;
+              })}
+            </select>
+          </div>)}
+
+        {field('Religion',
+          <div className="reg-input-wrap">
+            <Landmark size={18} className="reg-input-icon" />
+            <select
+              value={formData.religionId || ''}
+              onChange={(e) => handleChange('religionId', Number(e.target.value) || '')}
+              className="reg-input reg-select"
+            >
+              <option value="">Select religion</option>
+              {masterData.religions?.map((religion, index) => {
+                const id = religion.id ?? religion.Id;
+                const name = religion.name ?? religion.Name;
+                return <option key={`religion-${id ?? index}`} value={id}>{name}</option>;
+              })}
+            </select>
+          </div>)}
+
+        {field('Community',
+          <div className="reg-input-wrap">
+            <Users size={18} className="reg-input-icon" />
+            <select
+              value={formData.communityId || ''}
+              onChange={(e) => handleChange('communityId', Number(e.target.value) || '')}
+              className="reg-input reg-select"
+              disabled={!formData.religionId}
+            >
+              <option value="">{formData.religionId ? 'Select community' : 'Select religion first'}</option>
+              {communityOptions.map((community, index) => {
+                const id = community.id ?? community.Id;
+                const name = community.name ?? community.Name;
+                return <option key={`community-${id ?? index}`} value={id}>{name}</option>;
+              })}
+            </select>
+          </div>)}
+
+        {field('District',
+          <div className="reg-input-wrap">
+            <MapPin size={18} className="reg-input-icon" />
+            <select
+              value={formData.districtId || ''}
+              onChange={(e) => handleChange('districtId', Number(e.target.value) || '')}
+              className="reg-input reg-select"
+            >
+              <option value="">Select district</option>
+              {districts.map((district, index) => {
+                const id = district.id ?? district.Id;
+                const name = district.name ?? district.Name;
+                return <option key={`district-${id ?? index}`} value={id}>{name}</option>;
+              })}
+            </select>
+          </div>)}
       </div>
 
       <div className="reg-grid">
@@ -99,7 +212,6 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
               placeholder="e.g. Senior Software Engineer" className="reg-input" />
           </div>)}
       </div>
-
 
       {field('Highest Qualification',
         <div className="reg-input-wrap">

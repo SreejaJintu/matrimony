@@ -217,7 +217,7 @@ const AdminProfileDetail = () => {
           ← Back to Profiles
         </button>
 
-        <div className="admin-detail-heading">
+        <div className="admin-detail-heading" style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h2>Profile Details</h2>
             <p>
@@ -225,11 +225,22 @@ const AdminProfileDetail = () => {
             </p>
           </div>
 
-          <span
-            className={`admin-detail-status status-${profile.profileStatusId}`}
-          >
-            {profile.statusName || "Unknown"}
-          </span>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <span
+              className={`admin-detail-status status-${profile.profileStatusId}`}
+            >
+              {profile.statusName || "Unknown"}
+            </span>
+
+            <button
+              type="button"
+              className="admin-action approve"
+              onClick={() => navigate(`/admin/profiles/${userId}/edit`)}
+              style={{ backgroundColor: '#2563eb', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontWeight: 500 }}
+            >
+              Edit Profile
+            </button>
+          </div>
         </div>
 
       </div>

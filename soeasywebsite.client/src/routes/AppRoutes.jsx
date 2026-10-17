@@ -25,6 +25,7 @@ import AdminLayout from '../admin/components/AdminLayout'
 import AdminDashboard from '../admin/pages/AdminDashboard'
 import AdminProfiles from "../admin/pages/AdminProfiles";
 import AdminProfileDetail from "../admin/pages/AdminProfileDetail";
+import AdminProfileEdit from "../admin/pages/AdminProfileEdit";
 import AdminSubscriptionPage from '../admin/pages/AdminSubscriptionPage'
 import AdminPlansPage from '../admin/pages/AdminPlansPage'
 import LeadsManagementPage from '../admin/pages/LeadsManagementPage'
@@ -223,6 +224,8 @@ export function AppRoutes() {
           <Route path="profiles" element={<AdminProfiles />} />
 
           <Route path="profiles/:userId" element={<AdminProfileDetail />} />
+          
+          <Route path="profiles/:userId/edit" element={<AdminProfileEdit />} />
 
           <Route path="subscriptions" element={<AdminSubscriptionPage />} />
 

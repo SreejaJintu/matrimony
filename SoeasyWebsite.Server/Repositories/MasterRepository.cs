@@ -22,6 +22,18 @@ public class MasterRepository : IMasterRepository
             commandType: System.Data.CommandType.StoredProcedure);
     }
 
+    public async Task<IEnumerable<MasterDto>> GetBirthStar()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<MasterDto>(
+            """
+            SELECT BirthStarId AS Id, BirthStarName AS Name
+            FROM dbo.BirthStarMaster
+            WHERE IsActive = 1
+            ORDER BY BirthStarId;
+            """);
+    }
+
     public async Task<IEnumerable<MasterDto>> GetHeight()
     {
         using var connection = _connectionFactory.CreateConnection();

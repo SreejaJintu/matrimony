@@ -135,7 +135,7 @@ export function ProfileEditPage() {
         const [
           heightsRes, religionsRes, countriesRes, educationsRes,
           maritalStatusesRes, motherTonguesRes, occupationsRes,
-          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes
+          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes, birthStarsRes
         ] = await Promise.allSettled([
           api.getMasterHeight().catch(() => ({ data: [] })),
           api.getMasterReligion().catch(() => ({ data: [] })),
@@ -148,6 +148,7 @@ export function ProfileEditPage() {
           api.getMasterFamilyStatus().catch(() => ({ data: [] })),
           api.getMasterFamilyValue().catch(() => ({ data: [] })),
           api.getMasterIncome().catch(() => ({ data: [] })),
+          api.getMasterBirthStar().catch(() => ({ data: [] })),
         ]);
 
         const extractData = (res) => res.status === 'fulfilled' ? (res.value?.data ?? res.value?.Data ?? []) : [];
@@ -165,6 +166,7 @@ export function ProfileEditPage() {
           familyStatuses: extractData(familyStatusesRes),
           familyValues: extractData(familyValuesRes),
           incomes: extractData(incomesRes),
+          birthStars: extractData(birthStarsRes),
         }));
       } catch (err) {
         console.error("Error loading master data:", err);
@@ -206,7 +208,9 @@ export function ProfileEditPage() {
             religionId: profile.religionId || '',
             motherTongueId: profile.motherTongueId || '',
             communityId: profile.communityId || '',
+            birthStarId: profile.birthStarId || '',
             countryId: profile.countryId || '',
+            districtId: profile.districtId || '',
             fatherName: profile.fatherName || '',
             fatherOccupationId: profile.fatherOccupationId || '',
             motherName: profile.motherName || '',
@@ -309,9 +313,11 @@ export function ProfileEditPage() {
             city: mergedData.city,
             address: mergedData.city,
             religionId: mergedData.religionId,
+            birthStarId: mergedData.birthStarId,
             motherTongueId: mergedData.motherTongueId,
             communityId: mergedData.communityId,
             countryId: mergedData.countryId,
+            districtId: mergedData.districtId,
             aboutMe: mergedData.aboutMe,
           };
           apiCall = api.saveProfile(sanitizePayload(profilePayload));

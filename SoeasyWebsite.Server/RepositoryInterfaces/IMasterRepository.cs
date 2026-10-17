@@ -5,6 +5,7 @@ namespace SoeasyWebsite.Server.RepositoryInterfaces;
 public interface IMasterRepository
 {
     Task<IEnumerable<MasterDto>> GetHeight();
+    Task<IEnumerable<MasterDto>> GetBirthStar();
     Task<IEnumerable<MasterDto>> GetReligion();
     Task<IEnumerable<MasterDto>> GetCommunity(int religionId);
     Task<IEnumerable<MasterDto>> GetCountry();
