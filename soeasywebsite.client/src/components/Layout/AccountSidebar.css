@@ -3,25 +3,31 @@
 .account-sidebar {
   width: 250px;
   min-width: 250px;
-  height: calc(100vh - 24px);
+  height: calc(100vh - 110px);
+  height: calc(100dvh - 110px);
   position: sticky;
-  top: 12px;
+  top: 98px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
   border-radius: 18px;
   background: linear-gradient(180deg, #700019 0%, #560014 100%);
   color: #fff;
   box-shadow: 0 12px 35px rgba(86, 0, 20, 0.16);
-  z-index: 100;
+  z-index: 40;
+}
+
+.account-sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .account-sidebar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 18px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
 }
 
 .account-sidebar-brand {
@@ -110,12 +116,6 @@
 
 .account-sidebar-link.active svg {
   color: #e2bd72;
-}
-
-.account-sidebar-logout {
-  margin-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0 0 10px 10px;
 }
 
 .account-sidebar-membership {
@@ -222,9 +222,11 @@
   .account-sidebar {
     position: fixed;
     left: 12px;
-    top: 12px;
+    top: 98px;
     bottom: 12px;
     height: auto;
+    z-index: 100;
+    overflow-y: auto;
     transform: translateX(calc(-100% - 20px));
     transition: transform 0.25s ease;
   }
@@ -236,6 +238,12 @@
   .account-sidebar-close {
     display: grid;
     place-items: center;
+  }
+
+  .account-sidebar-header {
+    min-height: 54px;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .account-sidebar-backdrop {

@@ -54,7 +54,7 @@ export function Header() {
           <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link>
           <Link to="/matches" className={location.pathname === '/matches' ? 'active' : ''}>Search</Link>
           <Link to="/subscription" className={location.pathname === '/subscription' ? 'active' : ''}>Plans</Link>
-          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Success Stories</Link>
+          <Link to="/#success-stories" className={location.pathname === '/' ? 'active' : ''}>Success Stories</Link>
           <button
             type="button"
             className="nav-link-btn"

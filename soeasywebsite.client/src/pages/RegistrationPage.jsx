@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { BasicDetailsStep } from '../components/forms/BasicDetailsStep'
 import { RegistrationShell } from '../components/forms/RegistrationShell'
 import { getRegistrationDraft, saveRegistrationDraft } from '../services/registrationDraft'
 import { api, session } from '../services/api'
+import { assertApiSuccess, getFriendlyErrorDetails, getFriendlyErrorMessage } from '../services/apiErrors'
 
 const REGISTRATION_STEPS = [{ id: 'basic', label: 'Basic Details', icon: User }]
 
@@ -68,7 +70,7 @@ const initialForm = {
 export function RegistrationPage({ onBackToSignIn }) {
   const navigate = useNavigate()
   const [formData, setFormData] = useState(() => ({ ...initialForm, ...(getRegistrationDraft() ?? {}) }))
-  const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isHydrating, setIsHydrating] = useState(false)
   const isLoggedInProfileCompletion = session.isAuthenticated()
@@ -150,6 +152,7 @@ export function RegistrationPage({ onBackToSignIn }) {
   }
 
   const handleFinalSubmit = async (data) => {
+    if (isSubmitting) return
     const merged = { ...formData, ...data }
     setFormData(merged)
 
@@ -160,7 +163,7 @@ export function RegistrationPage({ onBackToSignIn }) {
     }
 
     try {
-      setError('')
+      setFieldErrors({})
       setIsSubmitting(true)
       const response = await api.register({
         fullName: merged.fullName,
@@ -170,9 +173,14 @@ export function RegistrationPage({ onBackToSignIn }) {
         genderId: merged.gender === 'Female' ? 2 : merged.gender === 'Other' ? 3 : 1,
       })
 
+      assertApiSuccess(response, 'Unable to create your account. Please try again.')
       const result = response?.data ?? response?.Data
+      assertApiSuccess(result, 'Unable to create your account. Please try again.')
       if (!result?.success) {
-        throw new Error(result?.message || response?.message || 'Registration failed.')
+        throw new Error(getFriendlyErrorMessage(
+          result?.message || response?.message,
+          'Unable to create your account. Please try again.'
+        ))
       }
 
       if (result.userId) {
@@ -184,7 +192,9 @@ export function RegistrationPage({ onBackToSignIn }) {
 
       navigate('/register/about', { replace: true })
     } catch (err) {
-      setError(err.message || 'Unable to register.')
+      const details = getFriendlyErrorDetails(err, 'Unable to create your account. Please try again.')
+      toast.error(details.message)
+      setFieldErrors(err.fieldErrors || details.fieldErrors)
     } finally {
       setIsSubmitting(false)
     }
@@ -196,7 +206,6 @@ export function RegistrationPage({ onBackToSignIn }) {
       title="Create Your Profile"
       subtitle="Join thousands of verified members who are looking for a meaningful relationship"
       steps={REGISTRATION_STEPS}
-      error={error}
       onStepChange={() => {}}
       mode="create"
     >
@@ -205,6 +214,9 @@ export function RegistrationPage({ onBackToSignIn }) {
         onSubmit={handleFinalSubmit}
         onSaveLater={handleSaveLater}
         showPasswordField={!isLoggedInProfileCompletion}
+        isSubmitting={isSubmitting}
+        serverErrors={fieldErrors}
+        onClearServerError={(field) => setFieldErrors((current) => ({ ...current, [field]: undefined }))}
       />
     </RegistrationShell>
   )

@@ -207,23 +207,30 @@
 .profile-summary-body {
   text-align: center;
   max-width: 100%;
+  min-width: 0;
 }
 
 .profile-name-row {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
+  min-width: 0;
   margin-bottom: 6px;
 }
 
 .profile-name-row h2 {
+  min-width: 0;
   margin: 0;
   color: #171414;
   font-size: 23px;
   font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .profile-verified-icon {
+  flex: 0 0 auto;
   color: #1d8b41;
 }
 
@@ -249,7 +256,7 @@
 
 .profile-facts-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 110px), 1fr));
   gap: 10px;
   margin-top: 14px;
   padding-top: 14px;
@@ -726,6 +733,12 @@
 
   .profile-lower-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1000px) {
+  .profile-dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

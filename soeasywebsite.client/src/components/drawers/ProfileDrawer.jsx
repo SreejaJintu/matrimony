@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { getProfileImageUrl, handleProfileImageError } from '../../utils/profileImage'
 
 export function ProfileDrawer({ profile, isOpen, onClose, onSendInterest }) {
   useEffect(() => {
@@ -29,7 +30,7 @@ export function ProfileDrawer({ profile, isOpen, onClose, onSendInterest }) {
         </div>
 
         <div className="profile-drawer-image">
-          <img src={profile.image} alt={`${profile.name} portrait`} />
+          <img src={getProfileImageUrl(profile.image)} alt={`${profile.name} portrait`} onError={handleProfileImageError} />
         </div>
 
         <div className="profile-drawer-content">

@@ -25,4 +25,16 @@ public class MatchService : IMatchService
             Data = matches
         };
     }
+
+    public async Task<ApiResponse<IEnumerable<MatchCardDto>>> GetFeaturedProfiles()
+    {
+        var profiles = await _matchRepository.GetFeaturedProfiles();
+
+        return new ApiResponse<IEnumerable<MatchCardDto>>
+        {
+            Success = true,
+            Message = "Featured profiles fetched successfully.",
+            Data = profiles
+        };
+    }
 }

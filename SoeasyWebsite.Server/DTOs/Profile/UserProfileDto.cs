@@ -108,6 +108,30 @@ public class UserProfileDto
 
     public string? PreferredDescription { get; set; }
 
+    public short? PreferredHeightFromId { get; set; }
+
+    public short? PreferredHeightToId { get; set; }
+
+    public byte? PreferredMaritalStatusId { get; set; }
+
+    public short? PreferredReligionId { get; set; }
+
+    public int? PreferredCommunityId { get; set; }
+
+    public short? PreferredMotherTongueId { get; set; }
+
+    public short? PreferredEducationId { get; set; }
+
+    public short? PreferredOccupationId { get; set; }
+
+    public short? PreferredIncomeId { get; set; }
+
+    public short? PreferredCountryId { get; set; }
+
+    public short? PreferredStateId { get; set; }
+
+    public short? PreferredDistrictId { get; set; }
+
     public int? AgeFrom { get; set; }
 
     public int? AgeTo { get; set; }

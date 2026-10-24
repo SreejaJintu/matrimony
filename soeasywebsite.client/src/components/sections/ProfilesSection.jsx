@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { profiles } from '../../services/homepageService'
+import { getProfileImageUrl, handleProfileImageError } from '../../utils/profileImage'
 
 export function ProfilesSection() {
   return (
@@ -17,7 +18,7 @@ export function ProfilesSection() {
         {profiles.map((profile) => (
           <article className="profile-card" key={profile.name}>
             <div className="profile-image-wrap">
-              <img src={profile.image} alt={`${profile.name} portrait`} />
+              <img src={getProfileImageUrl(profile.image)} alt={`${profile.name} portrait`} onError={handleProfileImageError} />
             </div>
 
             <div className="profile-body">

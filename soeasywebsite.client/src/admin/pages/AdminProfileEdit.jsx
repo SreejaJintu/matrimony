@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { RegistrationShell } from '../../components/forms/RegistrationShell'
 import { BasicDetailsStep } from '../../components/forms/BasicDetailsStep'
 import { AboutYouStep } from '../../components/forms/AboutYouStep'
@@ -7,6 +8,8 @@ import { FamilyDetailsStep } from '../../components/forms/FamilyDetailsStep'
 import { PartnerPreferencesStep } from '../../components/forms/PartnerPreferencesStep'
 import { UploadPhotosStep } from '../../components/forms/UploadPhotosStep'
 import { api } from '../../services/api'
+import { getFriendlyErrorMessage } from '../../services/apiErrors'
+import adminProfileService from '../services/adminProfileService'
 import { User, Heart, Users, Target, Camera } from 'lucide-react'
 
 // Full registration steps for admin edit
@@ -74,16 +77,50 @@ const buildAboutPayload = (data, userId) => {
   }
 }
 
+const buildPreferencePayload = (data, userId) => {
+  const descriptionParts = [data.preferredProfession, data.locationPreference]
+    .map((value) => typeof value === 'string' ? value.trim() : '')
+    .filter(Boolean)
+
+  return {
+    userId: Number(userId),
+    ageFrom: toNullableNumber(data.ageRangeMin, 'minimum preferred age'),
+    ageTo: toNullableNumber(data.ageRangeMax, 'maximum preferred age'),
+    heightFromId: toNullableNumber(data.preferredHeightFromId, 'minimum preferred height'),
+    heightToId: toNullableNumber(data.preferredHeightToId, 'maximum preferred height'),
+    maritalStatusId: toNullableNumber(data.preferredMaritalStatusId, 'preferred marital status'),
+    religionId: toNullableNumber(data.preferredReligionId, 'preferred religion'),
+    communityId: toNullableNumber(data.preferredCommunityId, 'preferred community'),
+    motherTongueId: toNullableNumber(data.preferredMotherTongueId, 'preferred mother tongue'),
+    educationId: toNullableNumber(data.educationPreferenceId, 'preferred education'),
+    occupationId: toNullableNumber(data.preferredOccupationId, 'preferred occupation'),
+    incomeId: toNullableNumber(data.preferredIncomeId, 'preferred income'),
+    countryId: toNullableNumber(data.preferredCountryId, 'preferred country'),
+    stateId: toNullableNumber(data.preferredStateId, 'preferred state'),
+    districtId: toNullableNumber(data.preferredDistrictId, 'preferred district'),
+    preferredDescription: descriptionParts.length
+      ? descriptionParts.join(' | ')
+      : data.preferredDescription || null,
+  }
+}
+
+const getPhotoId = (photo) => photo?.photoId ?? photo?.PhotoId ?? photo?.id ?? null
+
 export default function AdminProfileEdit() {
   const navigate = useNavigate()
   const location = useLocation()
   const { userId } = useParams()
   const [formData, setFormData] = useState({})
-  const [currentStep, setCurrentStep] = useState('basic')
-  const [error, setError] = useState('')
+  const [currentStep, setCurrentStep] = useState(() => {
+    const initialStep = location.hash.replace('#', '')
+    return COMPLETION_STEPS.some((step) => step.id === initialStep) ? initialStep : 'basic'
+  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [masterData, setMasterData] = useState({})
   const [communityOptions, setCommunityOptions] = useState([])
+  const [preferredCommunityOptions, setPreferredCommunityOptions] = useState([])
+  const [districtOptions, setDistrictOptions] = useState([])
+  const [locationOptions, setLocationOptions] = useState([])
   const [loadingProfile, setLoadingProfile] = useState(true)
   
   const resolvedLookingForGender = (() => {
@@ -107,16 +144,38 @@ export default function AdminProfileEdit() {
     }
   }, [])
 
+  const fetchPreferredCommunityOptions = useCallback(async (religionId) => {
+    if (!religionId) {
+      setPreferredCommunityOptions([])
+      return
+    }
+    try {
+      const res = await api.getMasterCommunity(religionId)
+      setPreferredCommunityOptions(res?.data ?? res?.Data ?? [])
+    } catch (err) {
+      console.error('Error fetching preferred communities:', err)
+      setPreferredCommunityOptions([])
+    }
+  }, [])
+
+  const fetchLocationOptions = useCallback(async (districtId) => {
+    if (!districtId) {
+      setLocationOptions([])
+      return
+    }
+    try {
+      const res = await api.getMasterLocations(districtId)
+      setLocationOptions(res?.data ?? res?.Data ?? [])
+    } catch (err) {
+      console.error('Error fetching preferred locations:', err)
+      setLocationOptions([])
+    }
+  }, [])
+
   useEffect(() => {
     if (!userId) {
       navigate('/admin/profiles', { replace: true })
       return
-    }
-
-    // Attempt to set step from url hash or query if needed, default to basic
-    const hash = location.hash.replace('#', '')
-    if (COMPLETION_STEPS.some(s => s.id === hash)) {
-      setCurrentStep(hash)
     }
 
     async function loadMasterData() {
@@ -124,13 +183,13 @@ export default function AdminProfileEdit() {
         const [
           heightsRes, religionsRes, countriesRes, educationsRes,
           maritalStatusesRes, motherTonguesRes, occupationsRes,
-          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes, birthStarsRes
+          familyTypesRes, familyStatusesRes, familyValuesRes, incomesRes, birthStarsRes, districtsRes
         ] = await Promise.allSettled([
           api.getMasterHeight(), api.getMasterReligion(), api.getMasterCountry(),
           api.getMasterEducation(), api.getMasterMaritalStatus(), api.getMasterMotherTongue(),
           api.getMasterOccupation(), api.getMasterFamilyType(), api.getMasterFamilyStatus(),
           api.getMasterFamilyValue(), api.getMasterIncome(),
-          api.getMasterBirthStar(),
+          api.getMasterBirthStar(), api.getMasterDistricts(),
         ]);
 
         const extractData = (res) => res.status === 'fulfilled' ? (res.value?.data ?? res.value?.Data ?? []) : [];
@@ -149,18 +208,20 @@ export default function AdminProfileEdit() {
           incomes: extractData(incomesRes),
           birthStars: extractData(birthStarsRes),
         });
+        setDistrictOptions(extractData(districtsRes))
       } catch (err) {
         console.error("Error loading master data:", err);
-        setError("Failed to load necessary data.");
+        toast.error('Failed to load necessary data.')
       }
     }
 
     async function loadProfileData() {
       try {
         setLoadingProfile(true)
-        const [profileResult, accountResult] = await Promise.allSettled([
+        const [profileResult, accountResult, photosResult] = await Promise.allSettled([
           api.getProfile(userId, userId),
           api.getAccountBasics(userId),
+          adminProfileService.getPhotos(userId),
         ]);
         if (profileResult.status === 'rejected') {
           throw profileResult.reason;
@@ -168,12 +229,20 @@ export default function AdminProfileEdit() {
 
         const response = profileResult.value;
         const accountResponse = accountResult.status === 'fulfilled' ? accountResult.value : null;
+        const photosResponse = photosResult.status === 'fulfilled' ? photosResult.value : null;
+        const loadWarnings = [];
         if (accountResult.status === 'rejected') {
           console.error("Error fetching account contact details:", accountResult.reason);
-          setError("Unable to load phone and email details.");
+          loadWarnings.push("Unable to load phone and email details.");
         }
+        if (photosResult.status === 'rejected') {
+          console.error("Error fetching profile photos:", photosResult.reason);
+          loadWarnings.push("Unable to load profile photos.");
+        }
+        if (loadWarnings.length) toast.error(loadWarnings.join(' '))
         const profile = response?.data ?? response?.Data ?? response;
         const account = accountResponse?.data ?? accountResponse?.Data ?? accountResponse;
+        const photos = photosResponse?.data ?? photosResponse?.Data ?? [];
         if (profile) {
           const hydratedDraft = {
             fullName: profile.fullName || '',
@@ -220,22 +289,35 @@ export default function AdminProfileEdit() {
             preferredReligionId: profile.preferredReligionId || '',
             preferredCommunityId: profile.preferredCommunityId || '',
             educationPreferenceId: profile.preferredEducationId || profile.educationPreferenceId || '',
-            preferredProfession: profile.preferredOccupation || '',
+            preferredProfession: profile.preferredDescription || profile.preferredOccupation || '',
             preferredMaritalStatusId: profile.preferredMaritalStatusId || '',
+            preferredDistrictId: profile.preferredDistrictId || '',
+            preferredHeightFromId: profile.preferredHeightFromId || '',
+            preferredHeightToId: profile.preferredHeightToId || '',
+            preferredMotherTongueId: profile.preferredMotherTongueId || '',
+            preferredOccupationId: profile.preferredOccupationId || '',
+            preferredIncomeId: profile.preferredIncomeId || '',
+            preferredCountryId: profile.preferredCountryId || '',
+            preferredStateId: profile.preferredStateId || '',
             locationPreference: profile.preferredLocation || profile.locationPreference || '',
             preferredDescription: profile.preferredDescription || '',
-            photos: profile.photos || [],
-            profilePhotoIndex: Number.isInteger(profile.profilePhotoIndex) ? profile.profilePhotoIndex : 
-               Math.max((profile.photos || []).findIndex(p => p.isProfilePhoto || p.IsProfilePhoto || p.isPrimary), 0),
+            photos,
+            profilePhotoIndex: Number.isInteger(profile.profilePhotoIndex)
+              ? profile.profilePhotoIndex
+              : Math.max(photos.findIndex((photo) =>
+                photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary
+              ), 0),
           };
           setFormData(hydratedDraft);
           if (profile.religionId) {
             fetchCommunityOptions(profile.religionId);
           }
+          if (profile.preferredReligionId) fetchPreferredCommunityOptions(profile.preferredReligionId)
+          if (profile.preferredDistrictId) fetchLocationOptions(profile.preferredDistrictId)
         }
       } catch (err) {
         console.error("Error fetching profile details:", err);
-        setError("Failed to load user profile details.");
+        toast.error('Failed to load user profile details.')
       } finally {
         setLoadingProfile(false)
       }
@@ -243,7 +325,7 @@ export default function AdminProfileEdit() {
 
     loadMasterData();
     loadProfileData();
-  }, [userId, location.hash, navigate, fetchCommunityOptions])
+  }, [userId, location.hash, navigate, fetchCommunityOptions, fetchPreferredCommunityOptions, fetchLocationOptions])
 
   const handleStepChange = (stepId) => {
     setCurrentStep(stepId);
@@ -255,7 +337,6 @@ export default function AdminProfileEdit() {
     setFormData(mergedData);
 
     setIsSubmitting(true);
-    setError('');
 
     try {
       let apiCall;
@@ -290,11 +371,23 @@ export default function AdminProfileEdit() {
           apiCall = api.saveFamily(sanitizePayload({ userId, ...mergedData }));
           break;
         case 'preferences':
-          apiCall = api.savePreference(sanitizePayload({ userId, ...mergedData }));
+          apiCall = api.savePreference(buildPreferencePayload(mergedData, userId));
           break;
         case 'photos':
           apiCall = (async () => {
             const newPhotos = (mergedData.photos || []).filter((photo) => photo.isNew);
+            const submittedExistingIds = new Set(
+              (mergedData.photos || [])
+                .filter((photo) => !photo.isNew)
+                .map(getPhotoId)
+                .filter((photoId) => photoId !== null)
+                .map(String)
+            )
+            const removedExistingPhotos = (formData.photos || []).filter((photo) => {
+              const photoId = getPhotoId(photo)
+              return photoId !== null && !submittedExistingIds.has(String(photoId))
+            })
+
             for (const [index, photo] of newPhotos.entries()) {
               const photoIndex = mergedData.photos.indexOf(photo);
               const response = await api.savePhoto({
@@ -309,6 +402,27 @@ export default function AdminProfileEdit() {
                 throw new Error(response.message || response.Message || `Unable to save photo ${index + 1}.`);
               }
             }
+
+            for (const photo of removedExistingPhotos) {
+              const response = await adminProfileService.deletePhoto(userId, getPhotoId(photo))
+              if (response?.success === false || response?.Success === false) {
+                throw new Error(response.message || response.Message || 'Unable to remove a profile photo.')
+              }
+            }
+
+            const selectedPhoto = mergedData.photos?.[mergedData.profilePhotoIndex ?? 0]
+            if (selectedPhoto && !selectedPhoto.isNew) {
+              const selectedPhotoId = getPhotoId(selectedPhoto)
+              const previousPrimary = (formData.photos || []).find((photo) =>
+                photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary
+              )
+              if (selectedPhotoId && String(selectedPhotoId) !== String(getPhotoId(previousPrimary))) {
+                const response = await adminProfileService.setProfilePhoto(userId, selectedPhotoId)
+                if (response?.success === false || response?.Success === false) {
+                  throw new Error(response.message || response.Message || 'Unable to update the profile photo.')
+                }
+              }
+            }
             return { success: true };
           })();
           break;
@@ -321,13 +435,16 @@ export default function AdminProfileEdit() {
         throw new Error(result?.message || 'Failed to save details.');
       }
 
+      toast.success(nextStep ? `${COMPLETION_STEPS[currentIndex].label} saved.` : 'Profile updated successfully.')
       if (nextStep) {
         handleStepChange(nextStep.id);
       } else {
         navigate(`/admin/profiles/${userId}`, { replace: true });
       }
+      return true
     } catch (err) {
-      setError(err.message || 'Unable to save details.');
+      toast.error(getFriendlyErrorMessage(err, 'Unable to save profile details. Please try again.'))
+      return false
     } finally {
       setIsSubmitting(false);
     }
@@ -335,8 +452,8 @@ export default function AdminProfileEdit() {
   
   const handleFinalSave = async (data) => {
       // Just save and return to profile
-      await handleSaveAndContinue(data);
-      navigate(`/admin/profiles/${userId}`, { replace: true });
+      const saved = await handleSaveAndContinue(data)
+      if (saved) navigate(`/admin/profiles/${userId}`, { replace: true });
   }
 
   const handleBack = () => {
@@ -370,9 +487,14 @@ export default function AdminProfileEdit() {
       case 'family':
         return <FamilyDetailsStep {...commonProps} />;
       case 'preferences':
-        return <PartnerPreferencesStep {...commonProps} onReligionChange={fetchCommunityOptions} />;
+        return <PartnerPreferencesStep
+          {...commonProps}
+          masterData={{ ...commonProps.masterData, communities: preferredCommunityOptions, districts: districtOptions, locations: locationOptions }}
+          onReligionChange={fetchPreferredCommunityOptions}
+          onDistrictChange={fetchLocationOptions}
+        />;
       case 'photos':
-        return <UploadPhotosStep {...commonProps} onSubmit={() => navigate(`/admin/profiles/${userId}`)} />;
+        return <UploadPhotosStep {...commonProps} />;
       default:
         return <div>Loading step...</div>;
     }
@@ -390,7 +512,6 @@ export default function AdminProfileEdit() {
           subtitle="Modify member details using the registration flow."
           eyebrow="ADMIN EDIT MODE"
           steps={COMPLETION_STEPS}
-          error={error}
           onStepChange={handleStepChange}
           mode="admin-edit"
           hideHeader={true}

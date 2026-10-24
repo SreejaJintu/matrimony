@@ -7,6 +7,10 @@ public interface IProfileService
 {
     Task<ApiResponse<UserProfileDto>> GetByUserId(int userId, int? viewerUserId = null);
 
+    Task<IEnumerable<UserProfilePhotoDto>> GetPhotos(int userId);
+
+    Task<ApiResponse<bool>> DeletePhoto(int userId, int photoId);
+
     Task<ApiResponse<bool>> UpsertProfile(UpsertProfileRequestDto dto);
 
     Task<ApiResponse<bool>> UpsertFamily(UpsertFamilyRequestDto dto);

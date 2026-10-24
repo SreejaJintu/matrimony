@@ -34,7 +34,7 @@ export function Footer() {
           <p className="eyebrow">Help</p>
           <ul>
             <li>
-              <Link to="/">How It Works</Link>
+              <Link to="/#how-it-works">How It Works</Link>
             </li>
             <li>
               <Link to="/subscription">Premium Membership</Link>

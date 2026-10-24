@@ -1,4 +1,5 @@
 import { Eye, Pencil, Trash2, KeyRound } from "lucide-react";
+import { DEFAULT_PROFILE_IMAGE, getProfileImageUrl, handleProfileImageError } from "../../utils/profileImage";
 
 const calculateAge = (dateOfBirth) => {
   if (!dateOfBirth) {
@@ -27,9 +28,9 @@ const calculateAge = (dateOfBirth) => {
 };
 
 const getImageCandidates = (url) => {
-  if (!url) return ["/images/default-profile.png"];
+  if (!url) return [DEFAULT_PROFILE_IMAGE];
 
-  const candidates = [url];
+  const candidates = [getProfileImageUrl(url)];
   const legacyMarker = "/uploads/old/uploads/";
 
   if (url.includes(legacyMarker)) {
@@ -38,7 +39,7 @@ const getImageCandidates = (url) => {
     candidates.push(`https://assetsmatrimony.kaliweb.in/uploads/old/${fileName}`);
   }
 
-  candidates.push("/images/default-profile.png");
+  candidates.push(DEFAULT_PROFILE_IMAGE);
   return candidates;
 };
 
@@ -99,7 +100,12 @@ const AdminProfileTable = ({ profiles, onView, onEdit, onDelete, onResetPassword
                       const candidates = JSON.parse(event.currentTarget.dataset.imageCandidates || "[]");
                       const nextIndex = Number(event.currentTarget.dataset.imageIndex || 0) + 1;
                       event.currentTarget.dataset.imageIndex = String(nextIndex);
-                      event.currentTarget.src = candidates[nextIndex] || "/images/default-profile.png";
+                      const nextImage = candidates[nextIndex];
+                      if (nextImage && nextImage !== event.currentTarget.src) {
+                        event.currentTarget.src = nextImage;
+                      } else {
+                        handleProfileImageError(event);
+                      }
                     }}
                   />
 

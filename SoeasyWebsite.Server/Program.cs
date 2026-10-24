@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using SoeasyWebsite.Server.Data;
 using SoeasyWebsite.Server.Models;
@@ -172,6 +173,26 @@ var app = builder.Build();
 //---------------------------------------------------------
 // Middleware
 //---------------------------------------------------------
+
+app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
+{
+    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+    if (exception is not null)
+    {
+        var logger = context.RequestServices
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger("GlobalExceptionHandler");
+        logger.LogError(exception, "Unhandled request error for {Method} {Path}", context.Request.Method, context.Request.Path);
+    }
+
+    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    context.Response.ContentType = "application/json";
+    await context.Response.WriteAsJsonAsync(new
+    {
+        success = false,
+        message = "We couldn’t complete your request right now. Please try again later."
+    });
+}));
 
 app.UseDefaultFiles();
 

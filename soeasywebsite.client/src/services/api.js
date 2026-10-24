@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getFriendlyErrorDetails } from './apiErrors'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -6,36 +7,6 @@ const apiClient = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 })
-
-function getApiErrorMessage(error) {
-  const responseData = error?.response?.data
-  const apiMessage = responseData?.message || responseData?.Message
-  if (apiMessage) return apiMessage
-
-  const status = error?.response?.status
-  if (status === 400) {
-    const validationFields = Object.keys(responseData?.errors || {})
-      .map((key) => key.match(/([A-Za-z][A-Za-z0-9]*)$/)?.[1])
-      .filter(Boolean)
-      .map((key) => {
-        const label = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-        return label.charAt(0).toUpperCase() + label.slice(1)
-      })
-
-    if (validationFields.length) {
-      return `Please check these details and try again: ${[...new Set(validationFields)].join(', ')}.`
-    }
-
-    return 'Some details could not be saved. Please check the information and try again.'
-  }
-  if (status === 401) return 'Your session has expired. Please sign in again.'
-  if (status === 403) return 'You do not have permission to make this change.'
-  if (status === 404) return 'The requested profile or information could not be found.'
-  if (status >= 500) return 'Something went wrong while saving. Please try again.'
-  if (!error?.response) return 'Unable to connect. Check your internet connection and try again.'
-
-  return 'The request could not be completed. Please try again.'
-}
 
 // Request interceptor automatically attaches the Auth token to every request
 apiClient.interceptors.request.use((config) => {
@@ -61,7 +32,10 @@ async function request(path, options = {}) {
     return response.data
   } catch (err) {
     console.error('API REQUEST ERROR:', err)
-    throw new Error(getApiErrorMessage(err), { cause: err })
+    const details = getFriendlyErrorDetails(err)
+    const friendlyError = new Error(details.message, { cause: err })
+    friendlyError.fieldErrors = details.fieldErrors
+    throw friendlyError
   }
 }
 
@@ -106,6 +80,8 @@ export const api = {
         ? `/api/profile/${userId}?viewerUserId=${viewerUserId}`
         : `/api/profile/${userId}`
     ),
+  getMyPhotos: () => request('/api/profile/my-photos'),
+  deleteMyPhoto: (photoId) => request(`/api/profile/my-photos/${photoId}`, { method: 'DELETE' }),
   saveProfile: (payload) => {
     const normalized = normalizeProfilePayload(payload)
     const resolvedUserId = Number(normalized.userId ?? session.getUserId() ?? 0)
@@ -161,11 +137,19 @@ export const api = {
   uploadPhoto: async (file) => {
     const formData = new FormData()
     formData.append('file', file)
-    // Axios auto-sets multipart boundary headers and applies auth interceptor automatically
-    const response = await apiClient.post('/api/profile/upload-photo', formData, {
-      headers: { 'Content-Type': undefined },
-    })
-    return response.data
+    try {
+      // Axios auto-sets multipart boundary headers and applies auth interceptor automatically
+      const response = await apiClient.post('/api/profile/upload-photo', formData, {
+        headers: { 'Content-Type': undefined },
+      })
+      return response.data
+    } catch (error) {
+      console.error('API REQUEST ERROR:', error)
+      const details = getFriendlyErrorDetails(error)
+      const friendlyError = new Error(details.message, { cause: error })
+      friendlyError.fieldErrors = details.fieldErrors
+      throw friendlyError
+    }
   },
 // Add inside the api object in api.js
   submitLead: (payload) => request('/api/subscription/lead', { method: 'POST', data: payload }),

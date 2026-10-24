@@ -22,43 +22,18 @@ public class AuthController : ControllerBase
         return Ok(response);
     }
 
-   [HttpPost("login")]
-public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
-{
-    try
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
         var response = await _authService.Login(dto);
         return Ok(response);
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new
-        {
-            Message = ex.Message,
-            StackTrace = ex.StackTrace,
-            InnerException = ex.InnerException?.Message
-        });
-    }
-}
 
-[HttpPost("verify-login-otp")]
-public async Task<IActionResult> VerifyLoginOtp(
-    [FromBody] VerifyLoginOtpRequestDto dto)
-{
-    try
+    [HttpPost("verify-login-otp")]
+    public async Task<IActionResult> VerifyLoginOtp(
+        [FromBody] VerifyLoginOtpRequestDto dto)
     {
         var response = await _authService.VerifyLoginOtp(dto);
-
         return Ok(response);
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new
-        {
-            Message = ex.Message,
-            StackTrace = ex.StackTrace,
-            InnerException = ex.InnerException?.Message
-        });
-    }
-}
 }

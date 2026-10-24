@@ -102,6 +102,18 @@ public class ProfileRepository : IProfileRepository
                 pref.PreferredDescription,
                 pref.AgeFrom,
                 pref.AgeTo,
+                pref.HeightFromId AS PreferredHeightFromId,
+                pref.HeightToId AS PreferredHeightToId,
+                pref.MaritalStatusId AS PreferredMaritalStatusId,
+                pref.ReligionId AS PreferredReligionId,
+                pref.CommunityId AS PreferredCommunityId,
+                pref.MotherTongueId AS PreferredMotherTongueId,
+                pref.EducationId AS PreferredEducationId,
+                pref.OccupationId AS PreferredOccupationId,
+                pref.IncomeId AS PreferredIncomeId,
+                pref.CountryId AS PreferredCountryId,
+                pref.StateId AS PreferredStateId,
+                pref.DistrictId AS PreferredDistrictId,
                 hfrom.HeightValue AS HeightFrom,
                 hto.HeightValue AS HeightTo,
                 prm.ReligionName AS PreferredReligion,
@@ -156,6 +168,67 @@ public class ProfileRepository : IProfileRepository
         }
 
         return profile;
+    }
+
+    public async Task<IEnumerable<UserProfilePhotoDto>> GetPhotos(int userId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<UserProfilePhotoDto>(
+            """
+            SELECT PhotoId, PhotoUrl, IsProfilePhoto, DisplayOrder, IsApproved, IsActive
+            FROM dbo.UserPhoto
+            WHERE UserId = @UserId AND IsActive = 1
+            ORDER BY IsProfilePhoto DESC, DisplayOrder, PhotoId;
+            """,
+            new { UserId = userId });
+    }
+
+    public async Task<bool> DeletePhoto(int userId, int photoId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        if (connection.State != ConnectionState.Open)
+        {
+            connection.Open();
+        }
+
+        using var transaction = connection.BeginTransaction();
+        var wasProfilePhoto = await connection.ExecuteScalarAsync<bool?>(
+            "SELECT IsProfilePhoto FROM dbo.UserPhoto WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1",
+            new { UserId = userId, PhotoId = photoId },
+            transaction);
+
+        if (wasProfilePhoto is null)
+        {
+            transaction.Rollback();
+            return false;
+        }
+
+        await connection.ExecuteAsync(
+            "UPDATE dbo.UserPhoto SET IsActive = 0, IsProfilePhoto = 0 WHERE UserId = @UserId AND PhotoId = @PhotoId AND IsActive = 1",
+            new { UserId = userId, PhotoId = photoId },
+            transaction);
+
+        if (wasProfilePhoto.Value)
+        {
+            await connection.ExecuteAsync(
+                """
+                ;WITH NextPhoto AS
+                (
+                    SELECT TOP (1) PhotoId
+                    FROM dbo.UserPhoto
+                    WHERE UserId = @UserId AND IsActive = 1
+                    ORDER BY DisplayOrder, PhotoId
+                )
+                UPDATE dbo.UserPhoto
+                SET IsProfilePhoto = 1
+                WHERE PhotoId = (SELECT PhotoId FROM NextPhoto);
+                """,
+                new { UserId = userId },
+                transaction);
+        }
+
+        transaction.Commit();
+        return true;
     }
 
     public async Task<bool> UpsertProfile(UpsertProfileRequestDto dto)

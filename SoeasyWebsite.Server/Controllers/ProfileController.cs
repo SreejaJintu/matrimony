@@ -1,4 +1,5 @@
 using FluentFTP;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using SoeasyWebsite.Server.Common;
 using SoeasyWebsite.Server.DTOs.Profile;
 using SoeasyWebsite.Server.Interfaces;
 using SoeasyWebsite.Server.RepositoryInterfaces;
+using System.Security.Claims;
 
 namespace SoeasyWebsite.Server.Controllers;
 
@@ -105,6 +107,15 @@ public class ProfileController : ControllerBase
     [HttpPost("photo")]
     public async Task<IActionResult> SavePhoto([FromBody] SaveUserPhotoRequestDto dto)
     {
+        // Authenticated members may only save against their own account. Keep the existing
+        // anonymous registration path intact because accounts are created before login.
+        if (User.Identity?.IsAuthenticated == true &&
+            !IsAdmin() &&
+            (!IsMember() || !TryGetCurrentUserId(out var currentUserId) || currentUserId != dto.UserId))
+        {
+            return Forbid();
+        }
+
         if (dto.UserId <= 0)
         {
             return BadRequest(new ApiResponse<bool>
@@ -126,6 +137,48 @@ public class ProfileController : ControllerBase
         dto.PhotoUrl = NormalizePhotoUrl(dto.PhotoUrl);
         var response = await _profileService.SavePhoto(dto);
         return Ok(response);
+    }
+
+    [HttpGet("my-photos")]
+    [Authorize(Policy = "MemberOnly")]
+    public async Task<IActionResult> GetMyPhotos()
+    {
+        if (!TryGetCurrentUserId(out var userId)) return Unauthorized();
+        var photos = await _profileService.GetPhotos(userId);
+        return Ok(new ApiResponse<IEnumerable<UserProfilePhotoDto>>
+        {
+            Success = true,
+            Message = "Profile photos fetched successfully.",
+            Data = photos
+        });
+    }
+
+    [HttpDelete("my-photos/{photoId:int}")]
+    [Authorize(Policy = "MemberOnly")]
+    public async Task<IActionResult> DeleteMyPhoto(int photoId)
+    {
+        if (!TryGetCurrentUserId(out var userId)) return Unauthorized();
+        if (photoId <= 0)
+        {
+            return BadRequest(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "A valid photo ID is required."
+            });
+        }
+
+        var response = await _profileService.DeletePhoto(userId, photoId);
+        return response.Success ? Ok(response) : NotFound(response);
+    }
+
+    private bool IsAdmin() => User.HasClaim("userType", "Admin");
+
+    private bool IsMember() => User.HasClaim("userType", "Member");
+
+    private bool TryGetCurrentUserId(out int userId)
+    {
+        var value = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
+        return int.TryParse(value, out userId) && userId > 0;
     }
 
     [HttpPost("upload-photo")]

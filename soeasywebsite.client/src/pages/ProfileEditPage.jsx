@@ -7,7 +7,9 @@ import { FamilyDetailsStep } from '../components/forms/FamilyDetailsStep'
 import { PartnerPreferencesStep } from '../components/forms/PartnerPreferencesStep'
 import { UploadPhotosStep } from '../components/forms/UploadPhotosStep'
 import { api, session } from '../services/api'
+import { assertApiSuccess } from '../services/apiErrors'
 import { calculateProfileCompletion, COMPLETION_CHECKS } from '../services/profileCompletion'
+import { getProfileImageUrl, handleProfileImageError } from '../utils/profileImage'
 import {
   Menu,
   ArrowLeft,
@@ -123,6 +125,33 @@ export function ProfileEditPage() {
 
   const userId = session.getUserId()
 
+  const handleRemoveSavedPhoto = async (photo) => {
+    const photoId = Number(photo.photoId ?? photo.PhotoId ?? photo.id)
+    if (!Number.isInteger(photoId) || photoId <= 0) {
+      throw new Error('Could not identify the saved photo to remove.');
+    }
+
+    const response = await api.deleteMyPhoto(photoId);
+    assertApiSuccess(response, 'Unable to remove this photo. Please try again.');
+    setFormData((current) => {
+      const wasPrimary = Boolean(photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary);
+      const remainingPhotos = (current.photos || []).filter((item) =>
+        String(item.photoId ?? item.PhotoId ?? item.id) !== String(photoId)
+      );
+      const photos = wasPrimary
+        ? remainingPhotos.map((item, index) => ({ ...item, isProfilePhoto: index === 0, IsProfilePhoto: index === 0 }))
+        : remainingPhotos;
+      const primary = photos.find((item) => item.isProfilePhoto || item.IsProfilePhoto);
+      return {
+        ...current,
+        photos,
+        profilePhotoIndex: Math.max(photos.findIndex((item) => item.isProfilePhoto || item.IsProfilePhoto), 0),
+        profileImageUrl: primary?.photoUrl || primary?.PhotoUrl || '',
+      };
+    });
+    return response;
+  };
+
   useEffect(() => {
     if (!userId) {
       navigate('/login', { replace: true })
@@ -179,15 +208,26 @@ export function ProfileEditPage() {
     // Load user profile data
     async function loadProfileData() {
       try {
-        const response = await api.getProfile(userId, userId);
+        const [response, photosResponse] = await Promise.all([
+          api.getProfile(userId, userId),
+          api.getMyPhotos(),
+        ]);
         const profile = response?.data ?? response?.Data ?? response;
         if (profile) {
+          const savedPhotos = photosResponse?.data ?? photosResponse?.Data ?? [];
+          const photos = savedPhotos.length
+            ? savedPhotos
+            : (profile.imageUrl || profile.ImageUrl)
+              ? [{ photoUrl: profile.imageUrl || profile.ImageUrl, isProfilePhoto: true }]
+              : [];
           const profileImageUrl =
             profile.imageUrl ||
             profile.image ||
             profile.profilePhotoUrl ||
-            profile.photos?.find((photo) => photo?.isProfilePhoto || photo?.isPrimary || photo?.isProfile)?.url ||
-            profile.photos?.[0]?.url ||
+            photos.find((photo) => photo?.isProfilePhoto || photo?.IsProfilePhoto || photo?.isPrimary || photo?.isProfile)?.photoUrl ||
+            photos.find((photo) => photo?.isProfilePhoto || photo?.IsProfilePhoto || photo?.isPrimary || photo?.isProfile)?.PhotoUrl ||
+            photos[0]?.photoUrl ||
+            photos[0]?.PhotoUrl ||
             ''
 
           const hydratedDraft = {
@@ -233,10 +273,10 @@ export function ProfileEditPage() {
             preferredProfession: profile.preferredOccupation || '',
             preferredMaritalStatusId: profile.preferredMaritalStatusId || '',
             locationPreference: profile.preferredLocation || '',
-            photos: profile.photos || [],
+            photos,
             profilePhotoIndex: Number.isInteger(profile.profilePhotoIndex)
               ? profile.profilePhotoIndex
-              : Math.max((profile.photos || []).findIndex((photo) => photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary), 0),
+              : Math.max(photos.findIndex((photo) => photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary), 0),
           };
           setFormData(hydratedDraft);
           if (profile.religionId) {
@@ -366,14 +406,22 @@ export function ProfileEditPage() {
                 isApproved: true,
                 isActive: true,
               });
-              if (response?.success === false || response?.Success === false) {
+              if (response?.success === false || response?.Success === false || response?.data === false || response?.Data === false) {
                 throw new Error(response.message || response.Message || `Unable to save photo ${index + 1}.`);
               }
-              setFormData((current) => ({
-                ...current,
-                photos: (current.photos || []).map((item) => item.id === photo.id ? { ...item, isNew: false } : item),
-              }));
             }
+            const refreshedPhotosResponse = await api.getMyPhotos();
+            if (refreshedPhotosResponse?.success === false || refreshedPhotosResponse?.Success === false) {
+              throw new Error(refreshedPhotosResponse.message || refreshedPhotosResponse.Message || 'Photo saved, but the updated gallery could not be loaded.');
+            }
+            const refreshedPhotos = refreshedPhotosResponse?.data ?? refreshedPhotosResponse?.Data ?? [];
+            setFormData((current) => ({
+              ...current,
+              photos: refreshedPhotos,
+              profilePhotoIndex: Math.max(refreshedPhotos.findIndex((item) => item.isProfilePhoto || item.IsProfilePhoto), 0),
+              profileImageUrl: refreshedPhotos.find((item) => item.isProfilePhoto || item.IsProfilePhoto)?.photoUrl ||
+                refreshedPhotos.find((item) => item.isProfilePhoto || item.IsProfilePhoto)?.PhotoUrl || current.profileImageUrl,
+            }));
             return { success: true };
           })();
           break;
@@ -397,11 +445,11 @@ export function ProfileEditPage() {
   const profileId = `GS${String(userId).padStart(6, '0')}`;
   const location = formData.city || 'Not provided';
   const { percentage: completionPercentage } = calculateProfileCompletion(formData);
-  const profileImageSrc =
+  const profileImageSrc = getProfileImageUrl(
     formData.profileImageUrl ||
     formData.photos?.find((photo) => photo?.isProfilePhoto || photo?.isPrimary || photo?.isProfile)?.url ||
-    formData.photos?.[0]?.url ||
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80'
+    formData.photos?.[0]?.url
+  )
   const heightLabel = resolveMasterLabel(masterData.heights, formData.heightId)
   const maritalStatusLabel = resolveMasterLabel(masterData.maritalStatuses, formData.maritalStatusId)
   const occupationLabel = resolveMasterLabel(masterData.occupations, formData.occupationId)
@@ -470,7 +518,7 @@ export function ProfileEditPage() {
               <article className="profile-edit-summary-card">
                 <div className="profile-photo-shell">
                   <div className="owner-profile-photo-wrap">
-                    <img src={profileImageSrc} alt={`${formData.fullName} portrait`} />
+                    <img src={profileImageSrc} alt={`${formData.fullName} portrait`} onError={handleProfileImageError} />
                   </div>
                 </div>
                 <div className="profile-summary-body">
@@ -585,6 +633,7 @@ export function ProfileEditPage() {
                 <p>Manage your profile photos.</p>,
                 <UploadPhotosStep
                   {...commonFormProps}
+                  onRemovePhoto={handleRemoveSavedPhoto}
                   onBack={() => setEditingSection(null)}
                   onSubmit={(data) => handleSave('photos', data)}
                 />

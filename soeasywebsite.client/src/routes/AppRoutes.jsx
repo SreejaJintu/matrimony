@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom'
 
 // User pages
 import { HomePage } from '../pages/HomePage'
@@ -46,10 +47,180 @@ import ExecutiveLayout from '../executive/components/ExecutiveLayout'
 import ExecutiveDashboard from '../executive/pages/ExecutiveDashboard'
 import ExecutiveProfile from '../executive/pages/ExecutiveProfile'
 
+const SITE_URL = 'https://viswaas.in'
+const SITE_NAME = 'Viswaas Matrimony'
+const SOCIAL_IMAGE = `${SITE_URL}/blackBgViswaas.png`
+
+const PUBLIC_PAGE_METADATA = {
+  '/': {
+    title: 'Viswaas Matrimony | Find Your Life Partner',
+    description: 'Explore matrimonial profiles and discover how Viswaas Matrimony helps you find a life partner with verified profiles, privacy-protected access, and assisted membership options.',
+    indexable: true,
+  },
+  '/subscription': {
+    title: 'Assisted Matrimony Membership | Viswaas Matrimony',
+    description: 'Learn about Viswaas Matrimony’s executive-assisted membership, including access to verified profiles and support from a relationship manager.',
+    indexable: true,
+  },
+}
+
+const NON_INDEXABLE_PAGE_METADATA = [
+  ['/forgot-password', 'Reset Password', 'Reset your Viswaas Matrimony account password.'],
+  ['/register', 'Create an Account', 'Create an account with Viswaas Matrimony.'],
+  ['/matches', 'Search Profiles', 'Search matrimonial profiles with Viswaas Matrimony.'],
+  ['/profile', 'Member Profile', 'Manage your Viswaas Matrimony profile.'],
+  ['/profile-detail', 'Member Profile Details', 'View matrimonial profile details.'],
+  ['/shortlisted', 'Shortlisted Profiles', 'View your shortlisted matrimonial profiles.'],
+  ['/shared-profiles', 'Shared Profiles', 'View profiles shared with your account.'],
+  ['/account-completion', 'Complete Your Profile', 'Complete your Viswaas Matrimony profile.'],
+  ['/admin', 'Admin', 'Viswaas Matrimony administration.'],
+  ['/broker', 'Broker', 'Viswaas Matrimony broker portal.'],
+  ['/executive', 'Executive', 'Viswaas Matrimony executive portal.'],
+]
+
+const LOGIN_PAGE_METADATA = {
+  title: 'Viswaas Matrimony Login | Sign In to Your Account',
+  description: 'Sign in to Viswaas Matrimony to continue your search for a life partner and manage your matrimonial profile.',
+  indexable: true,
+}
+
+function getPageMetadata(pathname) {
+  if (pathname === '/login') return LOGIN_PAGE_METADATA
+
+  const publicMetadata = PUBLIC_PAGE_METADATA[pathname]
+  if (publicMetadata) return publicMetadata
+
+  const privatePage = NON_INDEXABLE_PAGE_METADATA.find(([prefix]) =>
+    pathname === prefix || pathname.startsWith(`${prefix}/`)
+  )
+  if (privatePage) {
+    return {
+      title: `${privatePage[1]} | ${SITE_NAME}`,
+      description: privatePage[2],
+      indexable: false,
+    }
+  }
+
+  if (pathname.startsWith('/register/')) {
+    return {
+      title: `Registration | ${SITE_NAME}`,
+      description: 'Complete your Viswaas Matrimony registration.',
+      indexable: false,
+    }
+  }
+
+  return {
+    title: `Page Not Found | ${SITE_NAME}`,
+    description: 'The requested page could not be found.',
+    indexable: false,
+    notFound: true,
+  }
+}
+
+function updateMetaTag(selector, attributes, content) {
+  const matches = [...document.head.querySelectorAll(selector)]
+  let element = matches.shift()
+
+  if (content === null) {
+    element?.remove()
+    matches.forEach((duplicate) => duplicate.remove())
+    return
+  }
+
+  if (!element) {
+    element = document.createElement('meta')
+    Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value))
+    document.head.appendChild(element)
+  }
+
+  matches.forEach((duplicate) => duplicate.remove())
+  element.setAttribute('content', content)
+}
+
+function PageMetadata() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const normalizedPath = pathname.replace(/\/+$/, '') || '/'
+    const metadata = getPageMetadata(normalizedPath)
+    const pageUrl = `${SITE_URL}${normalizedPath === '/' ? '/' : normalizedPath}`
+
+    document.title = metadata.title
+    updateMetaTag('meta[name="description"]', { name: 'description' }, metadata.description)
+    updateMetaTag(
+      'meta[name="robots"]',
+      { name: 'robots' },
+      metadata.indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'
+    )
+    updateMetaTag('meta[property="og:type"]', { property: 'og:type' }, 'website')
+    updateMetaTag('meta[property="og:site_name"]', { property: 'og:site_name' }, SITE_NAME)
+    updateMetaTag('meta[property="og:title"]', { property: 'og:title' }, metadata.title)
+    updateMetaTag('meta[property="og:description"]', { property: 'og:description' }, metadata.description)
+    updateMetaTag(
+      'meta[property="og:url"]',
+      { property: 'og:url' },
+      metadata.indexable ? pageUrl : null
+    )
+    updateMetaTag('meta[property="og:image"]', { property: 'og:image' }, SOCIAL_IMAGE)
+    updateMetaTag('meta[property="og:image:alt"]', { property: 'og:image:alt' }, 'Viswaas Service brand logo')
+    updateMetaTag('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image')
+    updateMetaTag('meta[name="twitter:title"]', { name: 'twitter:title' }, metadata.title)
+    updateMetaTag('meta[name="twitter:description"]', { name: 'twitter:description' }, metadata.description)
+    updateMetaTag('meta[name="twitter:image"]', { name: 'twitter:image' }, SOCIAL_IMAGE)
+    updateMetaTag('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' }, 'Viswaas Service brand logo')
+
+    const canonicalLinks = [...document.head.querySelectorAll('link[rel="canonical"]')]
+    canonicalLinks.slice(1).forEach((link) => link.remove())
+    if (metadata.indexable) {
+      const canonical = canonicalLinks[0] ?? document.createElement('link')
+      canonical.setAttribute('rel', 'canonical')
+      canonical.setAttribute('href', pageUrl)
+      if (!canonicalLinks.length) document.head.appendChild(canonical)
+    } else {
+      canonicalLinks.forEach((link) => link.remove())
+    }
+
+    const pageSchemaId = 'route-webpage-jsonld'
+    let pageSchema = document.getElementById(pageSchemaId)
+    if (metadata.indexable) {
+      if (!pageSchema) {
+        pageSchema = document.createElement('script')
+        pageSchema.id = pageSchemaId
+        pageSchema.type = 'application/ld+json'
+        document.head.appendChild(pageSchema)
+      }
+      pageSchema.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: metadata.title,
+        description: metadata.description,
+        url: pageUrl,
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+      })
+    } else {
+      pageSchema?.remove()
+    }
+  }, [pathname])
+
+  return null
+}
+
+function NotFoundPage() {
+  return (
+    <main>
+      <h1>Page not found</h1>
+      <p>The page you requested could not be found.</p>
+      <Link to="/">Return to the Viswaas Matrimony home page</Link>
+    </main>
+  )
+}
+
 export function AppRoutes() {
   const navigate = useNavigate()
 
   return (
+    <>
+    <PageMetadata />
     <Routes>
 
       {/* =========================
@@ -254,9 +425,10 @@ export function AppRoutes() {
 
       <Route
         path="*"
-        element={<Navigate to="/" replace />}
+        element={<NotFoundPage />}
       />
 
     </Routes>
+    </>
   )
 }

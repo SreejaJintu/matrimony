@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import adminProfileService from "../services/adminProfileService";
 import adminProfileShareService from "../services/adminProfileShareService";
+import { getProfileImageUrl, handleProfileImageError } from "../../utils/profileImage";
 import "../styles/adminProfileShare.css";
 
 const PAGE_SIZE = 10;
@@ -326,11 +327,11 @@ const AdminProfileShareModal = ({ onClose }) => {
                   {profiles.map((profile) => {
                     const id = userId(profile);
                     const selected = Boolean(selectedProfiles[id]);
-                    const image = getField(profile, "profileImageUrl", "ProfileImageUrl") || getField(profile, "imageUrl", "ImageUrl");
+                    const image = getProfileImageUrl(getField(profile, "profileImageUrl", "ProfileImageUrl") || getField(profile, "imageUrl", "ImageUrl"));
                     return (
                       <label className={`share-result-row share-profile-row${selected ? " is-selected" : ""}`} key={id}>
                         <input type="checkbox" checked={selected} onChange={() => toggleProfile(profile)} disabled={!selected && selectedProfileList.length >= 2} />
-                        {image && <img src={image} alt="" />}
+                        <img src={image} alt="" onError={handleProfileImageError} />
                         <span><strong>{userName(profile)}</strong><small>{profileCode(profile)} · {getField(profile, "genderName", "GenderName") || ""}</small></span>
                         <span className="share-approved-badge">Approved</span>
                       </label>

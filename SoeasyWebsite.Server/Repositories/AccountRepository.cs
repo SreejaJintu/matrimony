@@ -34,6 +34,27 @@ public class AccountRepository : IAccountRepository
         return await connection.QueryFirstOrDefaultAsync<AccountBasicsDto>(sql, new { UserId = userId });
     }
 
+    public async Task<bool> IsMobileNumberInUse(string mobileNumber, int excludingUserId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = """
+            SELECT CASE WHEN EXISTS
+            (
+                SELECT 1
+                FROM UserAccount
+                WHERE MobileNumber = @MobileNumber
+                  AND UserId <> @ExcludingUserId
+            ) THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END;
+            """;
+
+        return await connection.ExecuteScalarAsync<bool>(sql, new
+        {
+            MobileNumber = mobileNumber,
+            ExcludingUserId = excludingUserId,
+        });
+    }
+
     public async Task<bool> UpsertBasics(UpsertAccountBasicsRequestDto dto)
     {
         using var connection = _connectionFactory.CreateConnection();

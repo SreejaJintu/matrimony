@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Target } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { PartnerPreferencesStep } from '../../components/forms/PartnerPreferencesStep'
 import { RegistrationShell } from '../../components/forms/RegistrationShell'
 import { api, session } from '../../services/api'
+import { assertApiSuccess, getFriendlyErrorMessage } from '../../services/apiErrors'
 import {
   getNextRegistrationStep,
   getPreviousRegistrationStep,
@@ -88,6 +90,7 @@ export function RegistrationPreferencesPage() {
     gender: registrationDraft.gender ?? session.getGenderId(),
   }))
   const [masterData, setMasterData] = useState({ religions: [], educations: [], maritalStatuses: [], communities: [], districts: [], locations: [] })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const resolvedLookingForGender = resolveLookingForGender(formData.gender ?? registrationDraft?.gender ?? session.getGenderId())
 
   useEffect(() => {
@@ -185,6 +188,7 @@ export function RegistrationPreferencesPage() {
   const handleBack = () => navigate(`/register/${getPreviousRegistrationStep('preferences') ?? 'family'}`, { replace: true })
 
   const handleSubmit = async (data) => {
+    if (isSubmitting) return
     const merged = {
       ...getRegistrationDraft(),
       ...sanitizePreferenceDraft({ ...formData, ...data }),
@@ -195,18 +199,22 @@ export function RegistrationPreferencesPage() {
     saveRegistrationDraft(merged, 'preferences')
 
     try {
+      setIsSubmitting(true)
       const userId = session.getUserId()
       if (!userId) {
         throw new Error('User session not found. Please complete registration again.')
       }
 
-      await api.savePreference(buildPreferencePayload(merged, userId))
+      const response = await api.savePreference(buildPreferencePayload(merged, userId))
+      assertApiSuccess(response, 'Unable to save preferences. Please try again.')
 
       const next = getNextRegistrationStep('preferences')
       navigate(`/register/${next ?? 'photos'}`, { replace: true })
     } catch (error) {
       console.error('Preference save failed:', error)
-      alert(error?.message || 'Unable to save preferences. Please try again.')
+      toast.error(getFriendlyErrorMessage(error, 'Unable to save preferences. Please try again.'))
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -228,6 +236,7 @@ export function RegistrationPreferencesPage() {
         onLocationChange={handleLocationChange}
         userGender={formData.gender ?? registrationDraft?.gender ?? session.getGenderId()}
         lookingForGender={resolvedLookingForGender}
+        isSubmitting={isSubmitting}
       />
     </RegistrationShell>
   )

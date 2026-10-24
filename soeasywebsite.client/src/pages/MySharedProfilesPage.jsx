@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { Header } from '../components/Layout/Header';
 import { AccountSidebar } from '../components/Layout/AccountSidebar';
+import { getProfileImageUrl, handleProfileImageError } from '../utils/profileImage';
 import './MySharedProfilesPage.css';
 
 const value = (item, camel, pascal, fallback = '') => item?.[camel] ?? item?.[pascal] ?? fallback;
@@ -113,7 +114,7 @@ export function MySharedProfilesPage() {
                   const viewed = Boolean(value(share, 'isViewed', 'IsViewed', false));
                   return (
                     <button type="button" key={id} className={`shared-profile-list-card${String(id) === String(shareId) ? ' active' : ''}`} onClick={() => openShare(share)}>
-                      <img src={value(share, 'photoUrl', 'PhotoUrl') || '/images/default-profile.png'} alt="" />
+                      <img src={getProfileImageUrl(value(share, 'photoUrl', 'PhotoUrl'))} alt="" onError={handleProfileImageError} />
                       <span className="shared-profile-list-copy">
                         <strong>{value(share, 'fullName', 'FullName', 'Member profile')}</strong>
                         <small>{value(share, 'profileCode', 'ProfileCode', '')}</small>
@@ -129,7 +130,7 @@ export function MySharedProfilesPage() {
 
               {shareId && detail ? (
                 <article className="shared-profile-detail-card">
-                  <img className="shared-profile-detail-photo" src={value(detail, 'photoUrl', 'PhotoUrl') || '/images/default-profile.png'} alt={`${value(detail, 'fullName', 'FullName', 'Member')} profile`} />
+                  <img className="shared-profile-detail-photo" src={getProfileImageUrl(value(detail, 'photoUrl', 'PhotoUrl'))} alt={`${value(detail, 'fullName', 'FullName', 'Member')} profile`} onError={handleProfileImageError} />
                   <div className="shared-profile-detail-info">
                     <span className="shared-profiles-eyebrow">Privately shared with you</span>
                     <h2>{value(detail, 'fullName', 'FullName', 'Member profile')}</h2>

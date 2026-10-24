@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Users } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { FamilyDetailsStep } from '../../components/forms/FamilyDetailsStep'
 import { RegistrationShell } from '../../components/forms/RegistrationShell'
 import { api, session } from '../../services/api'
+import { assertApiSuccess, getFriendlyErrorMessage } from '../../services/apiErrors'
 import {
   getNextRegistrationStep,
   getPreviousRegistrationStep,
@@ -65,6 +67,7 @@ export function RegistrationFamilyPage() {
     gender: getRegistrationDraft()?.gender,
   }))
   const [masterData, setMasterData] = useState(EMPTY_MASTER_DATA)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const loadMasters = async () => {
@@ -96,6 +99,7 @@ export function RegistrationFamilyPage() {
   const handleBack = () => navigate(`/register/${getPreviousRegistrationStep('family') ?? 'about'}`, { replace: true })
 
   const handleSubmit = async (data) => {
+    if (isSubmitting) return
     const merged = {
       ...getRegistrationDraft(),
       ...sanitizeFamilyDraft({ ...formData, ...data }),
@@ -105,18 +109,22 @@ export function RegistrationFamilyPage() {
     saveRegistrationDraft(merged, 'family')
 
     try {
+      setIsSubmitting(true)
       const userId = session.getUserId()
       if (!userId) {
         throw new Error('User session not found. Please complete registration again.')
       }
 
-      await api.saveFamily(buildFamilyPayload(merged, userId))
+      const response = await api.saveFamily(buildFamilyPayload(merged, userId))
+      assertApiSuccess(response, 'Unable to save family details. Please try again.')
 
       const next = getNextRegistrationStep('family')
       navigate(`/register/${next ?? 'preferences'}`, { replace: true })
     } catch (error) {
       console.error('Family save failed:', error)
-      alert(error?.message || 'Unable to save family details. Please try again.')
+      toast.error(getFriendlyErrorMessage(error, 'Unable to save family details. Please try again.'))
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -128,7 +136,7 @@ export function RegistrationFamilyPage() {
       steps={STEPS}
       onStepChange={(step) => navigate(step === 'basic' ? '/register' : `/register/${step}`, { replace: true })}
     >
-      <FamilyDetailsStep initialData={formData} onSubmit={handleSubmit} onBack={handleBack} masterData={masterData} />
+      <FamilyDetailsStep initialData={formData} onSubmit={handleSubmit} onBack={handleBack} masterData={masterData} isSubmitting={isSubmitting} />
     </RegistrationShell>
   )
 }

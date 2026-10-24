@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { RegistrationShell } from '../components/forms/RegistrationShell'
 import { AboutYouStep } from '../components/forms/AboutYouStep'
 import { FamilyDetailsStep } from '../components/forms/FamilyDetailsStep'
 import { PartnerPreferencesStep } from '../components/forms/PartnerPreferencesStep'
 import { UploadPhotosStep } from '../components/forms/UploadPhotosStep'
 import { api, session } from '../services/api'
+import { assertApiSuccess, getFriendlyErrorMessage } from '../services/apiErrors'
 import { getRegistrationDraft, saveRegistrationDraft, clearRegistrationDraft } from '../services/registrationDraft'
 import { Heart, Users, Target, Camera } from 'lucide-react'
 
@@ -32,12 +34,52 @@ export function AccountCompletionStepperPage() {
   const location = useLocation()
   const [formData, setFormData] = useState(() => getRegistrationDraft() ?? {})
   const [currentStep, setCurrentStep] = useState('about')
-  const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [masterData, setMasterData] = useState({})
   const [communityOptions, setCommunityOptions] = useState([])
 
+  const fetchCommunityOptions = useCallback(async (religionId) => {
+    if (!religionId) {
+      setCommunityOptions([])
+      return
+    }
+    try {
+      const res = await api.getMasterCommunity(religionId)
+      setCommunityOptions(res?.data ?? res?.Data ?? [])
+    } catch (err) {
+      console.error("Error fetching communities:", err)
+      setCommunityOptions([])
+    }
+  }, [])
+
   const userId = session.getUserId()
+
+  const handleRemoveSavedPhoto = async (photo) => {
+    const photoId = Number(photo.photoId ?? photo.PhotoId ?? photo.id)
+    if (!Number.isInteger(photoId) || photoId <= 0) {
+      throw new Error('Could not identify the saved photo to remove.');
+    }
+
+    const response = await api.deleteMyPhoto(photoId);
+    assertApiSuccess(response, 'Unable to remove this photo. Please try again.');
+    setFormData((current) => {
+      const wasPrimary = Boolean(photo.isProfilePhoto || photo.IsProfilePhoto || photo.isPrimary);
+      const remainingPhotos = (current.photos || []).filter((item) =>
+        String(item.photoId ?? item.PhotoId ?? item.id) !== String(photoId)
+      );
+      const photos = wasPrimary
+        ? remainingPhotos.map((item, index) => ({ ...item, isProfilePhoto: index === 0, IsProfilePhoto: index === 0 }))
+        : remainingPhotos;
+      const updated = {
+        ...current,
+        photos,
+        profilePhotoIndex: Math.max(photos.findIndex((item) => item.isProfilePhoto || item.IsProfilePhoto), 0),
+      };
+      saveRegistrationDraft(updated, currentStep);
+      return updated;
+    });
+    return response;
+  };
   const resolvedLookingForGender = (() => {
     const genderId = session.getGenderId()
     if (genderId === 2) return 'Groom'
@@ -92,15 +134,24 @@ export function AccountCompletionStepperPage() {
         });
       } catch (err) {
         console.error("Error loading master data:", err);
-        setError("Failed to load necessary data. Please try again.");
+        toast.error('Failed to load necessary data. Please try again.')
       }
     }
 
     async function loadProfileData() {
       try {
-        const response = await api.getProfile(userId, userId);
+        const [response, photosResponse] = await Promise.all([
+          api.getProfile(userId, userId),
+          api.getMyPhotos(),
+        ]);
         const profile = response?.data ?? response?.Data ?? response;
         if (profile) {
+          const savedPhotos = photosResponse?.data ?? photosResponse?.Data ?? [];
+          const photos = savedPhotos.length
+            ? savedPhotos
+            : (profile.imageUrl || profile.ImageUrl)
+              ? [{ photoUrl: profile.imageUrl || profile.ImageUrl, isProfilePhoto: true }]
+              : [];
           const hydratedDraft = {
             ...getRegistrationDraft(), // Keep existing draft data
             // Overwrite with fresh data from profile where available
@@ -138,7 +189,8 @@ export function AccountCompletionStepperPage() {
             marriedBrothers: profile.marriedBrothers ?? '',
             marriedSisters: profile.marriedSisters ?? '',
             aboutFamily: profile.familyAbout || '',
-            photos: profile.photos || [],
+            photos,
+            profilePhotoIndex: Math.max(photos.findIndex((photo) => photo.isProfilePhoto || photo.IsProfilePhoto), 0),
           };
           setFormData(hydratedDraft);
           saveRegistrationDraft(hydratedDraft, currentStep);
@@ -148,27 +200,13 @@ export function AccountCompletionStepperPage() {
         }
       } catch (err) {
         console.error("Error fetching profile details:", err);
-        setError("Failed to load your profile details.");
+        toast.error('Failed to load your profile details.')
       }
     }
 
     loadMasterData();
     loadProfileData();
-  }, [userId, location.pathname, navigate])
-
-  const fetchCommunityOptions = useCallback(async (religionId) => {
-    if (!religionId) {
-      setCommunityOptions([]);
-      return;
-    }
-    try {
-      const res = await api.getMasterCommunity(religionId);
-      setCommunityOptions(res?.data ?? res?.Data ?? []);
-    } catch (err) {
-      console.error("Error fetching communities:", err);
-      setCommunityOptions([]);
-    }
-  }, []);
+  }, [userId, location.pathname, navigate, currentStep, fetchCommunityOptions])
 
   const handleStepChange = (stepId) => {
     setCurrentStep(stepId);
@@ -181,7 +219,6 @@ export function AccountCompletionStepperPage() {
     saveRegistrationDraft(mergedData, currentStep);
 
     setIsSubmitting(true);
-    setError('');
 
     try {
       let apiCall;
@@ -199,33 +236,48 @@ export function AccountCompletionStepperPage() {
       };
 
       switch (currentStep) {
-        case 'about':
+        case 'about': {
           // Explicitly map dob to dateOfBirth to match backend expectation
           const aboutPayload = { ...data, dateOfBirth: data.dob };
           delete aboutPayload.dob; // Clean up the old key
-          {
-            const profilePayload = sanitizePayload({ userId, ...aboutPayload });
-            console.log('[AccountCompletionStepperPage] saveProfile payload:', profilePayload);
-            apiCall = api.saveProfile(profilePayload);
-          }
+          const profilePayload = sanitizePayload({ userId, ...aboutPayload });
+          console.log('[AccountCompletionStepperPage] saveProfile payload:', profilePayload);
+          apiCall = api.saveProfile(profilePayload);
           break;
+        }
         case 'family':
           apiCall = api.saveFamily(sanitizePayload({ userId, ...data }));
           break;
         case 'preferences':
           apiCall = api.savePreference(sanitizePayload({ userId, ...data }));
           break;
-        case 'photos':
-          // Photo uploads are handled inside the component, this is just for metadata
-          apiCall = Promise.resolve({ success: true });
+        case 'photos': {
+          apiCall = (async () => {
+            const newPhotos = (mergedData.photos || []).filter((photo) => photo.isNew);
+            for (const [index, photo] of newPhotos.entries()) {
+              const photoIndex = mergedData.photos.indexOf(photo);
+              const response = await api.savePhoto({
+                userId,
+                photoUrl: photo.url,
+                isProfilePhoto: photoIndex === (mergedData.profilePhotoIndex ?? 0),
+                displayOrder: photoIndex + 1,
+                isApproved: true,
+                isActive: true,
+              });
+              assertApiSuccess(response, `Unable to save photo ${index + 1}. Please try again.`);
+            }
+            return { success: true };
+          })();
           break;
+        }
         default:
           throw new Error('Invalid completion step');
       }
 
       const result = await apiCall;
-      if (!result?.success) {
-        throw new Error(result?.message || 'Failed to save details.');
+      assertApiSuccess(result, 'Unable to save details. Please try again.');
+      if (result?.success === false || result?.Success === false) {
+        throw new Error(result?.message || result?.Message || 'Unable to save details. Please try again.');
       }
 
       if (nextStep) {
@@ -235,7 +287,7 @@ export function AccountCompletionStepperPage() {
         navigate('/profile', { replace: true });
       }
     } catch (err) {
-      setError(err.message || 'Unable to save details.');
+      toast.error(getFriendlyErrorMessage(err, 'Unable to save details. Please try again.'))
     } finally {
       setIsSubmitting(false);
     }
@@ -271,7 +323,7 @@ export function AccountCompletionStepperPage() {
       case 'preferences':
         return <PartnerPreferencesStep {...commonProps} onReligionChange={fetchCommunityOptions} />;
       case 'photos':
-        return <UploadPhotosStep {...commonProps} />;
+        return <UploadPhotosStep {...commonProps} onRemovePhoto={handleRemoveSavedPhoto} />;
       default:
         return <div>Loading step...</div>;
     }
@@ -283,7 +335,6 @@ export function AccountCompletionStepperPage() {
       title="Complete Your Profile"
       subtitle="Fill in the remaining details to get better matches."
       steps={COMPLETION_STEPS}
-      error={error}
       onStepChange={handleStepChange}
       mode="create"
     >

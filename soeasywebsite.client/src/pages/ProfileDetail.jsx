@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { api, session } from '../services/api';
+import { getProfileImageUrl, handleProfileImageError } from '../utils/profileImage';
 import { Header } from '../components/Layout/Header';
 import { 
   Heart, 
@@ -238,7 +239,7 @@ export function ProfileDetail() {
   const religionCommArr = [religionStr, communityStr].filter(Boolean);
   const religionCommStr = religionCommArr.length > 0 ? religionCommArr.join(' • ') : null;
 
-  const imageUrl = profile.imageUrl || profile.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
+  const imageUrl = getProfileImageUrl(profile.imageUrl || profile.image);
   const isVerified = Boolean(profile.isVerified || profile.verified || profile.isProfileCompleted);
 
   const handleSendInterest = () => {
@@ -288,7 +289,7 @@ export function ProfileDetail() {
         <div className="pd-hero-card">
           <div className="pd-hero-photo-col">
             <div className="pd-photo-wrapper">
-              <img src={imageUrl} alt={name} className="pd-photo" />
+              <img src={imageUrl} alt={name} className="pd-photo" onError={handleProfileImageError} />
               {isVerified && (
                 <div className="pd-verified-badge" title="Verified Matrimony Profile">
                   <ShieldCheck size={15} />

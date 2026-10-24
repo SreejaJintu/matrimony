@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
 import { Camera, Upload, X, Star, ImagePlus, Loader } from 'lucide-react';
 import { api } from '../../services/api';
+import { assertApiSuccess, getFriendlyErrorMessage } from '../../services/apiErrors';
+import { getProfileImageUrl } from '../../utils/profileImage';
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
-export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, mode = 'create' }) => {
+export const UploadPhotosStep = ({ initialData, onSubmit, onBack, onRemovePhoto, isSubmitting, mode = 'create' }) => {
   const [photos, setPhotos] = useState(() => (initialData.photos || []).map((photo, index) => ({
     ...photo,
     id: photo.id ?? photo.photoId ?? photo.PhotoId ?? `existing-photo-${index}`,
@@ -19,6 +21,8 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
   });
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [removingPhotoId, setRemovingPhotoId] = useState(null);
+  const [removedSavedPhoto, setRemovedSavedPhoto] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFiles = async (files) => {
@@ -55,9 +59,7 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
       const pendingPhoto = pendingPhotos[index];
       try {
         const result = await api.uploadPhoto(file);
-        if (result?.success === false || result?.Success === false) {
-          throw new Error(result?.message || result?.Message || 'Unable to upload photo.');
-        }
+        assertApiSuccess(result, 'Unable to upload photo. Please try again.');
         const uploadedUrl = result?.data ?? result?.Data;
         if (typeof uploadedUrl !== 'string' || !uploadedUrl.trim()) {
           throw new Error('Photo upload did not return a URL.');
@@ -72,28 +74,38 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
         console.error('Upload failed:', err);
         URL.revokeObjectURL(pendingPhoto.url);
         setPhotos((current) => current.filter((photo) => photo.id !== pendingPhoto.id));
-        uploadErrors.push(
-          err.response?.data?.message ||
-          err.response?.data?.Message ||
-          err.message ||
-          'Failed to upload photo. Please try again.',
-        );
+        uploadErrors.push(getFriendlyErrorMessage(err, 'Failed to upload photo. Please try again.'));
       }
     }));
     setUploading(false);
     if (uploadErrors.length) setError(uploadErrors[0]);
   };
 
-  const handleRemove = (id) => {
+  const handleRemove = async (id) => {
     const removedIndex = photos.findIndex((photo) => photo.id === id);
-    if (removedIndex >= 0 && removedIndex < profilePhotoIndex) {
-      setProfilePhotoIndex((index) => index - 1);
-    } else if (removedIndex === profilePhotoIndex) {
-      setProfilePhotoIndex(Math.max(0, Math.min(profilePhotoIndex, photos.length - 2)));
+    const photoToRemove = photos[removedIndex];
+    if (!photoToRemove || removingPhotoId !== null) return;
+
+    setError('');
+    setRemovingPhotoId(id);
+    try {
+      if (!photoToRemove.isNew && onRemovePhoto) {
+        const response = await onRemovePhoto(photoToRemove);
+        assertApiSuccess(response, 'Unable to remove this photo. Please try again.');
+      }
+
+      if (!photoToRemove.isNew) setRemovedSavedPhoto(true);
+      if (removedIndex < profilePhotoIndex) {
+        setProfilePhotoIndex((index) => index - 1);
+      } else if (removedIndex === profilePhotoIndex) {
+        setProfilePhotoIndex(Math.max(0, Math.min(profilePhotoIndex, photos.length - 2)));
+      }
+      setPhotos((prev) => prev.filter((photo) => photo.id !== id));
+    } catch (err) {
+      setError(getFriendlyErrorMessage(err, 'Unable to remove this photo. Please try again.'));
+    } finally {
+      setRemovingPhotoId(null);
     }
-    setPhotos((prev) => {
-      return prev.filter((photo) => photo.id !== id);
-    });
   };
 
   const handleSubmit = (event) => {
@@ -103,7 +115,7 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
       return;
     }
     const uploadedPhotos = photos.filter((photo) => typeof photo.url === 'string' && photo.url.trim());
-    if (!uploadedPhotos.length) {
+    if (!uploadedPhotos.length && !removedSavedPhoto) {
       setError('Please upload at least one photo.');
       return;
     }
@@ -123,10 +135,10 @@ export const UploadPhotosStep = ({ initialData, onSubmit, onBack, isSubmitting, 
       <div className="reg-upload-grid">
         {photos.map((photo, index) => (
           <div key={photo.id || photo.photoId || index} className={`reg-upload-item ${index === profilePhotoIndex ? 'is-profile' : ''} ${photo.uploading ? 'is-uploading' : ''}`}>
-            <img src={photo.previewUrl || photo.url || photo.photoUrl} alt={photo.name || 'Profile photo'} />
+            <img src={getProfileImageUrl(photo.previewUrl || photo.url || photo.photoUrl)} alt={photo.name || 'Profile photo'} />
             {photo.uploading && <div className="reg-upload-progress"><Loader size={20} className="reg-upload-spinner" /><span>Uploading...</span></div>}
             {!photo.uploading && index === profilePhotoIndex && <span className="reg-upload-profile-badge"><Star size={12} fill="currentColor" /> Profile</span>}
-            {!photo.uploading && <button type="button" className="reg-upload-remove" onClick={() => handleRemove(photo.id || photo.photoId)} aria-label="Remove photo"><X size={14} /></button>}
+            {!photo.uploading && <button type="button" className="reg-upload-remove" onClick={() => handleRemove(photo.id || photo.photoId || photo.PhotoId)} aria-label="Remove photo" disabled={removingPhotoId !== null || isSubmitting}><X size={14} /></button>}
             {!photo.uploading && index !== profilePhotoIndex && <button type="button" className="reg-upload-set-profile" onClick={() => setProfilePhotoIndex(index)}>Set as Profile</button>}
           </div>
         ))}

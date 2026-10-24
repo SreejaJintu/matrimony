@@ -6,6 +6,10 @@ public interface IProfileRepository
 {
     Task<UserProfileDto?> GetByUserId(int userId, int? viewerUserId = null);
 
+    Task<IEnumerable<UserProfilePhotoDto>> GetPhotos(int userId);
+
+    Task<bool> DeletePhoto(int userId, int photoId);
+
     Task<bool> UpsertProfile(UpsertProfileRequestDto dto);
 
     Task<bool> UpsertFamily(UpsertFamilyRequestDto dto);

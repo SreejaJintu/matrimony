@@ -5,6 +5,7 @@ import { Header } from '../components/Layout/Header'
 import { AccountSidebar } from '../components/Layout/AccountSidebar'
 import { api, session } from '../services/api'
 import { AuthContext } from '../contexts/AuthContext'
+import { getProfileImageUrl, handleProfileImageError } from '../utils/profileImage'
 import './MatchesPage.css'
 import './ShortlistedPage.css'
 
@@ -133,8 +134,9 @@ export function ShortlistedPage() {
                 <article key={profile.shortlistId ?? profile.userId ?? profile.UserId} className="match-card shortlisted-card">
                   <div className="match-card-image shortlisted-image-wrap">
                     <img
-                      src={pick(profile, ['imageUrl', 'ImageUrl', 'photoUrl', 'PhotoUrl']) || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80'}
+                      src={getProfileImageUrl(pick(profile, ['imageUrl', 'ImageUrl', 'photoUrl', 'PhotoUrl']))}
                       alt={pick(profile, ['fullName', 'FullName', 'name', 'Name'], 'Shortlisted profile')}
+                      onError={handleProfileImageError}
                     />
                     <div className="match-card-badges">
                       {Boolean(pick(profile, ['isVerified', 'IsVerified', 'verified', 'Verified'])) && (

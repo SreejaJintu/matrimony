@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../services/api'
 import { Heart, ShieldCheck } from 'lucide-react'
+import { getProfileImageUrl, handleProfileImageError } from '../../utils/profileImage'
 
 export function FeaturedProfilesSection({ onViewProfile }) {
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 8
 
   useEffect(() => {
     let isMounted = true
@@ -15,7 +18,8 @@ export function FeaturedProfilesSection({ onViewProfile }) {
         const response = await api.getFeaturedProfiles()
         if (isMounted) {
           // Response data is the list of matches
-          setProfiles(response.data ?? [])
+          const featuredProfiles = response?.data ?? response?.Data ?? []
+          setProfiles(Array.isArray(featuredProfiles) ? featuredProfiles : [])
           setLoading(false)
         }
       } catch (error) {
@@ -30,6 +34,13 @@ export function FeaturedProfilesSection({ onViewProfile }) {
     }
   }, [])
 
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [profiles])
+
+  const pageCount = Math.ceil(profiles.length / pageSize)
+  const pageProfiles = profiles.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+
   return (
     <section id="profiles" className="featured-profiles section container">
       <div className="section-header section-header-row">
@@ -38,7 +49,7 @@ export function FeaturedProfilesSection({ onViewProfile }) {
           <h2>Handpicked for your journey</h2>
         </div>
         <Link className="text-link" to="/matches">
-          View All Profiles
+          View Matched Profiles
         </Link>
       </div>
 
@@ -48,9 +59,9 @@ export function FeaturedProfilesSection({ onViewProfile }) {
         ) : profiles.length === 0 ? (
           <p>No featured profiles available.</p>
         ) : (
-          profiles.slice(0, 8).map((profile) => {
+          pageProfiles.map((profile) => {
             const isVerified = Boolean(profile.isVerified || profile.verified || profile.verifiedProfile);
-            const image = profile.imageUrl || profile.image || '/images/default-profile.png';
+            const image = getProfileImageUrl(profile.imageUrl || profile.image)
             const locationText = [profile.district, profile.state].filter(Boolean).join(', ') || profile.location || 'N/A';
             
             return (
@@ -59,10 +70,7 @@ export function FeaturedProfilesSection({ onViewProfile }) {
                   <img
                     src={image}
                     alt={profile.fullName || profile.name}
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80';
-                    }}
+                    onError={handleProfileImageError}
                   />
                   <div className="featured-image-overlay" />
                   {isVerified && (
@@ -96,6 +104,43 @@ export function FeaturedProfilesSection({ onViewProfile }) {
           })
         )}
       </div>
+
+      {!loading && pageCount > 1 && (
+        <nav className="featured-pagination" aria-label="Featured profiles pages">
+          <button
+            type="button"
+            className="featured-pagination-button"
+            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+          >
+            Previous
+          </button>
+          <div className="featured-pagination-pages">
+            {Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                className={`featured-pagination-page${page === currentPage ? ' active' : ''}`}
+                onClick={() => setCurrentPage(page)}
+                aria-label={`Page ${page}`}
+                aria-current={page === currentPage ? 'page' : undefined}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="featured-pagination-button"
+            onClick={() => setCurrentPage((page) => Math.min(pageCount, page + 1))}
+            disabled={currentPage === pageCount}
+            aria-label="Next page"
+          >
+            Next
+          </button>
+        </nav>
+      )}
     </section>
   )
 }

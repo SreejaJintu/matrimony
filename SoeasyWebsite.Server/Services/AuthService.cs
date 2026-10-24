@@ -15,18 +15,21 @@ namespace SoeasyWebsite.Server.Services;
 public class AuthService : IAuthService
 {
     private readonly IAuthRepository _authRepository;
-private readonly JwtSettings _jwtSettings;
-private readonly ISmsBitsService _smsBitsService;
+    private readonly JwtSettings _jwtSettings;
+    private readonly ISmsBitsService _smsBitsService;
+    private readonly ILogger<AuthService> _logger;
 
-public AuthService(
-    IAuthRepository authRepository,
-    IOptions<JwtSettings> jwtSettings,
-    ISmsBitsService smsBitsService)
-{
-    _authRepository = authRepository;
-    _jwtSettings = jwtSettings.Value;
-    _smsBitsService = smsBitsService;
-}
+    public AuthService(
+        IAuthRepository authRepository,
+        IOptions<JwtSettings> jwtSettings,
+        ISmsBitsService smsBitsService,
+        ILogger<AuthService> logger)
+    {
+        _authRepository = authRepository;
+        _jwtSettings = jwtSettings.Value;
+        _smsBitsService = smsBitsService;
+        _logger = logger;
+    }
 
     public async Task<ApiResponse<RegisterResponseDto>> Register(RegisterRequestDto dto)
     {
@@ -37,7 +40,7 @@ public AuthService(
             return new ApiResponse<RegisterResponseDto>
             {
                 Success = false,
-                Message = "Registration failed. Mobile number or email may already exist.",
+                Message = "This mobile number or email address may already be registered. Please use different contact details or log in.",
                 Data = new RegisterResponseDto
                 {
                     Success = false,
@@ -131,10 +134,11 @@ public AuthService(
 
         if (!smsResult.Success)
         {
+            _logger.LogWarning("Failed to send login verification code: {ProviderResponse}", smsResult.Response);
             return new ApiResponse<LoginResponseDto>
             {
                 Success = false,
-                Message = $"OTP could not be sent. SMS BITS response: {smsResult.Response}"
+                Message = "Unable to send a verification code right now. Please try again later."
             };
         }
 

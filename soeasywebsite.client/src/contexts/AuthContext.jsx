@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { AuthContext } from './AuthContext'
 import { api, session } from '../services/api'
+import { getFriendlyErrorMessage } from '../services/apiErrors'
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => session.isAuthenticated())
@@ -21,7 +22,10 @@ export function AuthProvider({ children }) {
     const response = await api.login({ userName, password })
 
     if (response?.success !== true) {
-      throw new Error(response?.message || 'Invalid username or password.')
+      throw new Error(getFriendlyErrorMessage(
+        response?.message,
+        'Invalid mobile number/email or password. Please try again.'
+      ))
     }
 
     const payload = response.data
@@ -31,7 +35,7 @@ export function AuthProvider({ children }) {
     }
 
     if (!payload?.token) {
-      throw new Error('Login succeeded, but authentication token was not received from the server.')
+      throw new Error('Unable to complete sign-in. Please try again.')
     }
 
     const authData = {
@@ -64,12 +68,15 @@ export function AuthProvider({ children }) {
     const response = await api.verifyLoginOtp({ userId, otp })
 
     if (response?.success !== true) {
-      throw new Error(response?.message || 'OTP verification failed.')
+      throw new Error(getFriendlyErrorMessage(
+        response?.message,
+        'The verification code is invalid or has expired. Please request a new code.'
+      ))
     }
 
     const payload = response.data
     if (!payload?.token) {
-      throw new Error('OTP verification succeeded, but authentication token was not received from the server.')
+      throw new Error('Unable to complete sign-in. Please try again.')
     }
 
     const authData = {

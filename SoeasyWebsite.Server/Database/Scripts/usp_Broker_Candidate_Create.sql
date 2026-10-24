@@ -44,6 +44,7 @@ CREATE OR ALTER PROCEDURE dbo.usp_Broker_Candidate_Create
     @HeightId smallint = NULL,
     @Weight decimal(5,2) = NULL,
     @MaritalStatusId tinyint = NULL,
+    @BirthStarId smallint = NULL,
     @MotherTongueId smallint = NULL,
     @ReligionId smallint = NULL,
     @CommunityId int = NULL,
@@ -109,13 +110,6 @@ BEGIN
         )
             THROW 51002, 'This mobile number is already registered.', 1;
 
-        IF @Email IS NOT NULL AND EXISTS
-        (
-            SELECT 1 FROM dbo.UserAccount WITH (UPDLOCK, HOLDLOCK)
-            WHERE Email = @Email
-        )
-            THROW 51003, 'This email address is already registered.', 1;
-
         INSERT INTO dbo.UserAccount
         (
             ProfileCode, FullName, MobileNumber, Email, PasswordHash,
@@ -131,14 +125,14 @@ BEGIN
 
         INSERT INTO dbo.UserProfile
         (
-            UserId, DateOfBirth, HeightId, Weight, MaritalStatusId, MotherTongueId,
+            UserId, DateOfBirth, HeightId, Weight, MaritalStatusId, BirthStarId, MotherTongueId,
             ReligionId, CommunityId, EducationId, OccupationId, CompanyName,
             Designation, IncomeId, CountryId, StateId, DistrictId, Address,
             Pincode, AboutMe, CreatedAt, IsActive
         )
         VALUES
         (
-            @UserId, @DateOfBirth, @HeightId, @Weight, @MaritalStatusId, @MotherTongueId,
+            @UserId, @DateOfBirth, @HeightId, @Weight, @MaritalStatusId, @BirthStarId, @MotherTongueId,
             @ReligionId, @CommunityId, @EducationId, @OccupationId, @CompanyName,
             @Designation, @IncomeId, @CountryId, @StateId, @DistrictId, @Address,
             @Pincode, @AboutMe, GETDATE(), 1

@@ -25,7 +25,7 @@ public class MatchController : ControllerBase
     [HttpGet("featured")]
     public async Task<IActionResult> GetFeaturedProfiles()
     {
-        var response = await _matchService.SearchMatches(new MatchSearchRequestDto { Limit = 8 });
+        var response = await _matchService.GetFeaturedProfiles();
         return Ok(response);
     }
 }

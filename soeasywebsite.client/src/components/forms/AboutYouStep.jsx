@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Briefcase, GraduationCap, Landmark, MapPin, Users, Ruler, Weight, Calendar, Star } from 'lucide-react';
 import { api } from '../../services/api';
 
-export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, mode = 'create' }) => {
+export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, mode = 'create', isSubmitting = false, birthStarsLoading = false, birthStarsError = '' }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
   const [communityOptions, setCommunityOptions] = useState(masterData.communities || []);
@@ -73,6 +73,7 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     onSubmit(formData);
   };
 
@@ -133,11 +134,20 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
               value={formData.birthStarId || ''}
               onChange={(e) => handleChange('birthStarId', Number(e.target.value) || '')}
               className="reg-input reg-select"
+              disabled={birthStarsLoading || Boolean(birthStarsError)}
             >
-              <option value="">Select birth star</option>
+              <option value="">
+                {birthStarsLoading
+                  ? 'Loading birth stars...'
+                  : birthStarsError
+                    ? birthStarsError
+                    : masterData.birthStars?.length
+                      ? 'Select birth star'
+                      : 'No birth stars available'}
+              </option>
               {masterData.birthStars?.map((star, index) => {
-                const id = star.id ?? star.Id;
-                const name = star.name ?? star.Name;
+                const id = star.id ?? star.Id ?? star.birthStarId ?? star.BirthStarId;
+                const name = star.name ?? star.Name ?? star.birthStarName ?? star.BirthStarName;
                 return <option key={`birth-star-${id ?? index}`} value={id}>{name}</option>;
               })}
             </select>
@@ -223,8 +233,8 @@ export const AboutYouStep = ({ initialData, onSubmit, onBack, masterData = {}, m
         </div>)}
 
       <div className="reg-actions">
-        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
-        <button type="submit" className="reg-btn reg-btn-primary">{mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
+        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack} disabled={isSubmitting}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
+        <button type="submit" className="reg-btn reg-btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
       </div>
     </form>
   );

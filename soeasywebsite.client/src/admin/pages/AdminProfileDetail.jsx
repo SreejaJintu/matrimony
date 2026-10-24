@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import adminProfileService from "../services/adminProfileService";
+import { getProfileImageUrl, handleProfileImageError } from "../../utils/profileImage";
 import "../styles/adminProfileDetail.css";
 
 const calculateAge = (dateOfBirth) => {
@@ -253,19 +254,15 @@ const AdminProfileDetail = () => {
 
           <div className="admin-detail-photo-wrapper">
             <img
-              src={
+              src={getProfileImageUrl(
                 profile.imageUrl ||
                 profile.ImageUrl ||
                 profile.profileImageUrl ||
-                profile.ProfileImageUrl ||
-                "/images/default-profile.png"
-              }
+                profile.ProfileImageUrl
+              )}
               alt={profile.fullName}
               className="admin-detail-photo"
-              onError={(e) => {
-                e.currentTarget.src =
-                  "/images/default-profile.png";
-              }}
+              onError={handleProfileImageError}
             />
           </div>
 

@@ -35,6 +35,11 @@ public class AccountService : IAccountService
         };
     }
 
+    public Task<bool> IsMobileNumberInUse(string mobileNumber, int excludingUserId)
+    {
+        return _accountRepository.IsMobileNumberInUse(mobileNumber, excludingUserId);
+    }
+
     public async Task<ApiResponse<bool>> UpsertBasics(UpsertAccountBasicsRequestDto dto)
     {
         var success = await _accountRepository.UpsertBasics(dto);

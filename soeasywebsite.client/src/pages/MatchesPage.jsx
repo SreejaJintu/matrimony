@@ -17,6 +17,7 @@ import { AccountSidebar } from '../components/Layout/AccountSidebar'
 import { ProfileDrawer } from '../components/drawers/ProfileDrawer'
 import { api, session } from '../services/api'
 import { AuthContext } from '../contexts/AuthContext'
+import { getProfileImageUrl, handleProfileImageError } from '../utils/profileImage'
 import './MatchesPage.css'
 
 const lookingForOptions = ['Bride', 'Groom']
@@ -158,7 +159,7 @@ export function MatchesPage() {
           name: match.fullName || '',
           age: match.age || 0,
           location: locationText,
-          image: match.imageUrl || '/images/default-profile.png',
+          image: getProfileImageUrl(match.imageUrl),
           profession: match.profession || '',
           height: match.height || '-',
           community: match.community || '',
@@ -195,21 +196,25 @@ export function MatchesPage() {
           (!minAge || profileAge === 0 || profileAge >= minAge) &&
           (!maxAge || profileAge === 0 || profileAge <= maxAge);
 
+        const communityText = String(profile.community ?? '').trim();
+        const religionText = String(profile.religion ?? '').trim();
+        const locationText = String(profile.location ?? '').trim();
+
         const communityMatch =
           activeCommunity === 'All Communities' ||
           !activeCommunity ||
           activeCommunity === 'Any' ||
-          (profile.community && profile.community.toLowerCase().includes(activeCommunity.toLowerCase()));
+          communityText.toLowerCase().includes(activeCommunity.toLowerCase());
 
         const religionMatch =
           activeReligion === 'Any' ||
           !activeReligion ||
-          profile.religion.toLowerCase().includes(activeReligion.toLowerCase());
+          religionText.toLowerCase().includes(activeReligion.toLowerCase());
 
         const locationMatch =
           activeLocation === 'Any' ||
           !activeLocation ||
-          profile.location.toLowerCase().includes(activeLocation.toLowerCase());
+          locationText.toLowerCase().includes(activeLocation.toLowerCase());
 
         return ageMatch && communityMatch && religionMatch && locationMatch;
       })
@@ -616,10 +621,7 @@ export function MatchesPage() {
                       <img
                         src={profile.image}
                         alt={profile.name}
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = '/images/default-profile.png';
-                        }}
+                        onError={handleProfileImageError}
                       />
 
                       <div className="match-card-badges">

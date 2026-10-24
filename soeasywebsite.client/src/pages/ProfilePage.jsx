@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { profiles } from '../services/homepageService'
 import { api, session } from '../services/api'
 import { calculateProfileCompletion } from '../services/profileCompletion'
+import { getProfileImageUrl } from '../utils/profileImage'
 import { AccountSidebar } from '../components/Layout/AccountSidebar'
 import { Header } from '../components/Layout/Header'
 import {
@@ -85,7 +86,7 @@ function mapServerProfile(profile) {
     preferredEducation: pickFirstValue(profile.preferredEducation, profile.PreferredEducation) || '-',
     preferredLocation:
       [profile.state, profile.State, profile.district, profile.District].filter(Boolean).join(', ') || '-',
-    image: image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
+    image: getProfileImageUrl(image),
   }
 }
 
@@ -203,12 +204,12 @@ export function ProfilePage() {
             Menu
           </button>
 
-          <div className="owner-profile-heading">
+          {/* <div className="owner-profile-heading">
             <div>
               <h1>Your Matrimony Profile</h1>
               <p>Keep your profile complete and up to date to get better matches.</p>
             </div>
-          </div>
+          </div> */}
 
           <section className="profile-dashboard-grid">
             <div className="profile-left-column">
@@ -376,7 +377,7 @@ export function ProfilePage() {
            
           </section>
 
-          <div className="profile-support-strip">
+          {/* <div className="profile-support-strip">
             <div>
               <ShieldCheck size={16} />
               <span>Your privacy is our priority</span>
@@ -392,7 +393,7 @@ export function ProfilePage() {
               <span>Need Help?</span>
               <small>Contact our support team anytime.</small>
             </div>
-          </div>
+          </div> */}
         </section>
       </div>
     </main>

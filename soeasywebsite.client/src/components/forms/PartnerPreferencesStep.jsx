@@ -16,7 +16,7 @@ const resolveOptionLabel = (item) =>
   item?.Value ??
   '';
 
-export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, onDistrictChange, onLocationChange, mode = 'create', userGender, lookingForGender }) => {
+export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterData = {}, onReligionChange, onDistrictChange, onLocationChange, locationsLoading = false, locationsError = '', mode = 'create', isSubmitting = false, userGender, lookingForGender }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
   const normalizedGender = String(userGender ?? formData.gender ?? '').toLowerCase();
@@ -69,18 +69,28 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
     setFormData((prev) => ({
       ...prev,
       preferredDistrictId: districtId,
+      preferredLocationId: '',
       locationPreference: '',
     }));
     onDistrictChange?.(districtId);
   };
 
-  const handleLocationSelect = (locationName) => {
-    setFormData((prev) => ({ ...prev, locationPreference: locationName }));
-    onLocationChange?.(locationName);
+  const handleLocationSelect = (locationId) => {
+    const selectedLocation = masterData.locations?.find(
+      (location) => String(location.id ?? location.Id ?? location.locationId ?? location.LocationId) === String(locationId)
+    );
+    const locationName = selectedLocation?.name ?? selectedLocation?.Name ?? selectedLocation?.locationName ?? selectedLocation?.LocationName ?? '';
+    setFormData((prev) => ({
+      ...prev,
+      preferredLocationId: locationId === '' ? '' : Number(locationId),
+      locationPreference: locationName,
+    }));
+    onLocationChange?.(locationId);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     onSubmit(formData);
   };
 
@@ -231,43 +241,33 @@ export const PartnerPreferencesStep = ({ initialData, onSubmit, onBack, masterDa
             <MapPin size={18} className="reg-input-icon" />
             <select
               value={formData.preferredLocationId || ''}
-              onChange={(e) => {
-                const selectedId = e.target.value;
-                const selectedLocation = masterData.locations?.find(
-                  (location) => String(location.id ?? location.Id) === String(selectedId)
-                );
-                setFormData((prev) => ({
-                  ...prev,
-                  preferredLocationId: selectedId,
-                  locationPreference: selectedLocation?.name ?? selectedLocation?.Name ?? '',
-                }));
-                onLocationChange?.(selectedId);
-              }}
+              onChange={(e) => handleLocationSelect(e.target.value)}
               className="reg-input reg-select"
-              disabled={!formData.preferredDistrictId || !masterData.locations?.length}
+              disabled={!formData.preferredDistrictId || locationsLoading || Boolean(locationsError) || !masterData.locations?.length}
             >
               <option value="">
-                {formData.preferredDistrictId
-                  ? masterData.locations?.length ? 'Select location' : 'Loading locations...'
-                  : 'Select district first'}
+                {locationsError
+                  ? locationsError
+                  : !formData.preferredDistrictId
+                    ? 'Select district first'
+                    : locationsLoading
+                      ? 'Loading locations...'
+                      : masterData.locations?.length
+                        ? 'Select location'
+                        : 'No locations available'}
               </option>
               {masterData.locations?.map((location, i) => (
-                <option key={`location-${location.id ?? i}-${i}`} value={location.id ?? location.Id ?? ''}>
-                  {location.name ?? location.Name ?? ''}
+                <option key={`location-${location.id ?? location.Id ?? location.locationId ?? location.LocationId ?? i}-${i}`} value={location.id ?? location.Id ?? location.locationId ?? location.LocationId ?? ''}>
+                  {location.name ?? location.Name ?? location.locationName ?? location.LocationName ?? ''}
                 </option>
               ))}
             </select>
           </div>)}
       </div>
 
-      <div className="reg-note">
-        <Heart size={16} className="reg-note-icon" />
-        <p>GSeven Matrimony uses advanced multi-factor verification to ensure all member profiles are 100% authentic and intent-driven.</p>
-      </div>
-
       <div className="reg-actions">
-        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
-        <button type="submit" className="reg-btn reg-btn-primary">{mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
+        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack} disabled={isSubmitting}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
+        <button type="submit" className="reg-btn reg-btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
       </div>
     </form>
   );

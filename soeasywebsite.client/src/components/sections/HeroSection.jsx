@@ -1,7 +1,6 @@
 import bannerMobile from '../../assets/banner1.jpg'
 import bannerTablet from '../../assets/banner2.jpg'
 import bannerDesktop from '../../assets/new_banner.jpeg'
-import { Link } from 'react-router-dom'
 import { ShieldCheck, Lock, Users } from 'lucide-react'
 
 export function HeroSection() {
@@ -11,7 +10,7 @@ export function HeroSection() {
         <picture>
           <source media="(max-width: 768px)" srcSet={bannerMobile} />
           <source media="(max-width: 1024px)" srcSet={bannerTablet} />
-          <img className="hero-bg" src={bannerDesktop} alt="Soesy Matrimony hero" />
+          <img className="hero-bg" src={bannerDesktop} alt="Viswaas Matrimony banner" />
         </picture>
         <div className="hero-overlay" />
       </div>

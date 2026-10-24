@@ -17,9 +17,20 @@ public class MatchRepository : IMatchRepository
 
     public async Task<IEnumerable<MatchCardDto>> SearchMatches(MatchSearchRequestDto dto)
     {
+        return await QueryMatches(dto, includeLimit: true);
+    }
+
+    public async Task<IEnumerable<MatchCardDto>> GetFeaturedProfiles()
+    {
+        return await QueryMatches(new MatchSearchRequestDto(), includeLimit: false);
+    }
+
+    private async Task<IEnumerable<MatchCardDto>> QueryMatches(MatchSearchRequestDto dto, bool includeLimit)
+    {
         using var connection = _connectionFactory.CreateConnection();
 
-        const string sql = @"
+        var topClause = includeLimit ? "TOP (@Limit) " : string.Empty;
+        var sql = $@"
             DECLARE @LoggedInGenderId TINYINT = NULL;
 
             IF (@UserId IS NOT NULL AND @UserId > 0)
@@ -29,7 +40,7 @@ public class MatchRepository : IMatchRepository
                 WHERE UserId = @UserId;
             END
 
-            SELECT TOP (@Limit)
+            SELECT {topClause}
                 UA.UserId,
                 UA.ProfileCode,
                 UA.FullName,
@@ -104,19 +115,22 @@ public class MatchRepository : IMatchRepository
                 UA.CreatedAt DESC;
         ";
 
-        return await connection.QueryAsync<MatchCardDto>(sql, new
+        var parameters = new DynamicParameters();
+        parameters.Add("UserId", dto.UserId);
+        parameters.Add("GenderId", dto.GenderId);
+        parameters.Add("ReligionId", dto.ReligionId);
+        parameters.Add("CommunityId", dto.CommunityId);
+        parameters.Add("EducationId", dto.EducationId);
+        parameters.Add("OccupationId", dto.OccupationId);
+        parameters.Add("StateId", dto.StateId);
+        parameters.Add("DistrictId", dto.DistrictId);
+        parameters.Add("SearchText", dto.SearchText);
+        parameters.Add("OnlyVerified", dto.OnlyVerified);
+        if (includeLimit)
         {
-            dto.UserId,
-            dto.GenderId,
-            dto.ReligionId,
-            dto.CommunityId,
-            dto.EducationId,
-            dto.OccupationId,
-            dto.StateId,
-            dto.DistrictId,
-            dto.SearchText,
-            dto.OnlyVerified,
-            Limit = Math.Clamp(dto.Limit ?? int.MaxValue, 1, 100)
-        });
+            parameters.Add("Limit", Math.Clamp(dto.Limit ?? int.MaxValue, 1, 100));
+        }
+
+        return await connection.QueryAsync<MatchCardDto>(sql, parameters);
     }
 }

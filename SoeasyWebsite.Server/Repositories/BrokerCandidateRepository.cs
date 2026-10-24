@@ -77,6 +77,12 @@ public class BrokerCandidateRepository : IBrokerCandidateRepository
         string passwordHash)
     {
         using var connection = _connectionFactory.CreateConnection();
+        if (connection.State != ConnectionState.Open)
+        {
+            connection.Open();
+        }
+
+        using var transaction = connection.BeginTransaction();
         var parameters = new DynamicParameters();
         parameters.Add("BrokerId", brokerId, DbType.Int32);
         parameters.Add("FullName", request.FullName.Trim(), DbType.String, size: 150);
@@ -91,10 +97,36 @@ public class BrokerCandidateRepository : IBrokerCandidateRepository
 
         parameters.Add("PhotosJson", System.Text.Json.JsonSerializer.Serialize(request.Photos));
 
-        return await connection.QuerySingleOrDefaultAsync<CreateBrokerCandidateResponseDto>(
+        var result = await connection.QuerySingleOrDefaultAsync<CreateBrokerCandidateResponseDto>(
             "dbo.usp_Broker_Candidate_Create",
             parameters,
+            transaction: transaction,
             commandType: CommandType.StoredProcedure);
+
+        if (result is null)
+        {
+            throw new InvalidOperationException("Candidate creation did not return a user ID.");
+        }
+
+        if (request.Profile?.BirthStarId is short birthStarId)
+        {
+            var rowsUpdated = await connection.ExecuteAsync(
+                """
+                UPDATE dbo.UserProfile
+                SET BirthStarId = @BirthStarId
+                WHERE UserId = @UserId;
+                """,
+                new { BirthStarId = birthStarId, result.UserId },
+                transaction);
+
+            if (rowsUpdated == 0)
+            {
+                throw new InvalidOperationException("Candidate profile was created without a matching user profile.");
+            }
+        }
+
+        transaction.Commit();
+        return result;
     }
 
     private static void AddProfileParameters(DynamicParameters parameters, SoeasyWebsite.Server.DTOs.Profile.UpsertProfileRequestDto? p)

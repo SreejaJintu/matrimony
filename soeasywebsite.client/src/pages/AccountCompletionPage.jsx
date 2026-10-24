@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { BasicDetailsStep } from '../components/forms/BasicDetailsStep'
 import { RegistrationShell } from '../components/forms/RegistrationShell'
 import { api, session } from '../services/api'
 import { getRegistrationDraft, saveRegistrationDraft } from '../services/registrationDraft'
+import { assertApiSuccess, getFriendlyErrorMessage } from '../services/apiErrors'
 
 const STEPS = [{ id: 'basic', label: 'Basic Details', icon: User }]
 
@@ -32,7 +34,6 @@ const pickFirstValue = (source, keys) => {
 export function AccountCompletionPage() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState(() => ({ ...initialForm, ...(getRegistrationDraft() ?? {}) }))
-  const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -63,7 +64,7 @@ export function AccountCompletionPage() {
       })
       .catch((err) => {
         console.error(err)
-        setError('Unable to load account details.')
+        toast.error('Unable to load account details.')
       })
 
     return () => {
@@ -76,23 +77,23 @@ export function AccountCompletionPage() {
     setFormData(merged)
 
     try {
-      setError('')
       setIsSubmitting(true)
       const userId = session.getUserId()
       if (!userId) throw new Error('User session not found.')
 
-      await api.saveAccountBasics({
+      const response = await api.saveAccountBasics({
         userId,
         fullName: merged.fullName,
         mobileNumber: merged.mobileNumber,
         email: merged.email,
         genderId: merged.gender === 'Female' ? 2 : merged.gender === 'Other' ? 3 : 1,
       })
+      assertApiSuccess(response, 'Unable to save account details. Please try again.')
 
       saveRegistrationDraft(merged, 'basic')
       navigate('/account-completion/about', { replace: true })
     } catch (err) {
-      setError(err.message || 'Unable to save account details.')
+      toast.error(getFriendlyErrorMessage(err, 'Unable to save account details. Please try again.'))
     } finally {
       setIsSubmitting(false)
     }
@@ -104,7 +105,6 @@ export function AccountCompletionPage() {
       title="Complete Your Account"
       subtitle="Finish the pending account basics before continuing your profile."
       steps={STEPS}
-      error={error}
       onStepChange={() => {}}
       mode="create"
     >
@@ -113,6 +113,7 @@ export function AccountCompletionPage() {
         onSubmit={handleSubmit}
         onSaveLater={() => navigate('/login')}
         showPasswordField={false}
+        isSubmitting={isSubmitting}
       />
     </RegistrationShell>
   )

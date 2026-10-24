@@ -83,7 +83,7 @@ public class BrokerCandidateController : ControllerBase
             return Conflict(new ApiResponse<CreateBrokerCandidateResponseDto>
             {
                 Success = false,
-                Message = "Candidate could not be created. Mobile number or email may already exist."
+                Message = "Candidate could not be created. The mobile number may already be registered."
             });
         }
 

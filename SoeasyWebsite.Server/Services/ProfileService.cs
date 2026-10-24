@@ -37,6 +37,20 @@ public class ProfileService : IProfileService
         };
     }
 
+    public Task<IEnumerable<UserProfilePhotoDto>> GetPhotos(int userId) =>
+        _profileRepository.GetPhotos(userId);
+
+    public async Task<ApiResponse<bool>> DeletePhoto(int userId, int photoId)
+    {
+        var success = await _profileRepository.DeletePhoto(userId, photoId);
+        return new ApiResponse<bool>
+        {
+            Success = success,
+            Message = success ? "Photo removed successfully." : "Active profile photo not found.",
+            Data = success
+        };
+    }
+
     public async Task<ApiResponse<bool>> UpsertProfile(UpsertProfileRequestDto dto)
     {
         _logger.LogInformation("ProfileService.UpsertProfile started for UserId={UserId}", dto.UserId);

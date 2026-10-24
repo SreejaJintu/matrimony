@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Users, Home, Briefcase } from 'lucide-react';
 
-export const FamilyDetailsStep = ({ initialData, onSubmit, onBack, masterData = {}, mode = 'create' }) => {
+export const FamilyDetailsStep = ({ initialData, onSubmit, onBack, masterData = {}, mode = 'create', isSubmitting = false }) => {
   const [formData, setFormData] = useState(initialData);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -19,6 +19,7 @@ export const FamilyDetailsStep = ({ initialData, onSubmit, onBack, masterData = 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     onSubmit(formData);
   };
 
@@ -113,8 +114,8 @@ export const FamilyDetailsStep = ({ initialData, onSubmit, onBack, masterData = 
       )}
 
       <div className="reg-actions">
-        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
-        <button type="submit" className="reg-btn reg-btn-primary">{mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
+        <button type="button" className="reg-btn reg-btn-ghost" onClick={onBack} disabled={isSubmitting}>{mode === 'edit' ? 'Cancel' : 'Previous'}</button>
+        <button type="submit" className="reg-btn reg-btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Save & Continue'} <span aria-hidden="true">→</span></button>
       </div>
     </form>
   );

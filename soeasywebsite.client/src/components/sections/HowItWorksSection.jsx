@@ -25,7 +25,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section className="how-it-works section container">
+    <section id="how-it-works" className="how-it-works section container">
       <div className="section-header">
        
         <h2>How Soesy Matrimony Works?</h2>

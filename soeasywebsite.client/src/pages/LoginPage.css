@@ -1,26 +1,28 @@
+
 /* Fonts for LoginPage */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 .login-page-wrapper {
   min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Stack container + trust strip vertically */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--cream-1); /* Overall page background */
-  padding: 40px 20px; /* Generous padding for smaller screens */
+  background: var(--cream-1);
+  padding: 40px 20px;
   box-sizing: border-box;
 }
 
+/* ===== Main login container ===== */
 .login-container {
   display: grid;
-  grid-template-columns: 1.15fr 1fr; /* Desktop: two columns, left slightly wider for hero */
+  grid-template-columns: 1.15fr 1fr;
   background: #ffffff;
   border-radius: 32px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
   overflow: hidden;
-  max-width: 1200px; /* Max width for the entire container */
+  max-width: 1200px;
   width: 100%;
 }
 
@@ -30,22 +32,30 @@
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 24px;
   position: relative;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
+/* ===== Brand logo ===== */
 .login-brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
   color: var(--deep-burgundy-1);
-  margin-bottom: 40px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .login-brand-image {
   display: block;
   width: 220px;
+  max-width: 100%;
   height: auto;
   object-fit: contain;
 }
@@ -78,9 +88,13 @@
   margin-top: 2px;
 }
 
+/* ===== Hero content ===== */
 .login-hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
+  min-width: 0;
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 .login-hero-welcome {
@@ -121,58 +135,28 @@
   max-width: 380px;
 }
 
-/* ===== Hero image ===== */
-.login-couple-image-placeholder {
-  position: relative;
-  flex: 1; /* Fill the lower portion of the left column */
-  min-height: 280px;
-  width: 100%;
-  background: linear-gradient(to bottom right, #f8f2ea, #fbf7f0); /* Placeholder background */
-  border-radius: 24px;
-  overflow: hidden;
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted-text);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  text-align: center;
-}
-
-.login-couple-image-placeholder::before {
-  content: 'Couple Image Placeholder';
-}
-
-/* Support a real image with proper cropping when the asset is added */
-.login-couple-image-placeholder img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* ===== Trust / verification overlay ===== */
+/* ===== Trust / verification card ===== */
+/* Normal document flow: no longer depends on the removed image placeholder */
 .login-trust-card-overlay {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  background: rgba(85, 0, 42, 0.92); /* Deep burgundy with transparency */
+  position: static;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--deep-burgundy-1);
   border-radius: 20px;
   padding: 20px;
   color: #fff;
   display: grid;
   gap: 14px;
-  z-index: 2;
+  z-index: 1;
+  margin-top: 0;
+  flex-shrink: 0;
 }
 
 .login-trust-item {
   display: flex;
   align-items: flex-start;
   gap: 15px;
+  min-width: 0;
 }
 
 .login-trust-icon-wrap {
@@ -182,7 +166,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(200, 154, 69, 0.2); /* Gold with transparency */
+  background: rgba(200, 154, 69, 0.2);
   color: var(--gold-1);
 }
 
@@ -209,8 +193,10 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  max-width: 500px; /* Constrain the card so it doesn't stretch excessively */
-  justify-self: center; /* Center the card within the right column */
+  max-width: 500px;
+  justify-self: center;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .login-card-header {
@@ -298,7 +284,7 @@
 
 .login-input-wrapper input {
   width: 100%;
-  padding: 14px 16px 14px 45px; /* Left padding for icon */
+  padding: 14px 16px 14px 45px;
   min-height: 52px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -338,7 +324,7 @@
 .login-error-message {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  color: #dc2626; /* Red for errors */
+  color: #dc2626;
   margin-top: 8px;
 }
 
@@ -370,7 +356,7 @@
 .login-remember-me input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: var(--deep-burgundy-1); /* Theme color for checkbox */
+  accent-color: var(--deep-burgundy-1);
 }
 
 .login-forgot-password {
@@ -390,7 +376,11 @@
   width: 100%;
   padding: 15px 20px;
   min-height: 52px;
-  background: linear-gradient(to right, var(--deep-burgundy-1), var(--deep-burgundy-2));
+  background: linear-gradient(
+    to right,
+    var(--deep-burgundy-1),
+    var(--deep-burgundy-2)
+  );
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -406,7 +396,11 @@
 }
 
 .login-button:hover {
-  background: linear-gradient(to right, var(--deep-burgundy-2), var(--deep-burgundy-1));
+  background: linear-gradient(
+    to right,
+    var(--deep-burgundy-2),
+    var(--deep-burgundy-1)
+  );
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(112, 0, 25, 0.2);
 }
@@ -459,12 +453,12 @@
   background: var(--cream-2);
   padding: 30px 0;
   border-top: 1px solid var(--border-color);
-  width: 100%; /* Span full width beneath the container */
+  width: 100%;
 }
 
 .trust-strip-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Single horizontal row on desktop */
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -480,7 +474,7 @@
   height: 48px;
   display: grid;
   place-items: center;
-  background: rgba(200, 154, 69, 0.1); /* Gold with transparency */
+  background: rgba(200, 154, 69, 0.1);
   border-radius: 50%;
   color: var(--gold-1);
   margin: 0 auto 12px;
@@ -502,22 +496,28 @@
   color: var(--muted-text);
 }
 
-/* ===== Responsive Design ===== */
+/* ===== Responsive: tablet and smaller desktop ===== */
 @media (max-width: 1024px) {
   .login-container {
-    grid-template-columns: 1fr; /* Tablet: single column */
+    grid-template-columns: 1fr;
     max-width: 720px;
   }
 
   .login-left-panel {
     padding: 30px;
     border-radius: 32px 32px 0 0;
-    justify-content: flex-start; /* Avoid huge gaps when stacked */
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  .login-hero-content {
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .login-right-panel {
     padding: 30px;
-    max-width: 100%; /* Full width when stacked */
+    max-width: 100%;
     justify-self: stretch;
   }
 
@@ -529,26 +529,19 @@
     font-size: 40px;
   }
 
-  .login-couple-image-placeholder {
-    flex: none; /* Don't grow; use aspect-ratio for height */
-    aspect-ratio: 16 / 9;
-    min-height: 260px;
-    max-height: none;
-    margin-top: 30px;
-  }
-
   .login-trust-card-overlay {
-    position: static; /* Remove overlay effect, make it part of the flow */
+    position: static;
     border-radius: 16px;
-    background: var(--deep-burgundy-1); /* Solid background */
-    margin-top: 16px;
+    background: var(--deep-burgundy-1);
+    margin-top: 0;
   }
 
   .trust-strip-grid {
-    grid-template-columns: repeat(2, 1fr); /* Tablet: 2 columns */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* ===== Responsive: mobile ===== */
 @media (max-width: 768px) {
   .login-page-wrapper {
     padding: 16px 12px;
@@ -560,6 +553,7 @@
 
   .login-left-panel {
     padding: 24px;
+    gap: 20px;
   }
 
   .login-right-panel {
@@ -567,7 +561,11 @@
   }
 
   .login-brand {
-    margin-bottom: 28px;
+    margin-bottom: 0;
+  }
+
+  .login-brand-image {
+    width: 190px;
   }
 
   .login-brand-text strong {
@@ -584,11 +582,6 @@
 
   .login-hero-subtitle {
     font-size: 15px;
-  }
-
-  .login-couple-image-placeholder {
-    aspect-ratio: 4 / 3;
-    min-height: 220px;
   }
 
   .login-trust-card-overlay {
@@ -627,11 +620,12 @@
   }
 
   .trust-strip-grid {
-    grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
+    grid-template-columns: repeat(2, 1fr);
     padding: 0 15px;
   }
 }
 
+/* ===== Responsive: small mobile ===== */
 @media (max-width: 480px) {
   .login-page-wrapper {
     padding: 12px 10px;
@@ -639,10 +633,15 @@
 
   .login-left-panel {
     padding: 20px;
+    gap: 18px;
   }
 
   .login-right-panel {
     padding: 20px;
+  }
+
+  .login-brand-image {
+    width: 170px;
   }
 
   .login-brand-text strong {
@@ -659,10 +658,6 @@
 
   .login-hero-subtitle {
     font-size: 14px;
-  }
-
-  .login-couple-image-placeholder {
-    min-height: 180px;
   }
 
   .login-trust-card-overlay {
@@ -684,7 +679,7 @@
   }
 
   .trust-strip-grid {
-    grid-template-columns: 1fr; /* Small mobile: single column */
+    grid-template-columns: 1fr;
   }
 
   .trust-strip-item {
@@ -697,5 +692,4 @@
   .trust-strip-icon {
     margin: 0;
     min-width: 48px;
-  }
-}
+  }}
