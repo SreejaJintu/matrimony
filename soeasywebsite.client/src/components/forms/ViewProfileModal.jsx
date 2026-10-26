@@ -14,10 +14,6 @@ export function ViewProfileModal({ isOpen, onClose, onBecomeMember }) {
         <h3>View Full Profile</h3>
         <p>Become a member to unlock full profile details and connect with verified members.</p>
 
-        <div className="view-profile-modal-offer">
-          <strong>₹2,000</strong> Membership - Access up to 20 profiles
-        </div>
-
         <button type="button" className="view-profile-modal-primary" onClick={onBecomeMember}>
           <Crown size={18} />
           Become a Member
@@ -30,3 +26,4 @@ export function ViewProfileModal({ isOpen, onClose, onBecomeMember }) {
     </div>
   )
 }
+

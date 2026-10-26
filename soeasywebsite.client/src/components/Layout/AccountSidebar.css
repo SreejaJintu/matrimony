@@ -221,18 +221,24 @@
 @media (max-width: 900px) {
   .account-sidebar {
     position: fixed;
-    left: 12px;
-    top: 98px;
-    bottom: 12px;
+    left: 50%;
+    top: 50%;
+    bottom: auto;
     height: auto;
+    max-height: calc(100dvh - 32px);
+    width: min(320px, calc(100vw - 32px));
+    min-width: 0;
     z-index: 100;
     overflow-y: auto;
-    transform: translateX(calc(-100% - 20px));
-    transition: transform 0.25s ease;
+    border-radius: 18px;
+    transform: translate(-50%, calc(-50% + 16px));
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s ease;
   }
 
   .account-sidebar.open {
-    transform: translateX(0);
+    transform: translate(-50%, -50%);
+    visibility: visible;
   }
 
   .account-sidebar-close {
@@ -244,6 +250,22 @@
     min-height: 54px;
     padding: 12px 18px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .account-sidebar-nav {
+    flex: 0 0 auto;
+    padding: 10px 12px 4px;
+  }
+
+  .account-sidebar-link {
+    min-height: 42px;
+    margin-bottom: 3px;
+    padding: 0 12px;
+  }
+
+  .account-sidebar-membership {
+    margin: 8px 12px 12px;
+    padding: 13px 12px;
   }
 
   .account-sidebar-backdrop {
@@ -271,7 +293,7 @@
 
 @media (max-width: 425px) {
   .account-sidebar {
-    width: min(280px, calc(100vw - 24px));
+    width: min(320px, calc(100vw - 32px));
     min-width: 0;
   }
 }

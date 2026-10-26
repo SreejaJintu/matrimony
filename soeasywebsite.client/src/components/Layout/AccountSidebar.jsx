@@ -113,11 +113,10 @@ export function AccountSidebar({
           ) : (
             <>
 
-              <h4>Become a Soesy Member</h4>
+              <h4>Become a Viswaas Member</h4>
               <p>Get access to verified profiles and meaningful connections.</p>
               <div className="account-sidebar-plan">
-                <strong>₹2,000</strong>
-                <span>20 profile access</span>
+                
               </div>
               <button
                 type="button"

@@ -765,13 +765,8 @@ export function MatchesPage() {
                 <h2 id="membership-modal-title">View Full Profile</h2>
 
                 <p>
-                  Become a Soesy member to view full profile details and connect with verified members.
+                  Become a Viswaas member to view full profile details and connect with verified members.
                 </p>
-
-                <div className="membership-plan-preview">
-                  <strong>₹2,000</strong>
-                  <span>Membership · Access up to 20 profiles</span>
-                </div>
 
                 <button
                   type="button"
@@ -898,11 +893,6 @@ export function MatchesPage() {
               Please log in to your account and subscribe to a plan to shortlist profiles and connect with verified members.
             </p>
 
-            <div className="membership-plan-preview">
-              <strong>₹2,000</strong>
-              <span>Membership · Access up to 20 profiles</span>
-            </div>
-
             <button
               type="button"
               className="membership-modal-button"
@@ -933,3 +923,4 @@ export function MatchesPage() {
     </div>
   )
 }
+

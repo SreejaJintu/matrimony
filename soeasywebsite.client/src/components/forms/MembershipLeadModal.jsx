@@ -83,12 +83,12 @@ export function MembershipLeadModal({ isOpen, onClose, directForm = false }) {
 
             <h3 className="lead-modal-title">View Full Profile</h3>
             <p className="lead-modal-subtitle">
-              Become a Soesy member to view full profile details and connect with verified members.
+              Become a Viswaas member to view full profile details and connect with verified members.
             </p>
 
-            <div className="lead-modal-highlight-box">
+            {/* <div className="lead-modal-highlight-box">
               <strong style={{ fontSize: '18px', color: '#800020' }}>₹2,000</strong> Membership · Access up to 20 profiles
-            </div>
+            </div> */}
 
             <button
               onClick={() => setShowForm(true)}

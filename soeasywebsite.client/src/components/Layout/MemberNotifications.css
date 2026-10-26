@@ -21,3 +21,15 @@
 .member-notification-error { margin: 10px 14px; color: #b32626; font-size: 12px; }
 .member-notification-all { padding: 12px; border: 0; border-top: 1px solid #eee8e5; background: #fff; color: #800020; cursor: pointer; font-size: 12px; font-weight: 700; }
 .member-notification-all:hover { background: #fcf8f5; }
+
+@media (max-width: 900px) {
+  .member-notification-panel {
+    position: fixed;
+    top: 132px;
+    left: 50%;
+    right: auto;
+    width: min(320px, calc(100vw - 40px));
+    max-height: min(460px, calc(100dvh - 152px));
+    transform: translateX(-50%);
+  }
+}

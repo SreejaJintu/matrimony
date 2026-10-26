@@ -65,16 +65,6 @@ export function Header() {
           >
             Contact
           </button>
-          {!isAuthenticated && (
-            <div className="nav-buttons-mobile">
-              <button type="button" className="button button-outline" onClick={() => navigate('/login')}>
-                Login
-              </button>
-              <button type="button" className="button button-gold" onClick={() => navigate('/register')}>
-                Register Free
-              </button>
-            </div>
-          )}
         </nav>
 
         <div className="nav-actions" aria-label="Utility actions">

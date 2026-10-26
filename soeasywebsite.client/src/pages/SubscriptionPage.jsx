@@ -108,7 +108,7 @@ export function SubscriptionPage() {
           borderRadius: '20px',
           border: '2px solid #D6B97A',
           boxShadow: '0 8px 32px rgba(112, 0, 25, 0.06)',
-          padding: '40px',
+          padding: 'clamp(16px, 4vw, 40px)',
           marginBottom: '36px',
           position: 'relative'
         }}>
@@ -138,15 +138,10 @@ export function SubscriptionPage() {
               </span>
             </div>
 
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '36px', fontWeight: '800', color: 'var(--primary-maroon, #700019)', lineHeight: 1 }}>
-                ₹2,000
-              </div>
-              <span style={{ fontSize: '12.5px', color: 'var(--text-muted, #756A67)' }}>Assisted One-time activation</span>
-            </div>
+            
           </div>
 
-          {/* Plan Highlights */}
+          {/* Plan Highlights
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '32px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14.5px', fontWeight: '500' }}>
               <div style={{ color: '#2E7D32' }}><Check size={18} /></div>
@@ -164,13 +159,13 @@ export function SubscriptionPage() {
               <div style={{ color: '#2E7D32' }}><Check size={18} /></div>
               <span><strong>180 Days Validity</strong></span>
             </div>
-          </div>
+          </div> */}
 
           {/* Executive Call Request Section */}
           <div style={{
             background: 'var(--cream, #FBF7F0)',
             borderRadius: '14px',
-            padding: '28px',
+            padding: 'clamp(14px, 4vw, 28px)',
             border: '1px solid var(--border, #E7DED5)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
@@ -203,7 +198,7 @@ export function SubscriptionPage() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleLeadSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+              <form onSubmit={handleLeadSubmit} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '16px', width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '600', color: 'var(--dark-maroon, #4D0015)', marginBottom: '6px' }}>
                     Full Name *
@@ -266,23 +261,15 @@ export function SubscriptionPage() {
                   />
                 </div>
 
-                <div style={{ gridColumn: '1 / -1', marginTop: '6px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ gridColumn: '1 / -1', marginTop: '6px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', minWidth: 0 }}>
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="pd-btn pd-btn-gold-action"
-                    style={{ width: 'auto', padding: '13px 28px', margin: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    style={{ width: '100%', maxWidth: '100%', minWidth: 0, padding: '13px 16px', margin: 0, display: 'inline-flex', justifyContent: 'center', alignItems: 'center', gap: '8px', boxSizing: 'border-box', whiteSpace: 'normal', textAlign: 'center' }}
                   >
                     <UserCheck size={18} />
                     <span>{isSubmitting ? 'Submitting Request...' : 'Request Executive Call'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(true)}
-                    className="pd-btn pd-btn-secondary"
-                    style={{ width: 'auto', padding: '13px 20px', margin: 0 }}
-                  >
                   </button>
                 </div>
               </form>

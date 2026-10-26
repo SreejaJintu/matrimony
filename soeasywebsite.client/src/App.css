@@ -131,39 +131,40 @@
   min-width: 40px;
   height: 40px;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 6px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 5px;
   cursor: pointer;
 }
 
 .nav-toggle span {
   display: block;
-  width: 100%;
+  width: 22px;
   height: 2px;
   border-radius: 999px;
   background: #ffffff;
+  transition: transform 180ms ease, opacity 180ms ease;
 }
 
 .nav-toggle.open span:nth-child(2) {
   opacity: 0;
 }
 
+.nav-toggle.open span:first-child {
+  transform: translateY(7px) rotate(45deg);
+}
+
 .nav-toggle.open span:nth-child(3) {
-  transform: translateY(-10px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .nav {
   gap: 28px;
   align-items: center;
   display: flex;
-}
-
-.nav-buttons-mobile {
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  margin-top: 20px;
 }
 
 .brand {
@@ -1354,19 +1355,21 @@
 .footer-rich {
   background: var(--primary-maroon);
   color: #f6e7cf;
-  padding: 64px 0 28px;
+  padding: 56px 0 24px;
 }
 
 .footer-grid-rich {
   display: grid;
-  grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
-  gap: 28px;
+  grid-template-columns: minmax(280px, 1.45fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
   align-items: start;
 }
 
 .footer-rich a,
 .footer-rich .footer-bottom-links a {
-  color: rgba(255, 255, 255, 0.88);
+  color: #f6e7cf;
+  text-decoration: none;
+  transition: color 160ms ease;
 }
 
 .footer-rich a:hover,
@@ -1393,20 +1396,6 @@
   gap: 12px;
 }
 
-.footer-grid-rich a,
-.footer-bottom-links a,
-.footer a {
-  color: #4c6078;
-  text-decoration: none;
-  transition: color 160ms ease, border-color 160ms ease;
-}
-
-.footer-grid-rich a:hover,
-.footer-bottom-links a:hover,
-.footer a:hover {
-  color: #800020;
-}
-
 .footer-app-links {
   display: flex;
   gap: 12px;
@@ -1414,8 +1403,9 @@
 }
 
 .footer-bottom {
-  margin-top: 42px;
-  padding-top: 22px;
+  width: min(1200px, calc(100% - 80px));
+  margin: 40px auto 0;
+  padding-top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1430,7 +1420,13 @@
 }
 
 .footer-bottom-links a {
-  color: rgba(255, 255, 255, 0.75);
+  color: #f6e7cf;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom {
+    width: calc(100% - 32px);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1493,26 +1489,30 @@
     position: relative;
     flex-wrap: wrap;
     justify-content: space-between;
+    column-gap: 12px;
   }
 
   .nav {
     position: absolute;
     top: 100%;
-    left: 20px;
-    right: 20px;
+    left: 0;
+    right: 0;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-    background: rgba(101, 0, 31, 0.95);
-    border-radius: 24px;
-    padding: 24px;
+    align-items: stretch;
+    gap: 0;
+    background: #65001f;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0 0 12px 12px;
+    padding: 8px 20px 14px;
     box-sizing: border-box;
-    transform: translateY(-20px);
+    transform: translateY(-8px);
     opacity: 0;
     pointer-events: none;
     transition: opacity 180ms ease, transform 180ms ease;
-    width: calc(100% - 40px);
+    width: 100%;
     min-width: unset;
+    z-index: 60;
+    box-shadow: 0 12px 24px rgba(40, 0, 12, 0.24);
   }
 
   .nav.nav-open {
@@ -1522,38 +1522,33 @@
   }
 
   .nav a,
-  .nav-buttons-mobile .button {
+  .nav button.nav-link-btn {
     color: #ffffff;
   }
 
-  .nav-buttons-mobile .button-outline {
-    border-color: rgba(255, 255, 255, 0.4);
+  .nav a,
+  .nav button.nav-link-btn {
+    display: block;
+    width: 100%;
+    padding: 13px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: left;
   }
 
-  .nav-buttons-mobile .button-outline:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
+  .nav a.active::after {
+    left: 4px;
+    right: auto;
+    bottom: 7px;
+    width: 40px;
   }
 
   .nav a:hover,
-  .nav-buttons-mobile .button:hover {
+  .nav button.nav-link-btn:hover {
     color: var(--gold);
   }
 
   .nav-toggle {
     display: inline-flex;
-  }
-
-  .nav-buttons-mobile {
-    display: flex;
-  }
-
-  .nav a {
-    color: #ffffff;
-  }
-
-  .nav a:hover {
-    color: var(--gold);
   }
 
   .featured-card,
