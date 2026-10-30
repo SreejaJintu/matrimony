@@ -15,7 +15,7 @@ const AdminHeader = () => {
     <header className="admin-header">
 
       <div>
-        <h1>Dashboard</h1>
+        <h1 className="admin-header-title">Dashboard</h1>
       </div>
 
       <div className="admin-header-user">

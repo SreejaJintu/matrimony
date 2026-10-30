@@ -148,6 +148,7 @@ builder.Services.AddScoped<IProfileShareRepository, ProfileShareRepository>();
 builder.Services.AddScoped<IProfileShareService, ProfileShareService>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 
 builder.Services.AddHttpClient<ISmsBitsService, SmsBitsService>();
 //---------------------------------------------------------

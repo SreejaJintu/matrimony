@@ -21,11 +21,12 @@ import { getProfileImageUrl, handleProfileImageError } from '../utils/profileIma
 import './MatchesPage.css'
 
 const lookingForOptions = ['Bride', 'Groom']
-const religionOptions = ['Any', 'Hindu', 'Christian', 'Muslim', 'Sikh']
-const locationOptions = ['Any', 'Kerala', 'Bengaluru', 'Mumbai', 'Delhi']
-const communityOptions = ['All Communities', 'Nair', 'Kayastha', 'Khan', 'Professional', 'Creative', 'Academic']
-const professionOptions = ['Any', 'Medicine', 'Engineering', 'Education', 'Business']
-const educationOptions = ['Any', 'Graduate', 'Postgraduate', 'Doctorate', 'Professional', 'Diploma']
+const masterRows = (response) => {
+  const rows = Array.isArray(response) ? response : response?.data ?? response?.Data ?? []
+  return Array.isArray(rows) ? rows : []
+}
+const masterId = (item) => item?.id ?? item?.Id
+const masterName = (item) => item?.name ?? item?.Name ?? ''
 
 export function MatchesPage() {
   const { user, isAuthenticated } = useContext(AuthContext)
@@ -43,6 +44,10 @@ export function MatchesPage() {
   const [religion, setReligion] = useState('Any')
   const [community, setCommunity] = useState('All Communities')
   const [location, setLocation] = useState('Any')
+  const [religionOptions, setReligionOptions] = useState([])
+  const [communityOptions, setCommunityOptions] = useState([])
+  const [locationOptions, setLocationOptions] = useState([])
+  const [communityLoading, setCommunityLoading] = useState(false)
   const [education, setEducation] = useState('Any')
   const [profession, setProfession] = useState('Any')
 
@@ -80,6 +85,46 @@ export function MatchesPage() {
   // ── Live subscription status ───────────────────────────────
   const [subscriptionStatus, setSubscriptionStatus] = useState(null)
   const [unlockingUserId, setUnlockingUserId] = useState(null)
+
+  useEffect(() => {
+    let isCurrent = true
+    Promise.all([api.getMasterReligion(), api.getMasterDistricts()])
+      .then(([religionResponse, districtResponse]) => {
+        if (!isCurrent) return
+        setReligionOptions(masterRows(religionResponse))
+        setLocationOptions(masterRows(districtResponse))
+      })
+      .catch((loadError) => {
+        console.error('Unable to load match filter masters:', loadError)
+      })
+    return () => { isCurrent = false }
+  }, [])
+
+  useEffect(() => {
+    const selectedReligion = religionOptions.find(
+      (item) => masterName(item).toLowerCase() === religion.toLowerCase()
+    )
+    if (!selectedReligion) {
+      setCommunityOptions([])
+      return undefined
+    }
+
+    let isCurrent = true
+    setCommunityLoading(true)
+    api.getMasterCommunity(masterId(selectedReligion))
+      .then((response) => {
+        if (isCurrent) setCommunityOptions(masterRows(response))
+      })
+      .catch((loadError) => {
+        console.error('Unable to load communities for selected religion:', loadError)
+        if (isCurrent) setCommunityOptions([])
+      })
+      .finally(() => {
+        if (isCurrent) setCommunityLoading(false)
+      })
+
+    return () => { isCurrent = false }
+  }, [religion, religionOptions])
 
   const isPaidMember = Boolean(
     subscriptionStatus?.isApproved &&
@@ -525,10 +570,11 @@ export function MatchesPage() {
 
                 <label>
                   <span>Religion</span>
-                  <select value={religion} onChange={(e) => setReligion(e.target.value)}>
+                  <select value={religion} onChange={(e) => { setReligion(e.target.value); setCommunity('All Communities') }}>
+                    <option value="Any">Any</option>
                     {religionOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                      <option key={masterId(option)} value={masterName(option)}>
+                        {masterName(option)}
                       </option>
                     ))}
                   </select>
@@ -536,10 +582,11 @@ export function MatchesPage() {
 
                 <label>
                   <span>Community</span>
-                  <select value={community} onChange={(e) => setCommunity(e.target.value)}>
+                  <select value={community} disabled={communityLoading || religion === 'Any'} onChange={(e) => setCommunity(e.target.value)}>
+                    <option value="All Communities">All Communities</option>
                     {communityOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                      <option key={masterId(option)} value={masterName(option)}>
+                        {masterName(option)}
                       </option>
                     ))}
                   </select>
@@ -548,9 +595,10 @@ export function MatchesPage() {
                 <label>
                   <span>Location</span>
                   <select value={location} onChange={(e) => setLocation(e.target.value)}>
+                    <option value="Any">Any</option>
                     {locationOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                      <option key={masterId(option)} value={masterName(option)}>
+                        {masterName(option)}
                       </option>
                     ))}
                   </select>

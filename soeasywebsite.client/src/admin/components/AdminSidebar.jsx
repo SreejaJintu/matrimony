@@ -1,15 +1,24 @@
 import { NavLink } from "react-router-dom";
-import { ChevronLeft, ChevronRight, CreditCard, Package, UsersRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, CreditCard, Menu, MessageSquareQuote, Package, UsersRound, X } from "lucide-react";
 import { useAdminAuth } from "../context/AdminAuthContext";
 
-const AdminSidebar = ({ collapsed, onToggle }) => {
+const AdminSidebar = ({ collapsed, onToggle, mobileNavOpen, onMobileNavToggle, onMobileNavClose }) => {
   const { logout } = useAdminAuth();
 
   return (
-    <aside className="admin-sidebar" aria-label="Admin sidebar">
+    <aside className={`admin-sidebar${mobileNavOpen ? " mobile-open" : ""}`} aria-label="Admin sidebar">
 
       <div className="admin-brand">
         <img className="admin-brand-image" src="/maroon_favicon.svg" alt="Viswaas" />
+        <button
+          type="button"
+          className="admin-mobile-nav-toggle"
+          onClick={onMobileNavToggle}
+          aria-label={mobileNavOpen ? "Close admin navigation" : "Open admin navigation"}
+          aria-expanded={mobileNavOpen}
+        >
+          {mobileNavOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
         <button
           type="button"
           className="admin-sidebar-toggle"
@@ -21,7 +30,9 @@ const AdminSidebar = ({ collapsed, onToggle }) => {
         </button>
       </div>
 
-      <nav className="admin-nav">
+      <nav className="admin-nav" onClick={(event) => {
+        if (event.target.closest("a")) onMobileNavClose?.();
+      }}>
 
         <NavLink to="/admin/dashboard" aria-label="Dashboard" title="Dashboard">
           <span className="admin-nav-icon" aria-hidden="true">⌂</span>
@@ -31,6 +42,11 @@ const AdminSidebar = ({ collapsed, onToggle }) => {
         <NavLink to="/admin/profiles" aria-label="Profiles" title="Profiles">
           <span className="admin-nav-icon" aria-hidden="true">♙</span>
           <span className="admin-nav-label">Profiles</span>
+        </NavLink>
+
+        <NavLink to="/admin/testimonials" aria-label="Testimonials" title="Testimonials">
+          <MessageSquareQuote className="admin-nav-icon" size={18} aria-hidden="true" />
+          <span className="admin-nav-label">Testimonials</span>
         </NavLink>
 
         <NavLink to="/admin/brokers" aria-label="Broker Management" title="Broker Management">

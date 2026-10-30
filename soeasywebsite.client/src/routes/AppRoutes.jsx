@@ -35,6 +35,7 @@ import AdminBrokers from '../admin/pages/AdminBrokers'
 import AdminExecutives from '../admin/pages/AdminExecutives'
 import AdminExecutiveFormPage from '../admin/pages/AdminExecutiveFormPage'
 import AdminSettings from '../admin/pages/AdminSettings'
+import AdminTestimonials from '../admin/pages/AdminTestimonials'
 import AdminProtectedRoute from '../admin/components/AdminProtectedRoute'
 import { BrokerProtectedRoute } from '../broker/components/BrokerProtectedRoute'
 import { BrokerLayout } from '../broker/components/BrokerLayout'
@@ -393,6 +394,8 @@ export function AppRoutes() {
           <Route path="dashboard" element={<AdminDashboard />} />
 
           <Route path="profiles" element={<AdminProfiles />} />
+
+          <Route path="testimonials" element={<AdminTestimonials />} />
 
           <Route path="profiles/:userId" element={<AdminProfileDetail />} />
           

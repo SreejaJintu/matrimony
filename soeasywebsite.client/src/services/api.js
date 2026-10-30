@@ -46,6 +46,7 @@ function normalizeProfilePayload(payload = {}) {
 }
 
 export const api = {
+  getTestimonials: () => request('/api/testimonials'),
   // Auth
   register: (payload) => request('/api/auth/register', { method: 'POST', data: payload }),
   login: (payload) => request('/api/auth/login', { method: 'POST', data: payload }),
